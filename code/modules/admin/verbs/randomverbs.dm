@@ -77,7 +77,9 @@ GLOBAL_VAR_INIT(global_vantag_hud, 0)
 		to_chat(src, "Some accounts did not have proper ages set in their clients.  This function requires database to be present.")
 
 	if(msg != "")
-		src << browse("<html>[msg]</html>", "window=Player_age_check")
+		var/datum/browser/popup = new(src, "Player_age_check", "Player Age Check")
+		popup.set_content(msg)
+		popup.open()
 	else
 		to_chat(src, "No matches for that age range found.")
 
@@ -382,19 +384,12 @@ If a guy was gibbed and you want to revive him, this is a good way to do so.
 Works kind of like entering the game with a new character. Character receives a new mind if they didn't have one.
 Traitors and the like can also be revived with the previous role mostly intact.
 /N */
-/client/proc/respawn_character()
-	set category = "Fun.Event Kit"
-	set name = "Spawn Character"
-	set desc = "(Re)Spawn a client's loaded character."
-
-	if(!holder)
-		return
-
-	var/client/picked_client = tgui_input_list(src, "Please specify which client's character to spawn.", "Client", GLOB.clients)
+ADMIN_VERB(respawn_character, (R_ADMIN|R_REJUVINATE), "Spawn Character", "(Re)Spawn a client's loaded character.", "Fun.Event Kit")
+	var/client/picked_client = tgui_input_list(user, "Please specify which client's character to spawn.", "Client", GLOB.clients)
 	if(!picked_client)
 		return
 
-	respawn_character_proper(picked_client)
+	user.respawn_character_proper(picked_client)
 
 /client/proc/respawn_character_proper(client/picked_client)
 	if(!istype(picked_client))
@@ -519,12 +514,26 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		to_chat(src, "Something went wrong and spawning failed.")
 		return
 
+	// Respect admin spawn record choice. There's really not a nice way to do this without butchering copy_to() code for an admin proc
+	var/old_mind_scan = picked_client.prefs.resleeve_scan
+	var/old_body_scan = picked_client.prefs.mind_scan
+	if(!records) // Make em false for the copy_to()
+		picked_client.prefs.resleeve_scan = FALSE
+		picked_client.prefs.mind_scan = FALSE
+
 	//Write the appearance and whatnot out to the character
 	picked_client.prefs.copy_to(new_character)
+
+	// Restore pref state
+	picked_client.prefs.resleeve_scan = old_mind_scan
+	picked_client.prefs.mind_scan = old_body_scan
+
+	//Write the appearance and whatnot out to the character
 	if(new_character.dna)
 		new_character.dna.ResetUIFrom(new_character)
 		new_character.sync_dna_traits(TRUE) // Traitgenes Sync traits to genetics if needed
 		new_character.sync_organ_dna()
+	new_character.sync_addictions() // These are addicitions our profile wants... May as well give them!
 	new_character.initialize_vessel()
 	if(inhabit)
 		new_character.key = player_key
@@ -544,6 +553,8 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		if(chosen_language)
 			if(is_lang_whitelisted(src,chosen_language) || (new_character.species && (chosen_language.name in new_character.species.secondary_langs)))
 				new_character.add_language(lang)
+
+	SEND_SIGNAL(new_character, COMSIG_HUMAN_DNA_FINALIZED)
 
 	//If desired, apply equipment.
 	if(equipment)

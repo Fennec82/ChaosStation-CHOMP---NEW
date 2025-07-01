@@ -12,7 +12,6 @@
 
 	selects_bodytype = SELECTS_BODYTYPE_SHAPESHIFTER
 	base_species = SPECIES_HUMAN
-	digi_allowed = TRUE
 
 	blood_color = "#505050" //This is the same as the 80,80,80 below, but in hex
 	flesh_color = "#505050"
@@ -154,7 +153,7 @@
 		H.nif.unimplant(H) //Needs reference to owner to unimplant right.
 		H.nif.moveToNullspace()
 	..()
-	if(saved_nif)
+	if(saved_nif && !ismannequin(H))
 		saved_nif.quick_implant(H)
 
 /datum/species/protean/get_race_key()

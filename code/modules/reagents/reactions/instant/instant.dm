@@ -701,7 +701,7 @@
 	result_amount = 1
 
 /decl/chemical_reaction/instant/concrete/on_reaction(var/datum/reagents/holder, var/created_volume)
-	new /obj/item/stack/material/concrete(get_turf(holder.my_atom), created_volume)
+	new /obj/item/stack/material/concrete(get_turf(holder.my_atom), round(created_volume))
 	return
 
 /* Grenade reactions */
@@ -1247,4 +1247,11 @@
 	id = "spidertoxin_neutral"
 	result = REAGENT_ID_PROTEIN
 	required_reagents = list(REAGENT_ID_ENZYME = 1, REAGENT_ID_SPIDERTOXIN = 1, REAGENT_ID_SIFSAP = 1)
+	result_amount = 1
+
+/decl/chemical_reaction/instant/artificial_sustenance
+	name = REAGENT_ASUSTENANCE
+	id = REAGENT_ID_ASUSTENANCE
+	result = REAGENT_ID_ASUSTENANCE
+	required_reagents = list(REAGENT_ID_NUTRIMENT = 1, REAGENT_ID_MUTAGEN = 1, REAGENT_ID_PHORON = 1)
 	result_amount = 1

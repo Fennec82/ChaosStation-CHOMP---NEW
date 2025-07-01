@@ -142,7 +142,7 @@
 	vore_fullness_ex = list()
 	vore_icon_bellies = list()
 
-/mob/living/silicon/robot/Initialize(mapload, is_decoy, unfinished = FALSE)
+/mob/living/silicon/robot/Initialize(mapload, is_decoy)
 	spark_system = new /datum/effect/effect/system/spark_spread()
 	spark_system.set_up(5, 0, src)
 	spark_system.attach(src)
@@ -173,7 +173,6 @@
 
 	init()
 	initialize_components()
-	//if(!unfinished)
 	// Create all the robot parts.
 	for(var/V in components) if(V != "power cell")
 		var/datum/robot_component/C = components[V]
@@ -206,6 +205,8 @@
 
 	riding_datum = new /datum/riding/dogborg(src)
 
+	AddComponent(/datum/component/hose_connector/input/borg)
+	AddComponent(/datum/component/hose_connector/output/borg)
 
 /mob/living/silicon/robot/LateInitialize()
 	pick_module()
@@ -514,6 +515,22 @@
 	set name = "Emit Sparks"
 	to_chat(src, span_filter_notice("You harmlessly spark."))
 	spark_system.start()
+
+///Essentially, a Activate Held Object mode for borgs that acts just like pressing Z in hotkey mode but also works well with multibelts.
+/mob/living/silicon/robot/verb/alt_mode()
+	set name = "Robot Activate Held Object"
+	set category = "Object"
+	set src = usr
+
+	if(!checkClickCooldown())
+		return
+
+	setClickCooldown(1)
+
+	var/obj/item/W = module_active
+	if(module_active)
+		W.attack_self(src)
+	return
 
 /mob/living/silicon/robot/verb/toggle_grabbability() // Grisp the preyborgs with consent (and allows for your borg to still be pet).
 	set category = "Abilities.Silicon"

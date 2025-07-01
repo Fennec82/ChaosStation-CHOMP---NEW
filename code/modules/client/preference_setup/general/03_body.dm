@@ -175,13 +175,10 @@ var/const/preview_icons = 'icons/mob/human_races/preview.dmi'
 	character.h_style	= pref.h_style
 	character.f_style	= pref.f_style
 	character.grad_style= pref.grad_style
-	character.b_type	= pref.b_type
+	character.dna.b_type= pref.b_type
 	character.synth_color = pref.synth_color
 	character.synth_markings = pref.synth_markings
-	if(character.species.digi_allowed)
-		character.digitigrade = pref.digitigrade
-	else
-		character.digitigrade = 0
+	character.digitigrade = pref.digitigrade
 
 	//sanity check
 	if(character.digitigrade == null)
@@ -351,8 +348,6 @@ var/const/preview_icons = 'icons/mob/human_races/preview.dmi'
 			"can_select" = can_select,
 		)
 	data["can_play"] = can_play_list
-
-	data["digi_allowed"] = GLOB.all_species[pref.species].digi_allowed
 
 	var/list/available_hair_styles = list()
 	for(var/path in pref.get_available_styles(hair_styles_list))

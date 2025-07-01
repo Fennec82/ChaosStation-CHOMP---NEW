@@ -325,6 +325,11 @@
 			spawned_obj.unacidable = !M.digestable
 			M.forceMove(possessed_voice)
 
+		if("elder_smite")
+			if(!target.ckey)
+				return
+			target.overlay_fullscreen("scrolls", /obj/screen/fullscreen/scrolls, 1)
+			addtimer(CALLBACK(target, TYPE_PROC_REF(/mob, clear_fullscreen), "scrolls"), 20 SECONDS)
 
 		////////MEDICAL//////////////
 
@@ -676,7 +681,7 @@
 			log_and_message_admins("Quick NIF'd [Tar.real_name] with a [input_NIF].", user)
 
 		if("resize")
-			user.client.resize(target)
+			SSadmin_verbs.dynamic_invoke_verb(user.client, /datum/admin_verb/resize, target)
 
 		if("teleport")
 			var/where = tgui_alert(user, "Where to teleport?", "Where?", list("To Me", "To Mob", "To Area", "Cancel"))

@@ -84,6 +84,7 @@
 		O_VOICE = 		/obj/item/organ/internal/voicebox,
 		O_LIVER =		/obj/item/organ/internal/liver,
 		O_KIDNEYS =		/obj/item/organ/internal/kidneys,
+		O_SPLEEN =		/obj/item/organ/internal/spleen,
 		O_BRAIN =		/obj/item/organ/internal/brain/shadekin,
 		O_EYES =		/obj/item/organ/internal/eyes,
 		O_STOMACH =		/obj/item/organ/internal/stomach,
@@ -271,6 +272,7 @@
 
 /datum/species/shadekin/handle_environment_special(var/mob/living/carbon/human/H)
 	handle_shade(H)
+	..()
 
 /datum/species/shadekin/add_inherent_verbs(var/mob/living/carbon/human/H)
 	..()

@@ -782,12 +782,12 @@ includes scars and tattoos
 /datum/sprite_accessory/marking/taj_belly
 	name = "Belly Fur (Taj)"
 	icon_state = "taj_belly"
-	body_parts = list(BP_TORSO)
+	body_parts = list(BP_TORSO,BP_GROIN)
 
 /datum/sprite_accessory/marking/taj_bellyfull
 	name = "Belly Fur Wide (Taj)"
 	icon_state = "taj_bellyfull"
-	body_parts = list(BP_TORSO)
+	body_parts = list(BP_TORSO,BP_GROIN)
 
 /datum/sprite_accessory/marking/taj_earsout
 	name = "Outer Ear (Taj)"
@@ -1823,6 +1823,76 @@ includes scars and tattoos
 	color_blend_mode = ICON_MULTIPLY
 	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_L_LEG,BP_R_LEG,BP_L_ARM,BP_R_ARM,BP_L_HAND,BP_R_HAND,BP_GROIN,BP_TORSO,BP_HEAD)
 
+/datum/sprite_accessory/marking/bust_definition
+
+	name = "Bust definition"
+	icon_state = "bust_def"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_TORSO)
+
+/datum/sprite_accessory/marking/bust_definition_light
+
+	name = "Bust definition translucent"
+	icon_state = "bust_def_light"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_TORSO)
+
+/datum/sprite_accessory/marking/bust_definition_outline
+
+	name = "Bust definition outline only"
+	icon_state = "bust_def_outline"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_TORSO)
+
+/datum/sprite_accessory/marking/bustier_definition
+
+	name = "Bustier definition"
+	icon_state = "bust_def2"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_TORSO)
+
+/datum/sprite_accessory/marking/bustier_definition_light
+
+	name = "Bustier definition translucent"
+	icon_state = "bust_def2_light"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_TORSO)
+
+/datum/sprite_accessory/marking/bustier_definition_outline
+
+	name = "Bustier definition outline only"
+	icon_state = "bust_def2_outline"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_TORSO)
+
+/datum/sprite_accessory/marking/abs_definition
+
+	name = "Abs definition"
+	icon_state = "abs"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_TORSO)
+
+/datum/sprite_accessory/marking/bust_nips
+
+	name = "Nipples"
+	icon_state = "nips"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_TORSO)
+
+/datum/sprite_accessory/marking/bust_nips_lower
+
+	name = "Nipples (lower)"
+	icon_state = "nips2"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_TORSO)
+
+/datum/sprite_accessory/marking/bust_nips_closer
+
+	name = "Nipples (closer)"
+	icon_state = "nips3"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_TORSO)
+
 /datum/sprite_accessory/marking/vr_eboop_panels
 	name = "Eggnerd FBP panels"
 	icon_state = "eboop"
@@ -2648,6 +2718,30 @@ includes scars and tattoos
 /datum/sprite_accessory/marking/digi/gradient
 	name = "Digitigrade Gradient, Legs (Only works with digitigrade legs)"
 	icon_state = "digigradient"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_L_LEG,BP_L_FOOT,BP_R_LEG,BP_R_FOOT)
+
+/datum/sprite_accessory/marking/digi/hooves
+	name = "Digitigrade Hooves (Only works with digitigrade legs)"
+	icon_state = "deerhoof"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_L_FOOT,BP_R_FOOT)
+
+/datum/sprite_accessory/marking/digi/fox
+	name = "Digitigrade fox legs (Only works with digitigrade legs)"
+	icon_state = "fox"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_L_LEG,BP_L_FOOT,BP_R_LEG,BP_R_FOOT)
+
+/datum/sprite_accessory/marking/digi/tiger
+	name = "Digitigrade tiger legs (Only works with digitigrade legs)"
+	icon_state = "tiger"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_L_LEG,BP_L_FOOT,BP_R_LEG,BP_R_FOOT)
+
+/datum/sprite_accessory/marking/digi/gloss
+	name = "Digitigrade leg and foot gloss (Only works with digitigrade legs)"
+	icon_state = "gloss"
 	color_blend_mode = ICON_MULTIPLY
 	body_parts = list(BP_L_LEG,BP_L_FOOT,BP_R_LEG,BP_R_FOOT)
 

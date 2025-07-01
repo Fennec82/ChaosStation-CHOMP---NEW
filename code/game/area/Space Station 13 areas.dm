@@ -1254,7 +1254,7 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
 
 /area/crew_quarters/gym_private
 	name = "\improper Gym Sideroom"
-	icon_state = "pool" 
+	icon_state = "pool"
 
 /area/crew_quarters/sauna
 	name = "\improper Sauna"
@@ -2763,3 +2763,10 @@ var/list/the_station_areas = list (
 	name = "\improper Junker"
 	icon_state = "shuttlered"
 	requires_power = 1
+
+//chompADD
+/area/shuttle/phoenix
+	name = "\improper phoenix"
+	icon_state = "shuttlered"
+	requires_power = 1
+//ChompADD end

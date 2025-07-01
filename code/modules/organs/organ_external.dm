@@ -216,6 +216,8 @@
 //new function to check for markings
 /obj/item/organ/external/proc/is_hidden_by_markings()
 	for(var/M in markings)
+		if(!markings[M]["on"]) //If the marking is off, the organ isn't hidden by it.
+			continue
 		var/datum/sprite_accessory/marking/mark_style = markings[M]["datum"]
 		if(istype(mark_style,/datum/sprite_accessory/marking) && (organ_tag in mark_style.hide_body_parts))
 			return 1
@@ -286,6 +288,13 @@
 /obj/item/organ/external/proc/is_damageable(var/additional_damage = 0)
 	//Continued damage to vital organs can kill you, and robot organs don't count towards total damage so no need to cap them.
 	return (vital || (robotic >= ORGAN_ROBOT) || brute_dam + burn_dam + additional_damage < max_damage)
+
+/obj/item/organ/external/proc/is_fracturable()
+	if(robotic >= ORGAN_ROBOT)
+		return FALSE	//ORGAN_BROKEN doesn't have the same meaning for robot limbs
+	if((status & ORGAN_BROKEN) || cannot_break)
+		return FALSE
+	return TRUE
 
 /obj/item/organ/external/take_damage(brute, burn, sharp, edge, used_weapon = null, list/forbidden_limbs = list(), permutation = FALSE, projectile)
 	brute = round(brute * brute_mod, 0.1)
@@ -1131,14 +1140,25 @@ Note that amputating the affected organ does in fact remove the infection from t
 		return
 
 	if(owner)
-		if(organ_can_feel_pain() && !isbelly(owner.loc) && !isliving(owner.loc) && !owner.transforming)
-			//CHOMPEdit Begin
+		var/show_message = TRUE
+		var/scream = TRUE
+		if(!organ_can_feel_pain() || owner.transforming)
+			show_message = FALSE
+			scream = FALSE
+		if(isbelly(owner.loc) || isliving(owner.loc))
+			scream = FALSE
+			if(!owner.digest_pain)
+				show_message = FALSE
+
+		if(show_message)
+			// CHOMPEdit Start
 			owner.custom_pain(pick(\
 				span_danger("You hear a loud cracking sound coming from \the [owner]."),\
 				span_danger("Something feels like it shattered in your [name]!"),\
-				span_danger("You hear a sickening crack.")),brokenpain)
-			//CHOMPEdit End
-			owner.emote("scream")
+				span_danger("You hear a sickening crack.")), brokenpain)
+			// CHOMPEdit End
+			if(scream)
+				owner.emote("scream")
 		jostle_bone()
 
 	if(istype(owner.loc, /obj/belly)) //CHOMPedit, bone breaks in bellys should be whisper range to prevent bar wide blender prefbreak. This is a hacky passive hardcode, if a pref gets added, remove this if else
@@ -1483,6 +1503,8 @@ Note that amputating the affected organ does in fact remove the infection from t
 		return 1
 	if(clothing_only && markings.len)
 		for(var/M in markings)
+			if(!markings[M]["on"]) //If the marking is off, the organ isn't hidden by it.
+				continue
 			var/datum/sprite_accessory/marking/mark = markings[M]["datum"]
 			if(mark.hide_body_parts && (organ_tag in mark.hide_body_parts))
 				return 1
