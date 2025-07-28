@@ -39,20 +39,7 @@
 /mob/living/proc/handle_special_unlocks()
 	return
 
-//
-// Hook for generic creation of stuff on new creatures
-//
-/hook/living_new/proc/vore_setup(mob/living/M)
-
-	//Tries to load prefs if a client is present otherwise gives freebie stomach
-	spawn(2 SECONDS)
-		if(!QDELETED(M))
-			M.init_vore()
-
-	//return TRUE to hook-caller
-	return TRUE
-
-/mob/proc/init_vore()
+/mob/proc/init_vore(force = FALSE)
 	//Something else made organs, meanwhile.
 	if(!isnewplayer(src))
 		AddElement(/datum/element/slosh)
@@ -87,7 +74,7 @@
 			soulgem = new(src)
 		return TRUE
 
-/mob/living/init_vore()
+/mob/living/init_vore(force)
 	if(no_vore)
 		return FALSE
 	return ..()
@@ -193,6 +180,36 @@
 				return TRUE
 			else
 				return TRUE //You don't get to hit someone 'later'
+
+	// Body writing
+	else if(istype(I, /obj/item/pen))
+		// Avoids having an override on this proc because attempt_vr won't call the override
+		if(!ishuman(src))
+			return FALSE
+		var/mob/living/carbon/human/us = src
+
+		if(!isliving(user))
+			return FALSE
+		var/mob/living/attacker = user
+
+		if(attacker.a_intent != I_HELP)
+			return FALSE
+
+		var/hit_zone = attacker.zone_sel.selecting
+
+		var/obj/item/organ/external/affecting = get_organ(hit_zone)
+		if(!affecting || affecting.is_stump())
+			to_chat(attacker, span_danger("They are missing that limb!"))
+			return TRUE
+
+		var/message = tgui_input_text(attacker, "What would you like to write on [src]'s [affecting]? (This will replace existing writing.)", "Body Writing", "", 128, FALSE)
+		if(!message)
+			return TRUE
+
+		add_attack_logs(attacker, us, "wrote \"[message]\"")
+
+		LAZYSET(us.body_writing, affecting.organ_tag, message)
+		return TRUE
 
 	return FALSE
 
@@ -889,7 +906,7 @@
 		to_chat(src, span_notice("You are not holding anything."))
 		return
 
-	if(is_type_in_list(I, GLOB.edible_trash) || adminbus_trash || is_type_in_list(I,edible_tech) && isSynthetic()) // adds edible tech for synth
+	if(is_type_in_list(I, GLOB.edible_trash) || adminbus_trash || is_type_in_list(I,GLOB.edible_tech) && isSynthetic()) // adds edible tech for synth
 		if(!I.on_trash_eaten(src)) // shows object's rejection message itself
 			return
 		drop_item()
@@ -1387,18 +1404,25 @@
 	for (var/belly in vore_organs)
 		var/obj/belly/B = belly
 
-		var/fill_percentage = B.reagents.maximum_volume > 0 ? B.reagents.total_volume / B.reagents.maximum_volume : 0
+		var/fill_percentage = round((B.custom_max_volume > 0 ? B.reagents.total_volume / B.custom_max_volume : 0) * 100)
 
-		if(0 <= fill_percentage && fill_percentage <= 0.2 && B.show_fullness_messages)
-			message += B.get_reagent_examine_msg1()
-		if(0.2 < fill_percentage && fill_percentage <= 0.4 && B.show_fullness_messages)
-			message += B.get_reagent_examine_msg2()
-		if(0.4 < fill_percentage && fill_percentage <= 0.6 && B.show_fullness_messages)
-			message += B.get_reagent_examine_msg3()
-		if(0.6 < fill_percentage && fill_percentage <= 0.8 && B.show_fullness_messages)
-			message += B.get_reagent_examine_msg4()
-		if(0.8 < fill_percentage && fill_percentage <= 1 && B.show_fullness_messages)
-			message += B.get_reagent_examine_msg5()
+		if(B.show_fullness_messages)
+			switch(fill_percentage)
+				if(0 to 20)
+					if(B.liquid_fullness1_messages)
+						message += B.get_reagent_examine_msg1()
+				if(20 to 40)
+					if(B.liquid_fullness2_messages)
+						message += B.get_reagent_examine_msg2()
+				if(40 to 60)
+					if(B.liquid_fullness3_messages)
+						message += B.get_reagent_examine_msg3()
+				if(60 to 80)
+					if(B.liquid_fullness4_messages)
+						message += B.get_reagent_examine_msg4()
+				if(80 to 100)
+					if(B.liquid_fullness5_messages)
+						message += B.get_reagent_examine_msg5()
 
 	return message
 
@@ -1436,7 +1460,10 @@
 		to_chat(user, span_vwarning("This person's prefs dont allow that!"))
 		return FALSE
 
-	var/obj/belly/RTB = tgui_input_list(user, "Choose which vore belly to transfer from", "Select Belly", vore_organs)
+	if(!LAZYLEN(TG.vore_organs))
+		return FALSE
+
+	var/obj/belly/RTB = tgui_input_list(user, "Choose which vore belly to transfer from", "Select Belly", TG.vore_organs)
 	if(!RTB)
 		return FALSE
 

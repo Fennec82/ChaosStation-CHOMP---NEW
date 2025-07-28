@@ -33,13 +33,6 @@
 /client
 	var/datum/vore_preferences/prefs_vr
 
-/hook/client_new/proc/add_prefs_vr(client/C)
-	C.prefs_vr = new/datum/vore_preferences(C)
-	if(C.prefs_vr)
-		return TRUE
-
-	return FALSE
-
 /datum/vore_preferences
 	//Actual preferences
 	var/digestable = TRUE
@@ -147,8 +140,7 @@
 		if(isanimal(O)) //On-demand belly loading.
 			var/mob/living/simple_mob/SM = O
 			if(SM.vore_active && !SM.voremob_loaded)
-				SM.voremob_loaded = TRUE
-				SM.init_vore()
+				SM.init_vore(TRUE)
 		if(O.vore_organs.len > 0)
 			return TRUE
 
