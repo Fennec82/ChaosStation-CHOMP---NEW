@@ -308,3 +308,7 @@
   - bugfix: Fixed common diseases losing their dormant flag when applied
   - spellcheck: Roanoake to Roanoke
   - qol: Geneticist now spawn with a gene scanner
+2025-07-29:
+  CHOMPStation2StaffMirrorBot:
+  - bugfix: fixed circuit assemblies printing empty lines on examine.
+  - bugfix: Dev disabled styles removed from randomized rolls.
