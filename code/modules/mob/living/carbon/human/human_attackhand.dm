@@ -116,7 +116,7 @@
 		return FALSE;
 
 	//todo: make this whole CPR check into it's own individual proc instead of hogging up attack_hand_help_intent
-	if((istype(H) && (health < CONFIG_GET(number/health_threshold_crit)) || stat == DEAD) && !on_fire) //Only humans can do CPR.
+	if((istype(H) && (health < get_crit_point()) || stat == DEAD) && !on_fire) //Only humans can do CPR.
 		if(!H.check_has_mouth())
 			to_chat(H, span_danger("You don't have a mouth, you cannot perform CPR!"))
 			return FALSE
@@ -417,6 +417,14 @@
 	return
 
 /mob/living/carbon/human/attack_generic(var/mob/user, var/damage, var/attack_message, var/armor_type = "melee", var/armor_pen = 0, var/a_sharp = 0, var/a_edge = 0)
+	if(istype(user,/mob/living))
+		var/mob/living/L = user
+		if(touch_reaction_flags & SPECIES_TRAIT_THORNS)
+			if((src != L))
+				L.apply_damage(3, BRUTE)
+				L.visible_message( \
+					span_warning("[L] is hurt by sharp body parts when touching [src]!"), \
+					span_warning("[src] is covered in sharp bits and it hurt when you touched them!"), )
 
 	if(!damage)
 		return
@@ -537,7 +545,9 @@
 		else
 			dat += span_bold("Primarily [u_attack.attack_name]") + " - <a href='byond://?src=\ref[src];default_attk=\ref[u_attack]'>set default</a><br/><br/><br/>"
 
-	src << browse("<html>[dat]</html>", "window=checkattack")
+	var/datum/browser/popup = new(src, "checkattack")
+	popup.set_content(dat)
+	popup.open()
 
 /mob/living/carbon/human/Topic(href, href_list)
 	if(href_list["default_attk"])
@@ -554,7 +564,6 @@
 
 /mob/living/carbon/human/proc/set_default_attack(var/datum/unarmed_attack/u_attack)
 	default_attack = u_attack
-
 
 /mob/living/carbon/human/proc/perform_cpr(var/mob/living/carbon/human/reviver)
 	// Check for sanity
@@ -576,8 +585,8 @@
 				chest.fracture()
 
 	// standard CPR ahead, adjust oxy and refresh health
-	if(health > CONFIG_GET(number/health_threshold_crit) && prob(10))
-		if(istype(species, /datum/species/xenochimera))
+	if(health > get_crit_point() && prob(10))
+		if(get_xenochimera_component())
 			visible_message(span_danger("\The [src]'s body twitches and gurgles a bit."))
 			to_chat(reviver, span_danger("You get the feeling [src] can't be revived by CPR alone."))
 			return // Handle xenochim, can't cpr them back to life
@@ -602,10 +611,10 @@
 		visible_message(span_warning("\The [src]'s body convulses a bit."))
 
 		// REVIVE TIME, basically stolen from defib.dm
-		dead_mob_list.Remove(src)
-		if((src in living_mob_list) || (src in dead_mob_list))
+		GLOB.dead_mob_list.Remove(src)
+		if((src in GLOB.living_mob_list) || (src in GLOB.dead_mob_list))
 			WARNING("Mob [src] was cpr revived by [reviver], but already in the living or dead list still!")
-		living_mob_list += src
+		GLOB.living_mob_list += src
 
 		timeofdeath = 0
 		set_stat(UNCONSCIOUS) //Life() can bring them back to consciousness if it needs to.
@@ -628,7 +637,7 @@
 			// A bit of sanity.
 			var/brain_damage = between(getBrainLoss(), damage_calc, brain.max_damage)
 			setBrainLoss(brain_damage)
-	else if(health > CONFIG_GET(number/health_threshold_dead))
+	else if(health > -getMaxHealth())
 		adjustOxyLoss(-(min(getOxyLoss(), 5)))
 		updatehealth()
 		to_chat(src, span_notice("You feel a breath of fresh air enter your lungs. It feels good."))

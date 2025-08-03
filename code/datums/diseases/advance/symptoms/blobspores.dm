@@ -37,6 +37,9 @@ BONUS
 	var/strong_blob
 	var/node_blob
 
+	prefixes = list("Xeno", "Sporing ")
+	bodies = list("Blob")
+
 /datum/symptom/blobspores/severityset(datum/disease/advance/A)
 	. = ..()
 	if(A.resistance >= 14)
@@ -87,7 +90,7 @@ BONUS
 		ready_to_pop = TRUE
 
 /datum/symptom/blobspores/OnDeath(datum/disease/advance/A)
-	if(neutered)
+	if(!..())
 		return
 	var/mob/living/M = A.affected_mob
 	M.visible_message(span_danger("[M] starts swelling grotesquely!"))

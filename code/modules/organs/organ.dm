@@ -45,6 +45,7 @@ var/list/organ_cache = list()
 
 	var/butcherable = TRUE
 	var/meat_type	// What does butchering, if possible, make?
+	var/list/medical_issues = list()
 
 /obj/item/organ/Destroy()
 
@@ -105,9 +106,7 @@ var/list/organ_cache = list()
 						E.internal_organs = list()
 					E.internal_organs |= src
 			if(data)
-				if(!blood_DNA)
-					blood_DNA = list()
-				blood_DNA[data.unique_enzymes] = data.b_type
+				add_blooddna_organ(data)
 	else
 		data.setup_from_species(GLOB.all_species["Human"])
 
@@ -131,9 +130,8 @@ var/list/organ_cache = list()
 /obj/item/organ/proc/set_dna(var/datum/dna/new_dna)
 	if(new_dna)
 		data.setup_from_dna(new_dna)
-		if(blood_DNA)
-			blood_DNA.Cut()
-			blood_DNA[data.unique_enzymes] = data.b_type
+		forensic_data?.clear_blooddna()
+		add_blooddna_organ(data)
 
 /obj/item/organ/proc/die()
 	if(robotic < ORGAN_ROBOT)
@@ -192,6 +190,9 @@ var/list/organ_cache = list()
 		handle_antibiotics()
 		handle_rejection()
 		handle_germ_effects()
+
+	for(var/datum/medical_issue/I in medical_issues)
+		I.handle_effects()
 
 /obj/item/organ/examine(mob/user)
 	. = ..()
@@ -335,6 +336,9 @@ var/list/organ_cache = list()
 
 //Note: external organs have their own version of this proc
 /obj/item/organ/take_damage(amount, var/silent=0)
+	if(owner)
+		if(SEND_SIGNAL(owner, COMSIG_INTERNAL_ORGAN_PRE_DAMAGE_APPLICATION, amount, silent) & COMPONENT_CANCEL_INTERNAL_ORGAN_DAMAGE)
+			return 0
 	if(src.robotic >= ORGAN_ROBOT)
 		src.damage = between(0, src.damage + (amount * 0.8), max_damage)
 	else
@@ -345,7 +349,8 @@ var/list/organ_cache = list()
 			var/obj/item/organ/external/parent = owner?.get_organ(parent_organ)
 			if(parent && !silent)
 				owner.custom_pain("Something inside your [parent.name] hurts a lot.", amount)
-
+	if(owner)
+		SEND_SIGNAL(owner, COMSIG_INTERNAL_ORGAN_PRE_DAMAGE_APPLICATION, amount, silent)
 /obj/item/organ/proc/bruise()
 	damage = max(damage, min_bruised_damage)
 
@@ -421,11 +426,9 @@ var/list/organ_cache = list()
 
 	if(!istype(target)) return
 
-	// VOREstation edit begin - Posibrains don't have blood reagents, so they crash this
 	var/datum/reagent/blood/transplant_blood = null
 	if(reagents)
 		transplant_blood = locate(/datum/reagent/blood) in reagents.reagent_list
-	// VOREstation edit end
 	transplant_data = list()
 	if(!transplant_blood)
 		transplant_data["species"] =    target?.species.name
@@ -462,10 +465,8 @@ var/list/organ_cache = list()
 
 	// Pass over the blood.
 	reagents.trans_to(O, reagents.total_volume)
-
-	if(fingerprints) O.fingerprints = fingerprints.Copy()
-	if(fingerprintshidden) O.fingerprintshidden = fingerprintshidden.Copy()
-	if(fingerprintslast) O.fingerprintslast = fingerprintslast
+	transfer_fingerprints_to(O)
+	transfer_blooddna_to(O)
 
 	user.put_in_active_hand(O)
 	qdel(src)

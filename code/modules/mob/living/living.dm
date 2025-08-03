@@ -18,6 +18,15 @@
 
 	selected_image = image(icon = GLOB.buildmode_hud, loc = src, icon_state = "ai_sel")
 
+/mob/living/proc/get_visible_name()
+	var/datum/component/shadekin/SK = get_shadekin_component()
+	if(SK && SK.in_phase)
+		return "Something"
+	if(real_name)
+		return real_name
+	else
+		return name
+
 /mob/living/Destroy()
 	SSradiation.listeners -= src
 	remove_all_modifiers(TRUE)
@@ -161,8 +170,8 @@
 		manual_afk = TRUE
 
 /mob/living/proc/updatehealth()
-	if(status_flags & GODMODE)
-		health = 100
+	if(SEND_SIGNAL(src, COMSIG_UPDATE_HEALTH) & COMSIG_UPDATE_HEALTH_GOD_MODE)
+		health = getMaxHealth()
 		set_stat(CONSCIOUS)
 	else
 		// Pain/etc calculations, but more efficient:tm: - this should work for literally anything that applies to health. Far better than slapping emote("pain") everywhere like scream does.
@@ -187,6 +196,9 @@
 					if(51 to INFINITY)
 						if(prob(pain_noise * 3)  && !isbelly(loc)) // More likely, most severe damage. No pain noises inside bellies.
 							emote("pain")
+		if(health <= -getMaxHealth()) //die only once
+			death()
+			return
 
 //This proc is used for mobs which are affected by pressure to calculate the amount of pressure that actually
 //affects them once clothing is factored in. ~Errorage
@@ -250,7 +262,8 @@
 
 //'include_robo' only applies to healing, for legacy purposes, as all damage typically hurts both types of organs
 /mob/living/proc/adjustBruteLoss(var/amount,var/include_robo)
-	if(status_flags & GODMODE)	return 0	//godmode
+	if(SEND_SIGNAL(src, COMSIG_TAKING_BRUTE_DAMAGE, amount) & COMSIG_CANCEL_BRUTE_DAMAGE)
+		return 0	// Cancelled by a component
 
 	if(amount > 0)
 		for(var/datum/modifier/M in modifiers)
@@ -268,7 +281,7 @@
 				amount *= M.incoming_healing_percent
 
 	if(tf_mob_holder && tf_mob_holder.loc == src)
-		var/dmgmultiplier = tf_mob_holder.maxHealth / maxHealth
+		var/dmgmultiplier = tf_mob_holder.getMaxHealth() / getMaxHealth()
 		dmgmultiplier *= amount
 		tf_mob_holder.adjustBruteLoss(dmgmultiplier)
 
@@ -279,7 +292,8 @@
 	return oxyloss
 
 /mob/living/proc/adjustOxyLoss(var/amount)
-	if(status_flags & GODMODE)	return 0	//godmode
+	if(SEND_SIGNAL(src, COMSIG_TAKING_OXY_DAMAGE, amount) & COMSIG_CANCEL_OXY_DAMAGE)
+		return 0	// Cancelled by a component
 
 	if(amount > 0)
 		for(var/datum/modifier/M in modifiers)
@@ -300,14 +314,16 @@
 	updatehealth()
 
 /mob/living/proc/setOxyLoss(var/amount)
-	if(status_flags & GODMODE)	return 0	//godmode
+	if(SEND_SIGNAL(src, COMSIG_TAKING_OXY_DAMAGE, amount) & COMSIG_CANCEL_OXY_DAMAGE)
+		return 0	// Cancelled by a component
 	oxyloss = amount
 
 /mob/living/proc/getToxLoss()
 	return toxloss
 
 /mob/living/proc/adjustToxLoss(var/amount)
-	if(status_flags & GODMODE)	return 0	//godmode
+	if(SEND_SIGNAL(src, COMSIG_TAKING_TOX_DAMAGE, amount) & COMSIG_CANCEL_TOX_DAMAGE)
+		return 0	// Cancelled by a component
 
 	if(amount > 0)
 		for(var/datum/modifier/M in modifiers)
@@ -328,7 +344,8 @@
 	updatehealth()
 
 /mob/living/proc/setToxLoss(var/amount)
-	if(status_flags & GODMODE)	return 0	//godmode
+	if(SEND_SIGNAL(src, COMSIG_TAKING_TOX_DAMAGE, amount) & COMSIG_CANCEL_TOX_DAMAGE)
+		return 0	// Cancelled by a component
 	toxloss = amount
 
 /mob/living/proc/getFireLoss()
@@ -342,7 +359,8 @@
 
 //'include_robo' only applies to healing, for legacy purposes, as all damage typically hurts both types of organs
 /mob/living/proc/adjustFireLoss(var/amount,var/include_robo)
-	if(status_flags & GODMODE)	return 0	//godmode
+	if(SEND_SIGNAL(src, COMSIG_TAKING_FIRE_DAMAGE, amount) & COMSIG_CANCEL_FIRE_DAMAGE)
+		return 0	// Cancelled by a component
 	if(amount > 0)
 		for(var/datum/modifier/M in modifiers)
 			if(!isnull(M.incoming_damage_percent))
@@ -358,7 +376,7 @@
 			if(!isnull(M.incoming_healing_percent))
 				amount *= M.incoming_healing_percent
 	if(tf_mob_holder && tf_mob_holder.loc == src)
-		var/dmgmultiplier = tf_mob_holder.maxHealth / maxHealth
+		var/dmgmultiplier = tf_mob_holder.getMaxHealth() / getMaxHealth()
 		dmgmultiplier *= amount
 		tf_mob_holder.adjustFireLoss(dmgmultiplier)
 	fireloss = min(max(fireloss + amount, 0),(getMaxHealth()*2))
@@ -368,7 +386,8 @@
 	return cloneloss
 
 /mob/living/proc/adjustCloneLoss(var/amount)
-	if(status_flags & GODMODE)	return 0	//godmode
+	if(SEND_SIGNAL(src, COMSIG_TAKING_CLONE_DAMAGE, amount) & COMSIG_CANCEL_CLONE_DAMAGE)
+		return 0	// Cancelled by a component
 
 	if(amount > 0)
 		for(var/datum/modifier/M in modifiers)
@@ -389,25 +408,29 @@
 	updatehealth()
 
 /mob/living/proc/setCloneLoss(var/amount)
-	if(status_flags & GODMODE)	return 0	//godmode
+	if(SEND_SIGNAL(src, COMSIG_TAKING_CLONE_DAMAGE, amount) & COMSIG_CANCEL_CLONE_DAMAGE)
+		return 0	// Cancelled by a component
 	cloneloss = amount
 
 /mob/living/proc/getBrainLoss()
 	return brainloss
 
 /mob/living/proc/adjustBrainLoss(var/amount)
-	if(status_flags & GODMODE)	return 0	//godmode
+	if(SEND_SIGNAL(src, COMSIG_TAKING_BRAIN_DAMAGE, amount) & COMSIG_CANCEL_BRAIN_DAMAGE)
+		return 0	// Cancelled by a component
 	brainloss = min(max(brainloss + amount, 0),(getMaxHealth()*2))
 
 /mob/living/proc/setBrainLoss(var/amount)
-	if(status_flags & GODMODE)	return 0	//godmode
+	if(SEND_SIGNAL(src, COMSIG_TAKING_BRAIN_DAMAGE, amount) & COMSIG_CANCEL_BRAIN_DAMAGE)
+		return 0	// Cancelled by a component
 	brainloss = amount
 
 /mob/living/proc/getHalLoss()
 	return halloss
 
 /mob/living/proc/adjustHalLoss(var/amount)
-	if(status_flags & GODMODE)	return 0	//godmode
+	if(SEND_SIGNAL(src, COMSIG_TAKING_HALO_DAMAGE, amount) & COMSIG_CANCEL_HALO_DAMAGE)
+		return 0	// Cancelled by a component
 	if(amount > 0)
 		for(var/datum/modifier/M in modifiers)
 			if(M.energy_based && (!isnull(M.incoming_hal_damage_percent) || !isnull(M.disable_duration_percent)))
@@ -427,7 +450,8 @@
 	updatehealth()
 
 /mob/living/proc/setHalLoss(var/amount)
-	if(status_flags & GODMODE)	return 0	//godmode
+	if(SEND_SIGNAL(src, COMSIG_TAKING_HALO_DAMAGE, amount) & COMSIG_CANCEL_HALO_DAMAGE)
+		return 0	// Cancelled by a component
 	halloss = amount
 
 // Use this to get a mob's max health whenever possible.  Reading maxHealth directly will give inaccurate results if any modifiers exist.
@@ -441,6 +465,16 @@
 		if(!isnull(M.max_health_percent))
 			result *= M.max_health_percent
 	return result
+
+///Use this proc to get the damage in which the mob will be put into critical condition (hardcrit)
+/mob/living/proc/get_crit_point()
+	return -(getMaxHealth()*0.5)
+
+/mob/living/carbon/human/get_crit_point()
+	var/crit_point = -(getMaxHealth()*0.5)
+	if(species.crit_mod)
+		crit_point *= species.crit_mod
+	return crit_point
 
 /mob/living/proc/setMaxHealth(var/newMaxHealth)
 	var/h_mult = maxHealth / newMaxHealth	//Calculate change multiplier
@@ -669,7 +703,12 @@
 			return 1
 	return 0
 
+/// Revives a body using the client's preferences if human
 /mob/living/proc/revive()
+	revival_healing_action()
+
+/// Performs the actual healing of Aheal, seperate from revive() because it does not use client prefs. Will not heal everything, and expects to be called through revive() or with a bodyrecord doing a respawn/revive.
+/mob/living/proc/revival_healing_action()
 	rejuvenate()
 	if(buckled)
 		buckled.unbuckle_mob()
@@ -690,6 +729,8 @@
 	fire_stacks = 0
 	if(ai_holder) // AI gets told to sleep when killed. Since they're not dead anymore, wake it up.
 		ai_holder.go_wake()
+
+	SEND_SIGNAL(src, COMSIG_HUMAN_DNA_FINALIZED)
 
 /mob/living/proc/rejuvenate()
 	if(reagents)
@@ -733,8 +774,8 @@
 
 	// remove the character from the list of the dead
 	if(stat == DEAD)
-		dead_mob_list -= src
-		living_mob_list += src
+		GLOB.dead_mob_list -= src
+		GLOB.living_mob_list += src
 		tod = null
 		timeofdeath = 0
 
@@ -925,9 +966,23 @@
 		deaf_loop.start() // Ear Ringing/Deafness - Not sure if we need this, but, safety. NYI. Used downstream. //CHOMPStation Enable
 
 /mob/living/proc/vomit(lost_nutrition = 10, blood = FALSE, stun = 5, distance = 1, message = TRUE, toxic = VOMIT_TOXIC, purge = FALSE)
+	if(!lastpuke)
+		lastpuke = TRUE
+		to_chat(src, span_warning("You feel nauseous..."))
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(to_chat), src, span_warning("You feel like you're about to throw up!")), 15 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(do_vomit), lost_nutrition, blood, stun, distance, message, toxic, purge), 25 SECONDS)
+
+/mob/living/proc/do_vomit(lost_nutrition = 10, blood = FALSE, stun = 5, distance = 1, message = TRUE, toxic = VOMIT_TOXIC, purge = FALSE)
 
 	if(!check_has_mouth())
 		return TRUE
+
+	if(ishuman(src))
+		var/mob/living/carbon/human/H = src
+		if(CE_ANTACID in H.chem_effects)
+			if(prob(min(90, H.chem_effects[CE_ANTACID] * 15)))
+				VARSET_IN(src, lastpuke, FALSE, rand(30 SECONDS, 2 MINUTES))
+			return FALSE
 
 	if(nutrition < 100 && !blood)
 		if(message)
@@ -963,6 +1018,14 @@
 		if(message)
 			visible_message(span_danger("[src] throws up!"), span_userdanger("You throw up!"))
 
+	// Hurt liver means throwing up blood
+	if(!blood && ishuman(src))
+		var/mob/living/carbon/human/H = src
+		if(!H.isSynthetic())
+			var/obj/item/organ/internal/liver/L = H.internal_organs_by_name[O_LIVER]
+			if(!L || L.is_broken())
+				blood = TRUE
+
 	if(stun)
 		Stun(stun)
 
@@ -986,12 +1049,15 @@
 		for(var/i=0 to distance)
 			if(blood)
 				if(T)
-					blood_splatter(T, large = TRUE)
+					blood_splatter(T, src, large = TRUE)
 				if(stun)
 					adjustBruteLoss(2)
 			else if(T)
 				T.add_vomit_floor(src, vomit_type, purge)
 			T = get_step(T, dir)
+
+	VARSET_IN(src, lastpuke, FALSE, 10 SECONDS)
+
 	return TRUE
 
 /mob/living/proc/check_vomit_goal()
@@ -1158,6 +1224,11 @@
 				return
 			colors_to_blend += M.client_color
 
+	if(!colors_to_blend.len) // Modifiers take priority over passive area blending, to prevent changes on every area entered
+		var/location_grade = get_location_color_tint() // Area or weather!
+		if(location_grade)
+			colors_to_blend += location_grade
+
 	if(colors_to_blend.len)
 		var/final_color
 		if(colors_to_blend.len == 1) // If it's just one color we can skip all of this work.
@@ -1215,7 +1286,7 @@
 		swap_hand()
 
 /mob/living/throw_item(atom/target)
-	if(incapacitated() || !target || istype(target, /obj/screen))
+	if(incapacitated() || !target || istype(target, /obj/screen) || is_incorporeal())
 		return FALSE
 
 	var/atom/movable/item = src.get_active_hand()
@@ -1238,7 +1309,7 @@
 				add_attack_logs(src,M,"Thrown via grab to [end_T.x],[end_T.y],[end_T.z]")
 			if(ishuman(M))
 				var/mob/living/carbon/human/N = M
-				if((N.health + N.halloss) < CONFIG_GET(number/health_threshold_crit) || N.stat == DEAD)
+				if((N.health + N.halloss) < N.get_crit_point() || N.stat == DEAD)
 					N.adjustBruteLoss(rand(10,30))
 			src.drop_from_inventory(G)
 
@@ -1343,17 +1414,17 @@
 
 /mob/living/vv_get_header()
 	. = ..()
+	var/refid = REF(src)
 	. += {"
-		<a href='byond://?_src_=vars;[HrefToken()];rename=\ref[src]'>"} + span_bold("[src]") + {"</a>
-		"} + span_small("<br><a href='byond://?_src_=vars;[HrefToken()];datumedit=\ref[src];varnameedit=ckey'>[ckey ? ckey : "No ckey"]</a> / <a href='byond://?_src_=vars;[HrefToken()];datumedit=\ref[src];varnameedit=real_name'>[real_name ? real_name : "No real name"]</a>") + {"
-		"} + span_small("<br>") + {"
-		"} + span_small("BRUTE:<a href='byond://?_src_=vars;[HrefToken()];mobToDamage=\ref[src];adjustDamage=brute'>[getBruteLoss()]</a>") + {"
-		"} + span_small("FIRE:<a href='byond://?_src_=vars;[HrefToken()];mobToDamage=\ref[src];adjustDamage=fire'>[getFireLoss()]</a>") + {"
-		"} + span_small("TOXIN:<a href='byond://?_src_=vars;[HrefToken()];mobToDamage=\ref[src];adjustDamage=toxin'>[getToxLoss()]</a>") + {"
-		"} + span_small("OXY:<a href='byond://?_src_=vars;[HrefToken()];mobToDamage=\ref[src];adjustDamage=oxygen'>[getOxyLoss()]</a>") + {"
-		"} + span_small("CLONE:<a href='byond://?_src_=vars;[HrefToken()];mobToDamage=\ref[src];adjustDamage=clone'>[getCloneLoss()]</a>") + {"
-		"} + span_small("BRAIN:<a href='byond://?_src_=vars;[HrefToken()];mobToDamage=\ref[src];adjustDamage=brain'>[getBrainLoss()]</a>") + {"
-		"}
+		<br>"} + span_small("[VV_HREF_TARGETREF(refid, VV_HK_GIVE_DIRECT_CONTROL, "[ckey || "no ckey"]")] / [VV_HREF_TARGETREF_1V(refid, VV_HK_BASIC_EDIT, "[real_name || "no real name"]", NAMEOF(src, real_name))]") + {"
+		<br>"} + span_small({"
+			BRUTE:"} + span_small("<a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=brute' id='brute'>[getBruteLoss()]</a>") + {"
+			FIRE:"} + span_small("<a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=fire' id='fire'>[getFireLoss()]</a>") + {"
+			TOXIN:"} + span_small("<a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=toxin' id='toxin'>[getToxLoss()]</a>") + {"
+			OXY:"} + span_small("<a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=oxygen' id='oxygen'>[getOxyLoss()]</a>") + {"
+			BRAIN:"} + span_small("<a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=brain' id='brain'>[getBrainLoss()]</a>") + {"
+			CLONE:"} + span_small("<a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=clone' id='clone'>[getCloneLoss()]</a>") + {"
+		"})
 
 /mob/living/update_gravity(has_gravity)
 	if(!ticker)
@@ -1443,50 +1514,6 @@
 	to_chat(src, span_notice("You are [toggled_sleeping ? "now sleeping. Use the Sleep verb again to wake up" : "no longer sleeping"]."))
 	if(toggled_sleeping)
 		Sleeping(1)
-
-/mob/living/proc/handle_dripping()
-	if(prob(95))
-		return
-	if(!isturf(src.loc))
-		return
-	if(ishuman(src))
-		var/mob/living/carbon/human/H = src
-		if(H.species && H.species.drippy)
-			// drip body color if human
-			var/obj/effect/decal/cleanable/blood/B
-			var/decal_type = /obj/effect/decal/cleanable/blood/splatter
-			var/turf/T = get_turf(src.loc)
-
-			// Are we dripping or splattering?
-			var/list/drips = list()
-			// Only a certain number of drips (or one large splatter) can be on a given turf.
-			for(var/obj/effect/decal/cleanable/blood/drip/drop in T)
-				drips |= drop.drips
-				qdel(drop)
-			if(drips.len < 6)
-				decal_type = /obj/effect/decal/cleanable/blood/drip
-
-			// Find a blood decal or create a new one.
-			B = locate(decal_type) in T
-			if(!B)
-				B = new decal_type(T)
-
-			var/obj/effect/decal/cleanable/blood/drip/drop = B
-			if(istype(drop) && drips && drips.len)
-				drop.add_overlay(drips)
-				drop.drips |= drips
-
-			// Update appearance.
-			drop.basecolor = rgb(H.r_skin,H.g_skin,H.b_skin)
-			drop.update_icon()
-			drop.name = "drips of something"
-			drop.desc = "It's thick and gooey. Perhaps it's the chef's cooking?"
-			drop.dryname = "dried something"
-			drop.drydesc = "It's dry and crusty. The janitor isn't doing their job."
-			drop.fluorescent  = 0
-			drop.invisibility = INVISIBILITY_NONE
-	//else
-		// come up with drips for other mobs someday
 
 /mob/living/proc/set_metainfo_favs(var/mob/user, var/reopen = TRUE)
 	if(user != src)

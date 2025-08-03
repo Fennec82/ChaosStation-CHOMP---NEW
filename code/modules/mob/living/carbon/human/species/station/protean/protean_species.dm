@@ -12,7 +12,6 @@
 
 	selects_bodytype = SELECTS_BODYTYPE_SHAPESHIFTER
 	base_species = SPECIES_HUMAN
-	digi_allowed = TRUE
 
 	blood_color = "#505050" //This is the same as the 80,80,80 below, but in hex
 	flesh_color = "#505050"
@@ -117,8 +116,6 @@
 		/mob/living/proc/start_wings_hovering,
 		) //removed fetish verbs, since non-customs can pick neutral traits now. Also added flight, cause shapeshifter can grow wings.
 
-	var/global/list/abilities = list()
-
 	var/blob_appearance = "puddle1"
 	var/blob_color_1 = "#363636"
 	var/blob_color_2 = "#ba3636"
@@ -143,10 +140,10 @@
 
 /datum/species/protean/New()
 	..()
-	if(!LAZYLEN(abilities))
+	if(!LAZYLEN(GLOB.protean_abilities))
 		var/list/powertypes = subtypesof(/obj/effect/protean_ability)
 		for(var/path in powertypes)
-			abilities += new path()
+			GLOB.protean_abilities += new path()
 
 /datum/species/protean/create_organs(var/mob/living/carbon/human/H)
 	var/obj/item/nif/saved_nif = H.nif
@@ -154,7 +151,7 @@
 		H.nif.unimplant(H) //Needs reference to owner to unimplant right.
 		H.nif.moveToNullspace()
 	..()
-	if(saved_nif)
+	if(saved_nif && !ismannequin(H))
 		saved_nif.quick_implant(H)
 
 /datum/species/protean/get_race_key()
@@ -266,7 +263,7 @@
 	pseudodead = 1
 
 /datum/species/protean/handle_environment_special(var/mob/living/carbon/human/H)
-	if((H.getActualBruteLoss() + H.getActualFireLoss()) > H.maxHealth*0.5 && isturf(H.loc)) //So, only if we're not a blob (we're in nullspace) or in someone (or a locker, really, but whatever)
+	if((H.getActualBruteLoss() + H.getActualFireLoss()) > H.getMaxHealth()*0.5 && isturf(H.loc)) //So, only if we're not a blob (we're in nullspace) or in someone (or a locker, really, but whatever)
 		return ..() //Any instakill shot runtimes since there are no organs after this. No point to not skip these checks, going to nullspace anyway.
 
 /*CHOMP Station removal start
@@ -309,7 +306,7 @@ CHOMP Station removal end*/
 		L[++L.len] = list("- -- --- REFACTORY ERROR! --- -- -", null, null, null, null)
 
 	L[++L.len] = list("- -- --- Abilities (Shift+LMB Examines) --- -- -", null, null, null, null)
-	for(var/obj/effect/protean_ability/A as anything in abilities)
+	for(var/obj/effect/protean_ability/A as anything in GLOB.protean_abilities)
 		var/client/C = H.client
 		var/img
 		if(C && istype(C)) //sanity checks

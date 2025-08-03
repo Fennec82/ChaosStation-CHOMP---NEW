@@ -132,16 +132,15 @@
 	if(!(robotic >= ORGAN_ROBOT) || robotic == ORGAN_NANOFORM)	//CHOMPEdit - Proteans handle EMP's differently
 		return
 	var/burn_damage = 0
-	for(var/i = 1; i <= robotic; i++)
-		switch (severity)
-			if (1)
-				burn_damage += rand(5, 8)
-			if (2)
-				burn_damage += rand(4, 6)
-			if(3)
-				burn_damage += rand(2, 5)
-			if(4)
-				burn_damage += rand(1, 3)
+	switch (severity)
+		if (1)
+			burn_damage += rand(5, 8)
+		if (2)
+			burn_damage += rand(4, 6)
+		if(3)
+			burn_damage += rand(2, 5)
+		if(4)
+			burn_damage += rand(1, 3)
 
 	if(burn_damage)
 		take_damage(0, burn_damage)
@@ -216,6 +215,8 @@
 //new function to check for markings
 /obj/item/organ/external/proc/is_hidden_by_markings()
 	for(var/M in markings)
+		if(!markings[M]["on"]) //If the marking is off, the organ isn't hidden by it.
+			continue
 		var/datum/sprite_accessory/marking/mark_style = markings[M]["datum"]
 		if(istype(mark_style,/datum/sprite_accessory/marking) && (organ_tag in mark_style.hide_body_parts))
 			return 1
@@ -287,7 +288,17 @@
 	//Continued damage to vital organs can kill you, and robot organs don't count towards total damage so no need to cap them.
 	return (vital || (robotic >= ORGAN_ROBOT) || brute_dam + burn_dam + additional_damage < max_damage)
 
+/obj/item/organ/external/proc/is_fracturable()
+	if(robotic >= ORGAN_ROBOT)
+		return FALSE	//ORGAN_BROKEN doesn't have the same meaning for robot limbs
+	if((status & ORGAN_BROKEN) || cannot_break)
+		return FALSE
+	return TRUE
+
 /obj/item/organ/external/take_damage(brute, burn, sharp, edge, used_weapon = null, list/forbidden_limbs = list(), permutation = FALSE, projectile)
+	if(owner)
+		if(SEND_SIGNAL(owner, COMSIG_EXTERNAL_ORGAN_PRE_DAMAGE_APPLICATION, brute, burn, sharp, edge, used_weapon, forbidden_limbs, permutation, projectile) & COMPONENT_CANCEL_EXTERNAL_ORGAN_DAMAGE)
+			return 0 // If the signal returns, we don't apply damage, it's done its own special thing.
 	brute = round(brute * brute_mod, 0.1)
 	burn = round(burn * burn_mod, 0.1)
 
@@ -455,7 +466,8 @@
 								if(!C.is_stump())
 									C.take_damage(brute_on_children, burn_on_children, FALSE, FALSE, null, forbidden_limbs, 1) //Splits the damage to each individual 'child', incase multiple exist.
 					parent.take_damage(brute_third, burn_third, FALSE, FALSE, null, forbidden_limbs, 1)
-
+	if(owner)
+		SEND_SIGNAL(owner, COMSIG_EXTERNAL_ORGAN_POST_DAMAGE_APPLICATION, brute, burn, sharp, edge, used_weapon, forbidden_limbs, permutation, projectile)
 	return update_icon()
 
 /obj/item/organ/external/proc/heal_damage(brute, burn, internal = FALSE, robo_repair = FALSE)
@@ -602,8 +614,8 @@ This function completely restores a damaged organ to perfect condition.
 
 //Burn damage can cause fluid loss due to blistering and cook-off
 
-	if((damage > 5 || damage + burn_dam >= 15) && type == BURN && (robotic < ORGAN_ROBOT) && !(data.get_species_flags() & NO_BLOOD))
-		var/fluid_loss = 0.1 * (damage/(owner.getMaxHealth() - CONFIG_GET(number/health_threshold_dead))) * owner.species.blood_volume*(1 - owner.species.blood_level_fatal) //CHOMPedit reduce fluid loss 4-fold so lasers dont suck your blood
+	if(owner && (damage > 5 || damage + burn_dam >= 15) && type == BURN && (robotic < ORGAN_ROBOT) && !(data.get_species_flags() & NO_BLOOD))
+		var/fluid_loss = 0.1 * (damage/(owner.getMaxHealth() - (-owner.getMaxHealth()))) * owner.species.blood_volume*(1 - owner.species.blood_level_fatal) //CHOMPedit reduce fluid loss 4-fold so lasers dont suck your blood
 		owner.remove_blood(fluid_loss)
 	// first check whether we can widen an existing wound
 	if(wounds.len > 0 && prob(max(50+(number_wounds-1)*10,90)))
@@ -914,42 +926,42 @@ Note that amputating the affected organ does in fact remove the infection from t
 		disintegrate = DROPLIMB_BLUNT //splut
 
 	GLOB.lost_limbs_shift_roundstat++
-
-	switch(disintegrate)
-		if(DROPLIMB_EDGE)
-			if(!clean)
-				var/gore_sound = "[(robotic >= ORGAN_ROBOT) ? "tortured metal" : "ripping tendons and flesh"]"
+	if(owner && !owner.transforming)
+		switch(disintegrate)
+			if(DROPLIMB_EDGE)
+				if(!clean)
+					var/gore_sound = "[(robotic >= ORGAN_ROBOT) ? "tortured metal" : "ripping tendons and flesh"]"
+					owner.visible_message(
+						span_danger("\The [owner]'s [src.name] flies off in an arc!"),\
+						span_bolddanger("Your [src.name] goes flying off!"),\
+						span_danger("You hear a terrible sound of [gore_sound]."))
+			if(DROPLIMB_BURN)
+				if(cannot_gib)
+					return
+				var/gore = "[(robotic >= ORGAN_ROBOT) ? "": " of burning flesh"]"
 				owner.visible_message(
-					span_danger("\The [owner]'s [src.name] flies off in an arc!"),\
-					span_bolddanger("Your [src.name] goes flying off!"),\
-					span_danger("You hear a terrible sound of [gore_sound]."))
-		if(DROPLIMB_BURN)
-			if(cannot_gib)
-				return
-			var/gore = "[(robotic >= ORGAN_ROBOT) ? "": " of burning flesh"]"
-			owner.visible_message(
-				span_danger("\The [owner]'s [src.name] flashes away into ashes!"),\
-				span_bolddanger("Your [src.name] flashes away into ashes!"),\
-				span_danger("You hear a crackling sound[gore]."))
-		if(DROPLIMB_BLUNT)
-			if(cannot_gib)
-				return
-			var/gore = "[(robotic >= ORGAN_ROBOT) ? "": " in shower of gore"]"
-			var/gore_sound = "[(status >= ORGAN_ROBOT) ? "rending sound of tortured metal" : "sickening splatter of gore"]"
-			owner.visible_message(
-				span_danger("\The [owner]'s [src.name] explodes[gore]!"),\
-				span_bolddanger("Your [src.name] explodes[gore]!"),\
-				span_danger("You hear the [gore_sound]."))
+					span_danger("\The [owner]'s [src.name] flashes away into ashes!"),\
+					span_bolddanger("Your [src.name] flashes away into ashes!"),\
+					span_danger("You hear a crackling sound[gore]."))
+			if(DROPLIMB_BLUNT)
+				if(cannot_gib)
+					return
+				var/gore = "[(robotic >= ORGAN_ROBOT) ? "": " in shower of gore"]"
+				var/gore_sound = "[(status >= ORGAN_ROBOT) ? "rending sound of tortured metal" : "sickening splatter of gore"]"
+				owner.visible_message(
+					span_danger("\The [owner]'s [src.name] explodes[gore]!"),\
+					span_bolddanger("Your [src.name] explodes[gore]!"),\
+					span_danger("You hear the [gore_sound]."))
 
-		if(DROPLIMB_ACID)
-			if(cannot_gib)
-				return
-			var/gore = "[(robotic >= ORGAN_ROBOT) ? "": " in gush of gore"]"
-			var/gore_sound = "[(status >= ORGAN_ROBOT) ? "sizzling sound of melting metal" : "sickening drips of melting flesh"]"
-			owner.visible_message(
-				span_danger("\The [owner]'s [src.name] sloughs off[gore]!"),\
-				span_bolddanger("<b>Your [src.name] sloughs off of your body[gore]!</b>"),\
-				span_danger("You hear the [gore_sound]."))
+			if(DROPLIMB_ACID)
+				if(cannot_gib)
+					return
+				var/gore = "[(robotic >= ORGAN_ROBOT) ? "": " in gush of gore"]"
+				var/gore_sound = "[(status >= ORGAN_ROBOT) ? "sizzling sound of melting metal" : "sickening drips of melting flesh"]"
+				owner.visible_message(
+					span_danger("\The [owner]'s [src.name] sloughs off[gore]!"),\
+					span_bolddanger("<b>Your [src.name] sloughs off of your body[gore]!</b>"),\
+					span_danger("You hear the [gore_sound]."))
 
 	var/mob/living/carbon/human/victim = owner //Keep a reference for post-removed().
 	var/obj/item/organ/external/parent_organ = parent
@@ -1131,14 +1143,25 @@ Note that amputating the affected organ does in fact remove the infection from t
 		return
 
 	if(owner)
-		if(organ_can_feel_pain() && !isbelly(owner.loc) && !isliving(owner.loc))
-			//CHOMPEdit Begin
+		var/show_message = TRUE
+		var/scream = TRUE
+		if(!organ_can_feel_pain() || owner.transforming)
+			show_message = FALSE
+			scream = FALSE
+		if(isbelly(owner.loc) || isliving(owner.loc))
+			scream = FALSE
+			if(!owner.digest_pain)
+				show_message = FALSE
+
+		if(show_message)
+			// CHOMPEdit Start
 			owner.custom_pain(pick(\
 				span_danger("You hear a loud cracking sound coming from \the [owner]."),\
 				span_danger("Something feels like it shattered in your [name]!"),\
-				span_danger("You hear a sickening crack.")),brokenpain)
-			//CHOMPEdit End
-			owner.emote("scream")
+				span_danger("You hear a sickening crack.")), brokenpain)
+			// CHOMPEdit End
+			if(scream)
+				owner.emote("scream")
 		jostle_bone()
 
 	if(istype(owner.loc, /obj/belly)) //CHOMPedit, bone breaks in bellys should be whisper range to prevent bar wide blender prefbreak. This is a hacky passive hardcode, if a pref gets added, remove this if else
@@ -1274,6 +1297,8 @@ Note that amputating the affected organ does in fact remove the infection from t
 /obj/item/organ/external/proc/embed(var/obj/item/W, var/silent = 0)
 	if(!owner || loc != owner)
 		return
+	if(SEND_SIGNAL(owner, COMSIG_EMBED_OBJECT) & COMSIG_CANCEL_EMBED) //Normally we'd let this proc continue on, but it's much less time consumptive to just do a godmode check here.
+		return 0	// Cancelled by a component
 	if(!silent)
 		owner.visible_message(span_danger("\The [W] sticks in the wound!"))
 	implants += W
@@ -1366,7 +1391,7 @@ Note that amputating the affected organ does in fact remove the infection from t
 		return
 	if(brute_dam + force < min_broken_damage/5)	//no papercuts moving bones
 		return
-	if(internal_organs.len && prob(brute_dam + force))
+	if(internal_organs.len && prob(brute_dam + force) && !owner.transforming)
 		owner.custom_pain("A piece of bone in your [encased ? encased : name] moves painfully!", 50)
 		var/obj/item/organ/I = pick(internal_organs)
 		I.take_damage(rand(3,5))
@@ -1483,6 +1508,8 @@ Note that amputating the affected organ does in fact remove the infection from t
 		return 1
 	if(clothing_only && markings.len)
 		for(var/M in markings)
+			if(!markings[M]["on"]) //If the marking is off, the organ isn't hidden by it.
+				continue
 			var/datum/sprite_accessory/marking/mark = markings[M]["datum"]
 			if(mark.hide_body_parts && (organ_tag in mark.hide_body_parts))
 				return 1

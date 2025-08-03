@@ -34,28 +34,6 @@
 /// Signal that gets sent when a ghost query is completed
 #define COMSIG_GHOST_QUERY_COMPLETE "ghost_query_complete"
 
-// /datum signals
-/// when a component is added to a datum: (/datum/component)
-#define COMSIG_COMPONENT_ADDED "component_added"
-/// before a component is removed from a datum because of RemoveComponent: (/datum/component)
-#define COMSIG_COMPONENT_REMOVING "component_removing"
-/// before a datum's Destroy() is called: (force), returning a nonzero value will cancel the qdel operation
-#define COMSIG_PARENT_PREQDELETED "parent_preqdeleted"
-/// just before a datum's Destroy() is called: (force), at this point none of the other components chose to interrupt qdel and Destroy will be called
-#define COMSIG_PARENT_QDELETING "parent_qdeleting"
-/// generic topic handler (usr, href_list)
-#define COMSIG_TOPIC "handle_topic"
-/// from datum tgui_act (usr, action)
-#define COMSIG_UI_ACT "COMSIG_UI_ACT"
-/// from datum tgui_fallback (payload)
-#define COMSIG_UI_FALLBACK "COMSIG_UI_FALLBACK"
-
-
-/// fires on the target datum when an element is attached to it (/datum/element)
-#define COMSIG_ELEMENT_ATTACH "element_attach"
-/// fires on the target datum when an element is attached to it  (/datum/element)
-#define COMSIG_ELEMENT_DETACH "element_detach"
-
 // /atom signals
 ///from base of atom/proc/Initialize(): sent any time a new atom is created
 #define COMSIG_ATOM_CREATED "atom_created"
@@ -278,7 +256,6 @@
 	/* #define HEARING_RADIO_FREQ 5
 	#define HEARING_SPANS 6
 	#define HEARING_MESSAGE_MODE 7 */
-
 ///from /datum/controller/subsystem/motion_tracker/notice() (/datum/weakref/source_atom,/turf/echo_turf_location)
 #define COMSIG_MOVABLE_MOTIONTRACKER "move_motiontracker"
 
@@ -315,6 +292,8 @@
 ///from base of /obj/item/attack(): (mob/M, mob/user)
 #define COMSIG_MOB_ITEM_ATTACK "mob_item_attack"
 	#define COMPONENT_ITEM_NO_ATTACK (1<<0)
+///from the base of /mob/living/silicon/robot/ClickOn(): (var/atom/A, var/params)
+#define COMSIG_ROBOT_ITEM_ATTACK "robot_item_attack"
 ///from base of /mob/living/proc/apply_damage(): (damage, damagetype, def_zone)
 #define COMSIG_MOB_APPLY_DAMGE	"mob_apply_damage"
 ///from base of obj/item/afterattack(): (atom/target, mob/user, proximity_flag, click_parameters)
@@ -358,9 +337,6 @@
 #define COMSIG_LIVING_IGNITED "living_ignite"
 ///from base of mob/living/ExtinguishMob() (/mob/living)
 #define COMSIG_LIVING_EXTINGUISHED "living_extinguished"
-///from base of mob/living/electrocute_act(): (shock_damage, source, siemens_coeff, flags)
-#define COMSIG_LIVING_ELECTROCUTE_ACT "living_electrocute_act"
-///sent when items with siemen coeff. of 0 block a shock: (power_source, source, siemens_coeff, dist_check)
 #define COMSIG_LIVING_SHOCK_PREVENTED "living_shock_prevented"
 ///sent by stuff like stunbatons and tasers: ()
 #define COMSIG_LIVING_MINOR_SHOCK "living_minor_shock"
@@ -377,6 +353,52 @@
 #define COMSIG_MOB_CLIENT_LOGIN "comsig_mob_client_login"
 ///sent from borg mobs to itself, for tools to catch an upcoming destroy() due to safe decon (rather than detonation)
 #define COMSIG_BORG_SAFE_DECONSTRUCT "borg_safe_decon"
+///From living/Life().
+#define COMSIG_LIVING_LIFE "living_life"
+///From /living/handle_disabilities().
+#define COMSIG_HANDLE_DISABILITIES "handle_disabilities"
+///From /mob/living/proc/updatehealth().
+#define COMSIG_UPDATE_HEALTH "update_health"
+	#define COMSIG_UPDATE_HEALTH_GOD_MODE (1<<0) //If this will set health to 100 and stat to conscious.
+
+// Damage specific signals for /mob/living
+///from /mob/living/proc/adjustBrainLoss(amount) and /mob/living/proc/setBrainLoss(amount)
+#define COMSIG_TAKING_BRAIN_DAMAGE "taking_brain_damage"
+///Return this in response if you don't want brain damage to be dealt via the normal proc.
+	#define COMSIG_CANCEL_BRAIN_DAMAGE (1<<0)
+///from /mob/living/proc/adjustOxyLoss(amount) and /mob/living/proc/setOxyLoss(amount)
+#define COMSIG_TAKING_OXY_DAMAGE "taking_oxy_damage"
+///Return this in response if you don't want brain damage to be dealt via the normal proc.
+	#define COMSIG_CANCEL_OXY_DAMAGE (1<<0)
+///from /mob/living/proc/adjustToxLoss(amount) and /mob/living/proc/setToxLoss(amount)
+#define COMSIG_TAKING_TOX_DAMAGE "taking_tox_damage"
+///Return this in response if you don't want tox damage to be dealt via the normal proc.
+	#define COMSIG_CANCEL_TOX_DAMAGE (1<<0)
+///from /mob/living/proc/adjustCloneLoss(amount) and /mob/living/proc/setCloneLoss(amount)
+#define COMSIG_TAKING_CLONE_DAMAGE "taking_clone_damage"
+///Return this in response if you don't want clone damage to be dealt via the normal proc.
+	#define COMSIG_CANCEL_CLONE_DAMAGE (1<<0)
+///from /mob/living/proc/adjustFireLoss(amount, include_robo)
+#define COMSIG_TAKING_FIRE_DAMAGE "taking_fire_damage"
+///Return this in response if you don't want fire damage to be dealt via the normal proc.
+	#define COMSIG_CANCEL_FIRE_DAMAGE (1<<0)
+///from /mob/living/proc/adjustBruteLoss(amount, include_robo) and /mob/living/carbon/human/adjustBruteLoss(amount, include_robo)
+#define COMSIG_TAKING_BRUTE_DAMAGE "taking_brute_damage"
+///Return this in response if you don't want brute damage to be dealt via the normal proc.
+	#define COMSIG_CANCEL_BRUTE_DAMAGE (1<<0)
+///from /mob/living/proc/adjustHalLoss(amount)
+#define COMSIG_TAKING_HALO_DAMAGE "taking_halo_damage"
+///Return this in response if you don't want halo damage to be dealt via the normal proc.
+	#define COMSIG_CANCEL_HALO_DAMAGE (1<<0)
+///from /mob/living/proc/apply_effect(effect, effecttype, blocked, check_protection)
+#define COMSIG_TAKING_APPLY_EFFECT "applying_effect"
+///Return this in response if you don't want the effect to be applied
+	#define COMSIG_CANCEL_EFFECT (1<<0)
+
+///Misc signal for checking for godmode. Used by /datum/element/godmode
+#define COMSIG_CHECK_FOR_GODMODE "check_for_godmode"
+///Returned by /datum/element/godmode if the target is in godmode and whatever we're checking we want to cancel
+	#define COMSIG_GODMODE_CANCEL (1<<0)
 
 //ALL OF THESE DO NOT TAKE INTO ACCOUNT WHETHER AMOUNT IS 0 OR LOWER AND ARE SENT REGARDLESS!
 
@@ -413,8 +435,19 @@
 #define COMSIG_CARBON_EMBED_RIP "item_embed_start_rip"
 ///called when removing a given item from a mob, from mob/living/carbon/remove_embedded_object(mob/living/carbon/target, /obj/item)
 #define COMSIG_CARBON_EMBED_REMOVAL "item_embed_remove_safe"
+///called when being electrocuted, from /mob/living/carbon/electrocute_act(shock_damage, source, siemens_coeff, def_zone, stun)
+#define COMSIG_BEING_ELECTROCUTED "being_electrocuted"
+	#define COMPONENT_CARBON_CANCEL_ELECTROCUTE (1<<0) //If this is set, the carbon will be not be electrocuted.
 
-// /obj signals
+
+// /mob/living/silicon signals
+///called when a silicon is emp'd. from /mob/living/silicon/emp_act(severity)
+#define COMSIG_SILICON_EMP_ACT "silicon_emp_act"
+	#define COMPONENT_BLOCK_EMP (1<<0) //If this is set, the EMP will not go through. Used by other EMP acts as well.
+
+// /mob/living/silicon/robot signals
+///called when a robot is emp'd. from /mob/living/silicon/robot/emp_act(severity)
+#define COMSIG_ROBOT_EMP_ACT "robot_emp_act"
 
 ///from base of obj/deconstruct(): (disassembled)
 #define COMSIG_OBJ_DECONSTRUCT "obj_deconstruct"
@@ -426,6 +459,13 @@
 #define COMSIG_OBJ_HIDE	"obj_hide"
 ///called in /obj/update_icon()
 #define COMSIG_OBJ_UPDATE_ICON "obj_update_icon"
+
+// climbable signals
+
+///called when a mob is mousedropped onto, or uses a verb to climb an object
+#define COMSIG_CLIMBABLE_START_CLIMB "starting_climb_action"
+///called when an object is considered unsafe to climb on
+#define COMSIG_CLIMBABLE_SHAKE_CLIMBERS "shaking_climbing_mobs"
 
 // /obj/machinery signals
 
@@ -589,6 +629,27 @@
 #define COMSIG_HUMAN_DISARM_HIT	"human_disarm_hit"
 ///Whenever EquipRanked is called, called after job is set
 #define COMSIG_JOB_RECEIVED "job_received"
+///When the mob's dna and species have been fully applied
+#define COMSIG_HUMAN_DNA_FINALIZED "human_dna_finished"
+
+// Organ specific signals
+
+///from /obj/item/organ/external/take_damage(brute, burn, sharp, edge, used_weapon, forbidden_limbs, permutation, projectile)
+#define COMSIG_EXTERNAL_ORGAN_PRE_DAMAGE_APPLICATION "external_organ_pre_damage_application"
+///Return this in response if you don't want external organ damage to be dealt via the normal proc.
+	#define COMPONENT_CANCEL_EXTERNAL_ORGAN_DAMAGE (1<<0)
+///from /obj/item/organ/external/take_damage(brute, burn, sharp, edge, used_weapon, forbidden_limbs, permutation, projectile)
+#define COMSIG_EXTERNAL_ORGAN_POST_DAMAGE_APPLICATION "external_organ_post_damage_application"
+///from /obj/item/organ/take_damage(amount, silent)
+#define COMSIG_INTERNAL_ORGAN_PRE_DAMAGE_APPLICATION "internal_organ_pre_damage_application"
+///Return this in response if you don't want internal organ damage to be dealt via the normal proc.
+	#define COMPONENT_CANCEL_INTERNAL_ORGAN_DAMAGE (1<<0)
+///from /obj/item/organ/take_damage(amount, silent)
+#define COMSIG_INTERNAL_ORGAN_POST_DAMAGE_APPLICATION "internal_organ_post_damage_application"
+///From /obj/item/organ/external/proc/embed(W, silent)
+#define COMSIG_EMBED_OBJECT "embed_object"
+///Return this in response if you don't want the embed to go through.
+	#define COMSIG_CANCEL_EMBED (1<<0)
 
 // /datum/species signals
 
@@ -611,8 +672,6 @@
 #define COMSIG_TURF_IS_WET "check_turf_wet"
 ///(max_strength, immediate, duration_decrease = INFINITY): Returns bool.
 #define COMSIG_TURF_MAKE_DRY "make_turf_try"
-///called on an object to clean it of cleanables. Usualy with soap: (num/strength)
-#define COMSIG_COMPONENT_CLEAN_ACT "clean_act"
 
 //Creamed
 
@@ -796,6 +855,9 @@
 ///from base of [/datum/element/light_eater/proc/devour]: (atom/eaten_light)
 #define COMSIG_LIGHT_EATER_DEVOUR "light_eater_devour"
 
+// Lootpiles
+#define COMSIG_LOOT_REWARD "lootpile_reward_drop"
+
 // conflict checking elements
 /// (id) - returns flags - Registered on something by conflict checking elements.
 #define COMSIG_CONFLICT_ELEMENT_CHECK "conflict_element_check"
@@ -828,6 +890,34 @@
 #define COMSIG_BELLY_UPDATE_PREY_LOOP "update_prey_loop"
 /// COMSIG used to get messages where they need to go
 #define COMSIG_VISIBLE_MESSAGE "visible_message"
+
+// Weaver Component
+///from /mob/living/proc/check_silk_amount()
+#define COMSIG_CHECK_SILK_AMOUNT "check_silk_amount"
+///from /mob/living/proc/weave_structure()
+#define COMSIG_WEAVE_STRUCTURE "weave_structure"
+///from /mob/living/proc/toggle_silk_production()
+#define COMSIG_TOGGLE_SILK_PRODUCTION "toggle_silk_production"
+///from /mob/living/proc/weave_item()
+#define COMSIG_WEAVE_ITEM "weave_item"
+///from /mob/living/proc/set_silk_color()
+#define COMSIG_SET_SILK_COLOR "set_silk_color"
+
+// Gargoyle Component
+///from /mob/living/carbon/human/proc/gargoyle_transformation()
+#define COMSIG_GARGOYLE_TRANSFORMATION "gargoyle_transformation"
+///from /mob/living/carbon/human/proc/gargoyle_pause()
+#define COMSIG_GARGOYLE_PAUSE "gargoyle_pause"
+///from /mob/living/carbon/human/proc/gargoyle_checkenergy()
+#define COMSIG_GARGOYLE_CHECK_ENERGY "gargoyle_check_energy"
+
+// Species Components
+///from /datum/species/proc/handle_species_components()
+#define COMSIG_XENOCHIMERA_COMPONENT "xenochimera_component"
+#define COMSIG_SHADEKIN_COMPONENT "shadekin_component"
+
+// Hose Connector Component
+#define COMSIG_HOSE_FORCEPUMP "hose_force_pump"
 
 //Unittest data update
 #ifdef UNIT_TEST

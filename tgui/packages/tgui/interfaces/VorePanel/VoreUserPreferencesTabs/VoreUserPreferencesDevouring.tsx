@@ -4,7 +4,7 @@ import type { BooleanLike } from 'tgui-core/react';
 import { capitalize } from 'tgui-core/string';
 
 import type { localPrefs } from '../types';
-import { VoreUserPreferenceItem } from '../VoreUserPreferenceItem';
+import { VoreUserPreferenceItem } from '../VorePanelElements/VoreUserPreferenceItem';
 
 export const VoreUserPreferencesDevouring = (props: {
   devourable: BooleanLike;
@@ -54,7 +54,7 @@ export const VoreUserPreferencesDevouring = (props: {
               tooltipPosition="right"
               onClick={() => act('switch_selective_mode_pref')}
             >
-              {'Selective Mode Preference: ' + capitalize(selective_active)}
+              {`Selective Mode Preference: ${capitalize(selective_active)}`}
             </Button>
           </Stack.Item>
           <Stack.Item basis="32%" grow>

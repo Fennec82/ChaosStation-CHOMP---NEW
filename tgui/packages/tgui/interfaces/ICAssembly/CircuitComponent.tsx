@@ -152,11 +152,11 @@ export class CircuitComponent extends Component<CircuitProps, CircuitState> {
     }
 
     return (
-      <Box
+      <Box<HTMLDivElement>
         className="ObjectComponent"
         position="absolute"
-        left={x_pos + 'px'}
-        top={y_pos + 'px'}
+        left={`${x_pos}px`}
+        top={`${y_pos}px`}
         onMouseDown={this.handleStartDrag}
         onMouseUp={this.handleStopDrag}
         {...rest}

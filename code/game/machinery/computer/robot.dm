@@ -127,7 +127,7 @@
 	data["can_hack"] = can_hack_any(user)
 	data["cyborgs"] = list()
 	data["safety"] = safety
-	for(var/mob/living/silicon/robot/R in mob_list)
+	for(var/mob/living/silicon/robot/R in GLOB.mob_list)
 		if(!console_shows(R))
 			continue
 		var/area/A = get_area(R)
@@ -138,7 +138,7 @@
 			locked_down = R.lockcharge,
 			locstring = "[A.name] ([T.x], [T.y])",
 			status = R.stat,
-			health = round(R.health * 100 / R.maxHealth, 0.1),
+			health = round(R.health * 100 / R.getMaxHealth(), 0.1),
 			charge = R.cell ? round(R.cell.percent()) : null,
 			cell_capacity = R.cell ? R.cell.maxcharge : null,
 			module = R.module ? R.module.name : "No Module Detected",
@@ -175,7 +175,7 @@
 				return
 			message_admins(span_notice("[key_name_admin(ui.user)] detonated all cyborgs!"))
 			log_game(span_notice("[key_name(ui.user)] detonated all cyborgs!"))
-			for(var/mob/living/silicon/robot/R in mob_list)
+			for(var/mob/living/silicon/robot/R in GLOB.mob_list)
 				if(istype(R, /mob/living/silicon/robot/drone))
 					continue
 				// Ignore antagonistic cyborgs

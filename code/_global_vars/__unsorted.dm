@@ -3,6 +3,7 @@ GLOBAL_DATUM(data_core, /datum/datacore)
 
 //I would upgrade all instances of global.machines to SSmachines.all_machines but it's used in so many places and a search returns so many matches for 'machines' that isn't a use of the global...
 GLOBAL_LIST_INIT(machines, SSmachines.all_machines)
+GLOBAL_LIST_EMPTY(all_drone_fabricators)
 
 GLOBAL_LIST_EMPTY(active_diseases)
 GLOBAL_LIST_EMPTY(hud_icon_reference)
@@ -36,8 +37,6 @@ GLOBAL_VAR_INIT(secret_force_mode, "secret") // if this is anything but "secret"
 GLOBAL_DATUM_INIT(mods, /datum/moduletypes, new())
 
 GLOBAL_VAR_INIT(gravity_is_on, TRUE)
-
-GLOBAL_VAR(join_motd)
 
 // Metric datum, used to keep track of the round.
 GLOBAL_DATUM_INIT(metric, /datum/metric, new())

@@ -55,7 +55,8 @@
 	return //TODO: DEFERRED
 
 /mob/living/carbon/brain/proc/handle_temperature_damage(body_part, exposed_temperature, exposed_intensity)
-	if(status_flags & GODMODE) return
+	if(SEND_SIGNAL(src, COMSIG_CHECK_FOR_GODMODE) & COMSIG_GODMODE_CANCEL)
+		return 0	// Cancelled by a component
 
 	if(exposed_temperature > bodytemperature)
 		var/discomfort = min( abs(exposed_temperature - bodytemperature)*(exposed_intensity)/2000000, 1.0)
@@ -94,7 +95,7 @@
 		silent = 0
 		deaf_loop.stop() // CHOMPStation Add: Ear Ringing/Deafness - Not sure if we need this, but, safety.
 	else				//ALIVE. LIGHTS ARE ON
-		if( !container && (health < CONFIG_GET(number/health_threshold_dead) || ((world.time - timeofhostdeath) > CONFIG_GET(number/revival_brain_life))) )
+		if( !container && (health < -getMaxHealth() || ((world.time - timeofhostdeath) > CONFIG_GET(number/revival_brain_life))) )
 			death()
 			blinded = 1
 			silent = 0

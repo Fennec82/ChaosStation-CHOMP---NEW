@@ -77,7 +77,7 @@
 		return ..()
 	var/list/possible_targets = list()
 
-	for(var/mob/living/player in player_list)
+	for(var/mob/living/player in GLOB.player_list)
 		if(!(player.z in child_om_marker.map_z))
 			continue
 		if(!(isliving(player) && istype(player.loc,/turf/simulated/floor/outdoors/fur) && player.client))
@@ -314,7 +314,7 @@
 		if(!our_maps.len)
 			to_chat(src, span_warning("There is nowhere nearby to go to! You need to get closer to somewhere you can transition to before you can transition."))
 			return
-		for(var/obj/effect/landmark/l in landmarks_list)
+		for(var/obj/effect/landmark/l in GLOB.landmarks_list)
 			if(l.z in our_maps)
 				if(istype(l,/obj/effect/landmark/stardog))
 					destinations |= l
@@ -501,7 +501,7 @@
 		if(isnewplayer(M))
 			continue
 		if(isobserver(M) && (!M.client?.prefs?.read_preference(/datum/preference/toggle/ghost_see_whisubtle) || \
-		!L.client?.prefs?.read_preference(/datum/preference/toggle/whisubtle_vis) && !M.client?.holder))
+		!L.client?.prefs?.read_preference(/datum/preference/toggle/whisubtle_vis) && !check_rights_for(M.client, R_HOLDER)))
 			spawn(0)
 				M.show_message(undisplayed_message, 2)
 		else
@@ -518,13 +518,6 @@
 	has_base_range = 15
 
 	can_paint = TRUE
-
-	footstep_sounds = list("human" = list(
-		'sound/effects/footstep/carpet1.ogg',
-		'sound/effects/footstep/carpet2.ogg',
-		'sound/effects/footstep/carpet3.ogg',
-		'sound/effects/footstep/carpet4.ogg',
-		'sound/effects/footstep/carpet5.ogg'))
 
 /obj/structure/flora/tree/fur
 	name = "tall fur"
@@ -1173,7 +1166,7 @@
 		if(isnewplayer(M))
 			continue
 		if(isobserver(M) && (!M.client?.prefs?.read_preference(/datum/preference/toggle/ghost_see_whisubtle) || \
-		!L.client?.prefs?.read_preference(/datum/preference/toggle/whisubtle_vis) && !M.client?.holder))
+		!L.client?.prefs?.read_preference(/datum/preference/toggle/whisubtle_vis) && !check_rights_for(M.client, R_HOLDER)))
 			spawn(0)
 				M.show_message(undisplayed_message, 2)
 		else
@@ -1536,13 +1529,12 @@
 			spawn(0)
 			qdel(H)	//glorp
 			return
+		H.burn_skin(damage) //CHOMPEdit Start
 		if(linked_mob)
-			H.burn_skin(damage)
-			if(linked_mob)
-				var/how_much = (damage * H.size_multiplier) * H.get_digestion_nutrition_modifier() * linked_mob.get_digestion_efficiency_modifier()
-				if(!H.ckey)
-					how_much = how_much / 10	//Braindead mobs are worth less
-				linked_mob.adjust_nutrition(how_much)
+			var/how_much = (damage * H.size_multiplier) * H.get_digestion_nutrition_modifier() * linked_mob.get_digestion_efficiency_modifier()
+			if(!H.ckey)
+				how_much = how_much / 10	//Braindead mobs are worth less
+			linked_mob.adjust_nutrition(how_much) //CHOMPEdit End
 	else if (isliving(thing))
 		var/mob/living/L = thing
 		if(!L)
