@@ -311,7 +311,7 @@ GLOBAL_LIST_EMPTY(mannequins)
 	///These are icons that you DO NOT want to be selectable!
 	var/list/blacklisted_icons = list(SPECIES_CUSTOM,SPECIES_PROMETHEAN)
 	///These are icons that you WANT to be selectable, even if they're a whitelist species!
-	var/list/whitelisted_icons = list(SPECIES_FENNEC,SPECIES_XENOHYBRID,SPECIES_VOX,SPECIES_SHADEKIN) //CHOMPedit
+	var/list/whitelisted_icons = list(SPECIES_FENNEC,SPECIES_XENOHYBRID,SPECIES_VOX,SPECIES_ZORREN_DARK,SPECIES_SHADEKIN) //CHOMEdit
 	for(var/species_name in GLOB.playable_species)
 		if(species_name in blacklisted_icons)
 			continue
@@ -986,23 +986,16 @@ GLOBAL_LIST_INIT(maint_mob_pred_options, list(
 	"Space Bumblebee" = /mob/living/simple_mob/vore/bee,
 	"Space Bear" = /mob/living/simple_mob/animal/space/bear,
 	"Voracious Lizard" = /mob/living/simple_mob/vore/aggressive/dino,
-	"Lizardman" = /mob/living/simple_mob/vore/aggressive/lizardman, // CHOMPAdd
 	"Giant Frog" = /mob/living/simple_mob/vore/aggressive/frog,
 	"Giant Rat" = /mob/living/simple_mob/vore/aggressive/rat,
-	"Giant Lab Rat" = /mob/living/simple_mob/vore/aggressive/rat/labrat, // CHOMPAdd
 	"Jelly Blob" = /mob/living/simple_mob/vore/jelly,
 	"Wolf" = /mob/living/simple_mob/vore/wolf,
 	"Dire Wolf" = /mob/living/simple_mob/vore/wolf/direwolf,
 	"Large Dog" = /mob/living/simple_mob/vore/wolf/direwolf/dog,
-	"Hyena" = /mob/living/simple_mob/animal/hyena, // CHOMPAdd
 	"Juvenile Solargrub" = /mob/living/simple_mob/vore/solargrub,
 	"Sect Queen" = /mob/living/simple_mob/vore/sect_queen,
 	"Sect Drone" = /mob/living/simple_mob/vore/sect_drone,
 	"Defanged Xenomorph" = /mob/living/simple_mob/vore/xeno_defanged,
-	"Xenomorph Hunter" = /mob/living/simple_mob/xeno_ch/hunter, // CHOMPAdd
-	"Xenomorph Sentinel" = /mob/living/simple_mob/xeno_ch/sentinel, // CHOMPAdd
-	"Xenomorph Queen" = /mob/living/simple_mob/xeno_ch/queen, // CHOMPAdd
-	"Xenomorph Maid Queen" = /mob/living/simple_mob/xeno_ch/queen/maid, // CHOMPAdd
 	"Panther" = /mob/living/simple_mob/vore/aggressive/panther,
 	"Giant Snake" = /mob/living/simple_mob/vore/aggressive/giant_snake,
 	"Deathclaw" = /mob/living/simple_mob/vore/aggressive/deathclaw,
@@ -1012,12 +1005,8 @@ GLOBAL_LIST_INIT(maint_mob_pred_options, list(
 	"Chubby Mutated Otie" = /mob/living/simple_mob/vore/otie/feral/chubby,
 	"Red Otie" = /mob/living/simple_mob/vore/otie/red,
 	"Chubby Red Otie" = /mob/living/simple_mob/vore/otie/red/chubby,
-	"Zorgoia" = /mob/living/simple_mob/vore/zorgoia, // CHOMPAdd
 	"Corrupt Hound" = /mob/living/simple_mob/vore/aggressive/corrupthound,
 	"Corrupt Corrupt Hound" = /mob/living/simple_mob/vore/aggressive/corrupthound/prettyboi,
-	"Corrupt JaniHound" = /mob/living/simple_mob/vore/retaliate/corrupthound/janihound, // CHOMPAdd
-	"Corrupt Old JaniHound" = /mob/living/simple_mob/vore/retaliate/corrupthound/janihound/old, // CHOMPAdd
-	"Corrupt MediHound" = /mob/living/simple_mob/vore/retaliate/corrupthound/janihound/medihound, // CHOMPAdd
 	"Hunter Giant Spider" = /mob/living/simple_mob/animal/giant_spider/hunter,
 	"Lurker Giant Spider" = /mob/living/simple_mob/animal/giant_spider/lurker,
 	"Pepper Giant Spider" = /mob/living/simple_mob/animal/giant_spider/pepper,
@@ -1030,9 +1019,7 @@ GLOBAL_LIST_INIT(maint_mob_pred_options, list(
 	"Phoron Dragon" = /mob/living/simple_mob/vore/aggressive/dragon/virgo3b,
 	"Space Dragon" = /mob/living/simple_mob/vore/aggressive/dragon/space,
 	"Crypt Drake" = /mob/living/simple_mob/vore/cryptdrake,
-	"Gryphon" = /mob/living/simple_mob/vore/gryphon, // CHOMPAdd
 	"Weretiger" = /mob/living/simple_mob/vore/weretiger,
-	"Lesser Large Dragon" = /mob/living/simple_mob/vore/bigdragon/friendly/maintpred, // CHOMPAdd
 	"Catslug" = /mob/living/simple_mob/vore/alienanimals/catslug,
 	"Squirrel" = /mob/living/simple_mob/vore/squirrel/big,
 	"Pakkun" =/mob/living/simple_mob/vore/pakkun,
@@ -1054,14 +1041,35 @@ GLOBAL_LIST_INIT(maint_mob_pred_options, list(
 	"kururak" = /mob/living/simple_mob/animal/sif/kururak,
 	"Statue of Temptation" = /mob/living/simple_mob/vore/devil,
 	"Meowl" = /mob/living/simple_mob/vore/meowl,
-	"Synx" = /mob/living/simple_mob/animal/synx, // CHOMPAdd
-	"Reindeer" = /mob/living/simple_mob/vore/reindeer, // CHOMPAdd
-	"Lion/Lioness" = /mob/living/simple_mob/vore/retaliate/lion, // CHOMPAdd
 	"Abyss Leaper" = /mob/living/simple_mob/vore/vore_hostile/leaper,
 	"Abyss Lurker" = /mob/living/simple_mob/vore/vore_hostile/abyss_lurker,
-	"Swoopie XL" = /mob/living/simple_mob/vore/aggressive/corrupthound/swoopie, // CHOMPAdd
-	"Teppie" = /datum/category_item/catalogue/fauna/teppi, // CHOMPAdd
-	"Frostlit Lamp" = /mob/living/simple_mob/animal/passive/gaslamp/snow // CHOMPAdd
+	// CHOMPAdd Start
+	"Horse" = /mob/living/simple_mob/vore/horse/big,
+	"Lizardman" = /mob/living/simple_mob/vore/aggressive/lizardman,
+	"Giant Lab Rat" = /mob/living/simple_mob/vore/aggressive/rat/labrat,
+	"Hyena" = /mob/living/simple_mob/animal/hyena,
+	"Xenomorph Hunter" = /mob/living/simple_mob/xeno_ch/hunter,
+	"Xenomorph Sentinel" = /mob/living/simple_mob/xeno_ch/sentinel,
+	"Xenomorph Queen" = /mob/living/simple_mob/xeno_ch/queen,
+	"Xenomorph Maid Queen" = /mob/living/simple_mob/xeno_ch/queen/maid,
+	"Corrupt JaniHound" = /mob/living/simple_mob/vore/retaliate/corrupthound/janihound,
+	"Corrupt Old JaniHound" = /mob/living/simple_mob/vore/retaliate/corrupthound/janihound/old,
+	"Corrupt MediHound" = /mob/living/simple_mob/vore/retaliate/corrupthound/janihound/medihound,
+	"Lesser Large Dragon" = /mob/living/simple_mob/vore/bigdragon/friendly/maintpred,
+	"Zorgoia" = /mob/living/simple_mob/vore/zorgoia,
+	"Gryphon" = /mob/living/simple_mob/vore/gryphon,
+	"Synx" = /mob/living/simple_mob/animal/synx,
+	"Reindeer" = /mob/living/simple_mob/vore/reindeer,
+	"Lion/Lioness" = /mob/living/simple_mob/vore/retaliate/lion,
+	"Swoopie XL" = /mob/living/simple_mob/vore/aggressive/corrupthound/swoopie,
+	"Teppie" = /mob/living/simple_mob/vore/alienanimals/teppi,
+	"Frostlit Lamp" = /mob/living/simple_mob/animal/passive/gaslamp/snow,
+	"Voidwalker" = /mob/living/simple_mob/vore/demon,
+	"Super Metroid" = /mob/living/simple_mob/metroid/juvenile/super,
+	"Space Carp" = /mob/living/simple_mob/animal/space/carp,
+	"Great White Carp" = /mob/living/simple_mob/animal/space/carp/large/huge/vorny,
+	"Giant Bat" = /mob/living/simple_mob/vore/bat
+	// CHOMPAdd End
 	))
 
 // GLOB.alldirs in global.dm is the same list of directions, but since
@@ -1498,8 +1506,44 @@ GLOBAL_LIST_INIT(ore_reagents, list( //have a number of reageents divisible by R
 	/obj/item/ore/lead = list(REAGENT_ID_LEAD),
 	/obj/item/ore/hydrogen = list(REAGENT_ID_HYDROGEN),
 	/obj/item/ore/verdantium = list(REAGENT_ID_RADIUM,REAGENT_ID_PHORON,REAGENT_ID_NITROGEN,REAGENT_ID_PHOSPHORUS,REAGENT_ID_SODIUM), // Some fun stuff to be useful with
-	/obj/item/ore/rutile = list(REAGENT_ID_TUNGSTEN,REAGENT_ID_OXYGEN) // Should be titanium
-))
+	/obj/item/ore/rutile = list(REAGENT_ID_TITANIUMDIOX,REAGENT_ID_OXYGEN),
+	/obj/item/ore/copper = list(REAGENT_ID_COPPER),
+	/obj/item/ore/tin = list(REAGENT_ID_TIN),
+	/obj/item/ore/void_opal = list(REAGENT_ID_SILICON,REAGENT_ID_SILICON,REAGENT_ID_OXYGEN,REAGENT_ID_WATER),
+	/obj/item/ore/painite = list(REAGENT_ID_CALCIUM,REAGENT_ID_ALUMINIUM,REAGENT_ID_OXYGEN,REAGENT_ID_OXYGEN),
+	/obj/item/ore/quartz = list(REAGENT_ID_SILICON,REAGENT_ID_OXYGEN),
+	/obj/item/ore/bauxite = list(REAGENT_ID_ALUMINIUM,REAGENT_ID_ALUMINIUM),
+	))
+
+// Don't need a new list for every grinder in the game
+GLOBAL_LIST_INIT(reagent_sheets,list( // Recompressing reagents back into sheets
+	REAGENT_ID_COPPER 			= MAT_COPPER,
+	REAGENT_ID_TIN 				= MAT_TIN,
+	REAGENT_ID_WOODPULP 		= MAT_CARDBOARD,
+	REAGENT_ID_CARBON 			= MAT_GRAPHITE,
+	REAGENT_ID_ALUMINIUM 		= MAT_ALUMINIUM,
+	REAGENT_ID_TITANIUM 		= MAT_TITANIUM,
+	REAGENT_ID_IRON 			= MAT_IRON,
+	REAGENT_ID_LEAD				= MAT_LEAD,
+	REAGENT_ID_URANIUM			= MAT_URANIUM,
+	REAGENT_ID_GOLD 			= MAT_GOLD,
+	REAGENT_ID_SILVER 			= MAT_SILVER,
+	REAGENT_ID_PLATINUM			= MAT_PLATINUM,
+	REAGENT_ID_SILICON 			= MAT_GLASS,
+	// Mostly harmless
+	REAGENT_ID_PROTEIN			= REFINERY_SINTERING_SMOKE,
+	REAGENT_ID_TRIGLYCERIDE 	= REFINERY_SINTERING_SMOKE,
+	REAGENT_ID_SODIUM	 		= REFINERY_SINTERING_SMOKE,
+	REAGENT_ID_PHOSPHORUS 		= REFINERY_SINTERING_SMOKE,
+	REAGENT_ID_ETHANOL 			= REFINERY_SINTERING_SMOKE,
+	// Extremely stupid ones
+	REAGENT_ID_OXYGEN 			= REFINERY_SINTERING_EXPLODE,
+	REAGENT_ID_HYDROGEN 		= REFINERY_SINTERING_EXPLODE,
+	REAGENT_ID_PHORON 			= REFINERY_SINTERING_EXPLODE,
+	REAGENT_ID_SUPERMATTER 		= REFINERY_SINTERING_EXPLODE,
+	// Nothing is funnier to me
+	REAGENT_ID_SPIDEREGG 		= REFINERY_SINTERING_SPIDERS,
+	))
 
 //List of the ammo types that can be used in game.
 GLOBAL_LIST_INIT(global_ammo_types, list(
