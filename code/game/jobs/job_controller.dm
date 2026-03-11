@@ -1,4 +1,4 @@
-var/global/datum/controller/occupations/job_master
+GLOBAL_DATUM(job_master, /datum/controller/occupations)
 
 /datum/controller/occupations
 		//List of all jobs
@@ -15,7 +15,7 @@ var/global/datum/controller/occupations/job_master
 	//var/list/all_jobs = typesof(/datum/job)
 	var/list/all_jobs = list(/datum/job/assistant) | using_map.allowed_jobs
 	if(!all_jobs.len)
-		to_world(span_boldannounce("Error setting up jobs, no job datums found!"))
+		to_chat(world, span_boldannounce("Error setting up jobs, no job datums found!"))
 		return 0
 	for(var/J in all_jobs)
 		var/datum/job/job = new J()
@@ -73,7 +73,7 @@ var/global/datum/controller/occupations/job_master
 			unassigned -= player
 			job.current_positions++
 			//CHOMPadd START
-			if(job.camp_protection && round_duration_in_ds < transfer_controller.shift_hard_end - 30 MINUTES)
+			if(job.camp_protection && round_duration_in_ds < GLOB.transfer_controller.shift_hard_end - 30 MINUTES)
 				job.register_shift_key(player.client.ckey)
 			//CHOMPadd END
 			return 1
@@ -238,7 +238,7 @@ var/global/datum/controller/occupations/job_master
 	SetupOccupations()
 
 	//Holder for Triumvirate is stored in the ticker, this just processes it
-	if(ticker && ticker.triai)
+	if(SSticker && GLOB.triai)
 		for(var/datum/job/A in occupations)
 			if(A.title == JOB_AI)
 				A.spawn_positions = 3
@@ -283,7 +283,7 @@ var/global/datum/controller/occupations/job_master
 
 	// Loop through all levels from high to low
 	var/list/shuffledoccupations = shuffle(occupations)
-	// var/list/disabled_jobs = ticker.mode.disabled_jobs  // So we can use .Find down below without a colon.
+	// var/list/disabled_jobs = SSticker.mode.disabled_jobs  // So we can use .Find down below without a colon.
 	for(var/level = 1 to 3)
 		//Check the head jobs first each level
 		CheckHeadPositions(level)
@@ -293,7 +293,7 @@ var/global/datum/controller/occupations/job_master
 
 			// Loop through all jobs
 			for(var/datum/job/job in shuffledoccupations) // SHUFFLE ME BABY
-				if(!job || ticker.mode.disabled_jobs.Find(job.title) )
+				if(!job || SSticker.mode.disabled_jobs.Find(job.title) )
 					continue
 
 				if(jobban_isbanned(player, job.title))
@@ -356,7 +356,7 @@ var/global/datum/controller/occupations/job_master
 	//For ones returning to lobby
 	for(var/mob/new_player/player in unassigned)
 		if(player.client.prefs.alternate_option == RETURN_TO_LOBBY)
-			player.ready = 0
+			player.ready = PLAYER_NOT_READY
 			unassigned -= player
 	return 1
 
@@ -485,6 +485,12 @@ var/global/datum/controller/occupations/job_master
 					custom_equip_slots.Add(G.slot)
 				else
 					spawn_in_storage += thing
+
+		/* CHOMPRemove Start
+		//Give new players a welcome guide!
+		if(isnum(H.client?.player_age) && H.client.player_age < 10)
+			H.equip_to_slot_or_del(new /obj/item/book/manual/virgo_pamphlet(H), slot_r_hand)
+		*/// CHOMPRemove End
 	else
 		to_chat(H, span_filter_notice("Your job is [rank] and the game just can't handle it! Please report this bug to an administrator."))
 
@@ -517,7 +523,7 @@ var/global/datum/controller/occupations/job_master
 
 		// TWEET PEEP
 		if(rank == JOB_SITE_MANAGER && announce)
-			var/sound/announce_sound = (ticker.current_state <= GAME_STATE_SETTING_UP) ? null : sound('sound/misc/boatswain.ogg', volume=20)
+			var/sound/announce_sound = (SSticker.current_state <= GAME_STATE_SETTING_UP) ? null : sound('sound/misc/boatswain.ogg', volume=20)
 			captain_announcement.Announce("All hands, [alt_title ? alt_title : JOB_SITE_MANAGER] [H.real_name] on deck!", new_sound = announce_sound, zlevel = H.z)
 
 		//Deferred item spawning.
@@ -576,11 +582,11 @@ var/global/datum/controller/occupations/job_master
 
 	// It is VERY unlikely that we'll have two players, in the same round, with the same name and branch, but still, this is here.
 	// If such conflict is encountered, a random number will be appended to the email address. If this fails too, no email account will be created.
-	if(ntnet_global.does_email_exist(complete_login))
+	if(GLOB.ntnet_global.does_email_exist(complete_login))
 		complete_login = "[sanitized_name][random_id(/datum/computer_file/data/email_account/, 100, 999)]@[domain]"
 
 	// If even fallback login generation failed, just don't give them an email. The chance of this happening is astronomically low.
-	if(ntnet_global.does_email_exist(complete_login))
+	if(GLOB.ntnet_global.does_email_exist(complete_login))
 		to_chat(H, span_filter_notice("You were not assigned an email address."))
 		H.mind.store_memory("You were not assigned an email address.")
 	else
@@ -607,7 +613,7 @@ var/global/datum/controller/occupations/job_master
 	if(!CONFIG_GET(flag/load_jobs_from_txt))
 		return 0
 
-	var/list/jobEntries = file2list(jobsfile)
+	var/list/jobEntries = world.file2list(jobsfile)
 
 	for(var/job in jobEntries)
 		if(!job)
@@ -735,22 +741,23 @@ var/global/datum/controller/occupations/job_master
 				message_admins("[key_name(C)] has requested to vore spawn into [key_name(pred)]")
 
 				var/confirm
+				var/spawner_name = C.prefs.read_preference(/datum/preference/name/real_name)
 				if(pred.no_latejoin_vore_warning)
 					if(pred.no_latejoin_vore_warning_time > 0)
 						if(absorb_choice)
-							confirm = tgui_alert(pred, "[C.prefs.real_name] is attempting to spawn absorbed as your [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"), pred.no_latejoin_vore_warning_time SECONDS)
+							confirm = tgui_alert(pred, "[spawner_name] is attempting to spawn absorbed as your [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"), pred.no_latejoin_vore_warning_time SECONDS)
 						else
-							confirm = tgui_alert(pred, "[C.prefs.real_name] is attempting to spawn into your [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"), pred.no_latejoin_vore_warning_time SECONDS)
+							confirm = tgui_alert(pred, "[spawner_name] is attempting to spawn into your [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"), pred.no_latejoin_vore_warning_time SECONDS)
 					if(!confirm)
 						confirm = "Yes"
 				else
 					if(absorb_choice)
-						confirm = tgui_alert(pred, "[C.prefs.real_name] is attempting to spawn absorbed as your [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"))
+						confirm = tgui_alert(pred, "[spawner_name] is attempting to spawn absorbed as your [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"))
 					else
-						confirm = tgui_alert(pred, "[C.prefs.real_name] is attempting to spawn into your [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"))
+						confirm = tgui_alert(pred, "[spawner_name] is attempting to spawn into your [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"))
 				if(confirm != "Yes")
 					to_chat(C, span_warning("[pred] has declined your spawn request."))
-					var/message = sanitizeSafe(tgui_input_text(pred,"Do you want to leave them a message?", "Notify Prey"))
+					var/message = tgui_input_text(pred,"Do you want to leave them a message?", "Notify Prey", max_length = MAX_MESSAGE_LEN)
 					if(message)
 						to_chat(C, span_notice("[pred] message : [message]"))
 					return
@@ -812,22 +819,23 @@ var/global/datum/controller/occupations/job_master
 				message_admins("[key_name(C)] has requested to pred spawn onto [key_name(prey)]")
 
 				var/confirm
+				var/spawner_name = C.prefs.read_preference(/datum/preference/name/real_name)
 				if(prey.no_latejoin_prey_warning)
 					if(prey.no_latejoin_prey_warning_time > 0)
 						if(absorb_choice)
-							confirm = tgui_alert(prey, "[C.prefs.real_name] is attempting to televore and instantly absorb you with their [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"), prey.no_latejoin_prey_warning_time SECONDS)
+							confirm = tgui_alert(prey, "[spawner_name] is attempting to televore and instantly absorb you with their [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"), prey.no_latejoin_prey_warning_time SECONDS)
 						else
-							confirm = tgui_alert(prey, "[C.prefs.real_name] is attempting to televore you into their [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"), prey.no_latejoin_prey_warning_time SECONDS)
+							confirm = tgui_alert(prey, "[spawner_name] is attempting to televore you into their [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"), prey.no_latejoin_prey_warning_time SECONDS)
 					if(!confirm)
 						confirm = "Yes"
 				else
 					if(absorb_choice)
-						confirm = tgui_alert(prey, "[C.prefs.real_name] is attempting to televore and instantly absorb you with their [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"))
+						confirm = tgui_alert(prey, "[spawner_name] is attempting to televore and instantly absorb you with their [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"))
 					else
-						confirm = tgui_alert(prey, "[C.prefs.real_name] is attempting to televore you into their [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"))
+						confirm = tgui_alert(prey, "[spawner_name] is attempting to televore you into their [vore_spawn_gut]. Let them?", "Confirm", list("No", "Yes"))
 				if(confirm != "Yes")
 					to_chat(C, span_warning("[prey] has declined your spawn request."))
-					var/message = sanitizeSafe(tgui_input_text(prey,"Do you want to leave them a message?", "Notify Pred"))
+					var/message = tgui_input_text(prey,"Do you want to leave them a message?", "Notify Pred", max_length = MAX_MESSAGE_LEN)
 					if(message)
 						to_chat(C, span_notice("[prey] message : [message]"))
 					return
@@ -908,10 +916,10 @@ var/global/datum/controller/occupations/job_master
 					to_chat(C, span_boldwarning("[carrier] has received your spawn request. Please wait."))
 					log_and_message_admins("[key_name(C)] has requested to item spawn into [key_name(carrier)]'s possession")
 
-					var/confirm = tgui_alert(carrier, "[C.prefs.real_name] is attempting to join as the [item_name] in your possession.", "Confirm", list("No", "Yes"))
+					var/confirm = tgui_alert(carrier, "[C.prefs.read_preference(/datum/preference/name/real_name)] is attempting to join as the [item_name] in your possession.", "Confirm", list("No", "Yes"))
 					if(confirm != "Yes")
 						to_chat(C, span_warning("[carrier] has declined your spawn request."))
-						var/message = sanitizeSafe(tgui_input_text(carrier,"Do you want to leave them a message?", "Notify Spawner"))
+						var/message = tgui_input_text(carrier,"Do you want to leave them a message?", "Notify Spawner", max_length = MAX_MESSAGE_LEN)
 						if(message)
 							to_chat(C, span_notice("[carrier] message : [message]"))
 						return

@@ -21,8 +21,6 @@
 	var/insistinga = 0
 
 /obj/machinery/wish_granter_dark/attack_hand(var/mob/living/carbon/human/user)
-	user.set_machine(src)
-
 	if(chargesa <= 0)
 		to_chat(user, "The Wish Granter lies silent.")
 		return
@@ -75,7 +73,7 @@
 			if("To Kill")
 				to_chat(user, span_boldwarning("Your wish is granted, but at a terrible cost..."))
 				to_chat(user, span_warning("The Wish Granter punishes you for your wickedness, claiming your soul and warping your body to match the darkness in your heart."))
-				ticker.mode.traitors += user.mind
+				SSticker.mode.traitors += user.mind
 				user.mind.special_role = "traitor"
 				var/datum/objective/hijack/hijack = new
 				hijack.owner = user.mind

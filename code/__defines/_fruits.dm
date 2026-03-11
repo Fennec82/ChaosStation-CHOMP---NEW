@@ -18,6 +18,7 @@
 #define PLANT_LEMON "lemon"
 #define PLANT_LETTUCE "lettuce"
 #define PLANT_LIME "lime"
+#define PLANT_MUSTARD "mustard"
 #define PLANT_ONION "onion"
 #define PLANT_ORANGE "orange"
 #define PLANT_PEANUT "peanut"
@@ -92,6 +93,9 @@
 #define PLANT_WURMWOAD "wurmwoad"
 #define PLANT_MICROM "microm"
 #define PLANT_MEGAM "megam"
+#define PLANT_TEA "tea"
+#define PLANT_PITCHERPLANT "pitcher plant"
+#define PLANT_NULLHARDLIGHT "Type NULL Hardlight Generator"
 
 // CHompAdd Start
 #define PLANT_VOLTATO "voltato"
@@ -104,9 +108,6 @@
 #define PLANT_BLUESAPBEAN "bluesapbean"
 #define PLANT_BLACKSAPBEAN "blacksapbean"
 #define PLANT_MEATWHEAT "meatwheat"
-#define PLANT_TEA "tea"
-#define PLANT_PITCHERPLANT "pitcher plant"
-#define PLANT_NULLHARDLIGHT "Type NULL Hardlight Generator"
 #define PLANT_CINNAMON "cinnamon"
 #define PLANT_GARDENIA "gardenia"
 #define PLANT_CHERRYBOMB "cherrybomb"

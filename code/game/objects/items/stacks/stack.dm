@@ -31,6 +31,10 @@
 	var/strict_color_stacking = FALSE // Will the stack merge with other stacks that are different colors? (Dyed cloth, wood, etc)
 	var/is_building = FALSE
 
+	var/custom_handling = FALSE
+	var/beacons = FALSE
+	var/sandbags = FALSE
+
 /obj/item/stack/Initialize(mapload, var/starting_amount)
 	. = ..()
 	if(!stacktype)
@@ -45,15 +49,19 @@
 				starting_amount = 1
 		set_amount(starting_amount, TRUE)
 	update_icon()
+	AddElement(/datum/element/sellable/material_stack)
 
 /obj/item/stack/Destroy()
-	if(uses_charge)
-		return 1
-	if (src && usr && usr.machine == src)
+	if (src && usr && usr.check_current_machine(src))
 		usr << browse(null, "window=stack")
 	if(islist(synths))
 		synths.Cut()
 	return ..()
+
+/obj/item/stack/get_material_composition(breakdown_flags)
+	. = ..()
+	for(var/M in .)
+		.[M] *= amount
 
 /obj/item/stack/update_icon()
 	if(no_variants)
@@ -80,6 +88,11 @@
 		. += get_examine_string()
 
 /obj/item/stack/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
+	if(custom_handling)
+		return FALSE
 	tgui_interact(user)
 
 /obj/item/stack/tgui_interact(mob/user, datum/tgui/ui, datum/tgui/parent_ui)
@@ -180,7 +193,7 @@
 	if (recipe.time)
 		to_chat(user, span_notice("Building [recipe.title] ..."))
 		is_building = TRUE
-		if (!do_after(user, recipe.time))
+		if (!do_after(user, recipe.time, target = src))
 			is_building = FALSE
 			return
 
@@ -190,8 +203,8 @@
 		if(recipe.use_material)
 			O = new recipe.result_type(user.loc, recipe.use_material)
 
-			if(istype(O, /obj))
-				var/obj/Ob = O
+			if(istype(O, /obj/item))
+				var/obj/item/Ob = O
 
 				if(LAZYLEN(Ob.matter))	// Law of equivalent exchange.
 					Ob.matter.Cut()
@@ -207,8 +220,8 @@
 			O = new recipe.result_type(user.loc)
 
 			if(recipe.matter_material)
-				if(istype(O, /obj))
-					var/obj/Ob = O
+				if(istype(O, /obj/item))
+					var/obj/item/Ob = O
 
 					if(LAZYLEN(Ob.matter))	// Law of equivalent exchange.
 						Ob.matter.Cut()
@@ -222,16 +235,13 @@
 
 		O.set_dir(user.dir)
 		O.add_fingerprint(user)
-		//VOREStation Addition Start - Let's not store things that get crafted with materials like this, they won't spawn correctly when retrieved.
-		if (isobj(O))
-			var/obj/P = O
-			P.persist_storable = FALSE
-		//VOREStation Addition End
 		if (istype(O, /obj/item/stack))
 			var/obj/item/stack/S = O
 			S.amount = produced
 			S.add_to_stacks(user)
-
+		if (isitem(O))
+			var/obj/item/P = O
+			P.persist_storable = FALSE
 		if (istype(O, /obj/item/storage)) //BubbleWrap - so newly formed boxes are empty
 			for (var/obj/item/I in O)
 				qdel(I)
@@ -263,7 +273,10 @@
 	if(!uses_charge)
 		amount -= used
 		if (amount <= 0)
-			amount = 0 // stop amount going negative ideally
+			// Tell container that we used up a stack
+			if(istype( loc, /obj/item/storage))
+				var/obj/item/storage/holder = loc
+				holder.remove_from_storage( src, null)
 			qdel(src) //should be safe to qdel immediately since if someone is still using this stack it will persist for a little while longer
 		update_icon()
 		return 1
@@ -419,7 +432,7 @@
 				src.add_fingerprint(user)
 				F.add_fingerprint(user)
 				spawn(0)
-					if (src && user.machine==src)
+					if (src && user.check_current_machine(src))
 						src.interact(user)
 	else
 		..()
@@ -429,16 +442,19 @@
 	if(istype(W, /obj/item/gripper))
 		var/obj/item/gripper/G = W
 		G.consolidate_stacks(src)
+		if(QDELETED(src))
+			return
 
 	else if(istype(W, /obj/item/stack))
 		var/obj/item/stack/S = W
 		src.transfer_to(S)
+		if(QDELETED(src))
+			return
 
-		spawn(0) //give the stacks a chance to delete themselves if necessary
-			if (S && user.machine==S)
-				S.interact(user)
-			if (src && user.machine==src)
-				src.interact(user)
+		if (S && user.check_current_machine(S))
+			S.interact(user)
+		if (src && user.check_current_machine(src))
+			src.interact(user)
 	else
 		return ..()
 
@@ -454,6 +470,9 @@
 	. = ..()
 	if(pulledby && isturf(loc))
 		combine_in_loc()
+
+/obj/item/stack/proc/reagents_per_sheet()
+	return REAGENTS_PER_SHEET // units total of reagents when grinded
 
 /*
  * Recipe datum

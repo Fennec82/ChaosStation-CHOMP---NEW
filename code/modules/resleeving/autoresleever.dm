@@ -1,3 +1,5 @@
+GLOBAL_LIST_EMPTY(active_autoresleevers)
+
 /obj/machinery/transhuman/autoresleever
 	name = "automatic resleever"
 	desc = "Uses advanced technology to detect when someone needs to be resleeved, and automatically prints and sleeves them into a new body. It even generates its own biomass!"
@@ -13,9 +15,17 @@
 	var/spawn_slots = -1				//How many people can be spawned from this? If -1 it's unlimited
 	var/spawntype						//The kind of mob that will be spawned, if set.
 
+/obj/machinery/transhuman/autoresleever/Initialize(mapload)
+	. = ..()
+	GLOB.active_autoresleevers += src
+
+/obj/machinery/transhuman/autoresleever/Destroy()
+	. = ..()
+	GLOB.active_autoresleevers -= src
+
 /obj/machinery/transhuman/autoresleever/update_icon()
 	. = ..()
-	if(stat)
+	if(stat & (BROKEN | MAINT | EMPED))
 		icon_state = "autoresleever-o"
 	else
 		icon_state = "autoresleever"
@@ -58,7 +68,7 @@
 		return
 
 /obj/machinery/transhuman/autoresleever/proc/autoresleeve(var/mob/observer/dead/ghost)
-	if(stat)
+	if(stat & (BROKEN | MAINT | EMPED)) // Let it still work when power is just off, it has it's own backup reserve or something.
 		to_chat(ghost, span_warning("This machine is not functioning..."))
 		return
 	if(!isobserver(ghost))
@@ -93,7 +103,7 @@
 	//Name matching is ugly but mind doesn't persist to look at.
 	var/charjob
 	var/datum/data/record/record_found
-	record_found = find_general_record("name",ghost_client.prefs.real_name)
+	record_found = find_general_record("name", ghost_client.prefs.read_preference(/datum/preference/name/real_name))
 
 	//Found their record, they were spawned previously
 	if(record_found)
@@ -136,6 +146,8 @@
 
 	var/slot = ghost.client.prefs.default_slot
 	if(tgui_alert(ghost, "Would you like to be resleeved?", "Resleeve", list("No","Yes")) != "Yes")
+		if(respawn >= world.time - ghost.timeofdeath) //We were given the option to resleeve due to an outside event, but closed the input box (be it by typing or otherwise) so we allow clicking the autosleever to revive.
+			ghost.timeofdeath = world.time - respawn
 		return
 	//This keeps people from dying in round, clicking the autoresleever, then swapping savefiles and clicking 'yes'
 	if(slot != ghost.client.prefs.default_slot && (!equip_body || !ghost_spawns))
@@ -192,13 +204,14 @@
 			new_character.default_language = def_lang
 
 	SEND_SIGNAL(new_character, COMSIG_HUMAN_DNA_FINALIZED)
+	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_RESLEEVED_MIND, new_character, new_character.mind)
 
 	//If desired, apply equipment.
 	if(equip_body)
 		if(charjob)
-			job_master.EquipRank(new_character, charjob, 1)
+			GLOB.job_master.EquipRank(new_character, charjob, 1)
 			new_character.mind.assigned_role = charjob
-			new_character.mind.role_alt_title = job_master.GetPlayerAltTitle(new_character, charjob)
+			new_character.mind.role_alt_title = GLOB.job_master.GetPlayerAltTitle(new_character, charjob)
 
 	//A redraw for good measure
 	new_character.regenerate_icons()

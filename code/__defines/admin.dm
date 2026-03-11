@@ -42,10 +42,11 @@
 #define R_EVENT (1<<14)
 #define R_HOST (1<<15) //higher than this will overflow
 #define R_MENTOR (1<<16)
+#define R_DBRANKS (1<<17)
 
 #define R_DEFAULT R_NONE
 
-#define R_EVERYTHING (1<<17)-1 //the sum of all other rank permissions, used for +EVERYTHING
+#define R_EVERYTHING (1<<18)-1 //the sum of all other rank permissions, used for +EVERYTHING
 #define R_HOLDER ((R_EVERYTHING) & (~(R_MENTOR | R_STEALTH)))
 
 #define SMITE_BREAKLEGS				"Break Legs"
@@ -61,23 +62,6 @@
 #define SMITE_AUTOSAVE_WIDE			"10 Second Autosave (AoE)"
 #define SMITE_SPICEREQUEST			"Give Them Spice (Harmless)"
 #define SMITE_PEPPERNADE			"Give Them Spice (Extra Spicy)"
-
-#define MODIFIY_ROBOT_MODULE_ADD	"Add a Module"
-#define MODIFIY_ROBOT_MODULE_REMOVE	"Remove a Module"
-#define MODIFIY_ROBOT_APPLY_UPGRADE	"Apply an Upgrade"
-#define MODIFIY_ROBOT_SUPP_ADD		"Add Upgrade Support"
-#define MODIFIY_ROBOT_SUPP_REMOVE	"Remove Upgrade Support"
-#define MODIFIY_ROBOT_RADIOC_ADD	"Add a Radio Channel"
-#define MODIFIY_ROBOT_RADIOC_REMOVE	"Remove a Radio Channel"
-#define MODIFIY_ROBOT_COMP_ADD		"Replace a Component"
-#define MODIFIY_ROBOT_COMP_REMOVE	"Remove a Component"
-#define MODIFIY_ROBOT_SWAP_MODULE	"Swap a Robot Module"
-#define MODIFIY_ROBOT_RESET_MODULE	"Fully Reset Robot Module"
-#define MODIFIY_ROBOT_TOGGLE_ERT	"Toggle ERT Module Overwrite"
-#define MODIFIY_ROBOT_LIMIT_MODULES_ADD	"Restrict Modules to"
-#define MODIFIY_ROBOT_LIMIT_MODULES_REMOVE	"Remove from restricted Modules"
-#define MODIFIY_ROBOT_TOGGLE_STATION_ACCESS "Toggle All Station Access Codes"
-#define MODIFIY_ROBOT_TOGGLE_CENT_ACCESS	"Toggle Central Access Codes"
 
 #define ADMIN_QUE(user) "(<a href='byond://?_src_=holder;[HrefToken(TRUE)];adminmoreinfo=\ref[user]'>?</a>)"
 #define ADMIN_FLW(user) "(<a href='byond://?_src_=holder;[HrefToken(TRUE)];adminplayerobservefollow=\ref[user]'>FLW</a>)"
@@ -123,6 +107,28 @@
 #define AHELP_ACTIVE 1
 #define AHELP_CLOSED 2
 #define AHELP_RESOLVED 3
+
+// Page numbers for the Permission Panel
+#define PERMISSIONS_PAGE_PERMISSIONS 1
+#define PERMISSIONS_PAGE_RANKS 2
+#define PERMISSIONS_PAGE_LOGGING 3
+#define PERMISSIONS_PAGE_HOUSEKEEPING 4
+
+// Actions that can be logged in the admin_log table, excepting NONE
+#define PERMISSIONS_ACTION_ADMIN_ADDED "add admin"
+#define PERMISSIONS_ACTION_ADMIN_REMOVED "remove admin"
+#define PERMISSIONS_ACTION_ADMIN_RANK_CHANGED "change admin rank"
+#define PERMISSIONS_ACTION_RANK_ADDED "add rank"
+#define PERMISSIONS_ACTION_RANK_REMOVED "remove rank"
+#define PERMISSIONS_ACTION_RANK_CHANGED "change rank flags"
+#define PERMISSIONS_ACTION_NONE "none"
+
+// The types of ranks you can have
+#define RANK_SOURCE_LOCAL "rank_local"
+#define RANK_SOURCE_TXT "rank_txt"
+#define RANK_SOURCE_DB "rank_db"
+#define RANK_SOURCE_BACKUP "rank_backup"
+#define RANK_SOURCE_TEMPORARY "rank_temp"
 
 // LOG BROWSE TYPES
 #define BROWSE_ROOT_ALL_LOGS 1

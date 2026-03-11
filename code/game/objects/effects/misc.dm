@@ -2,7 +2,7 @@
 /obj/effect/spresent
 	name = "strange present"
 	desc = "It's a ... present?"
-	icon = 'icons/obj/items.dmi'
+	icon = 'icons/obj/gifts.dmi'
 	icon_state = "strangepresent"
 	density = TRUE
 	anchored = FALSE
@@ -148,6 +148,6 @@
 		return QDEL_HINT_LETMELIVE
 
 	vis_contents.Cut()
-	qdel_null(light_spot)
+	QDEL_NULL(light_spot)
 
 	return ..()

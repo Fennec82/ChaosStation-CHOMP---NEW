@@ -51,7 +51,7 @@
 #define ROBOLIMB_REPAIR_CAP 60 //CHOMPedit, bumping it up to 60 to keep consistency with our global cap of 60
 
 #define ORGAN_FLESH    0 // Normal organic organs.
-#define ORGAN_ASSISTED 1 // Like pacemakers, not robotic
+#define ORGAN_ASSISTED 1 // Like an LVAD - No pulse, but still organic.
 #define ORGAN_ROBOT    2 // Fully robotic, no organic parts
 #define ORGAN_LIFELIKE 3 // Robotic, made to appear organic
 #define ORGAN_NANOFORM 4 // Fully nanoswarm organ
@@ -68,3 +68,22 @@
 #define MODULAR_BODYPART_INVALID    0 // Cannot be detached or reattached.
 #define MODULAR_BODYPART_PROSTHETIC 1 // Can be detached or reattached freely.
 #define MODULAR_BODYPART_CYBERNETIC 2 // Can be detached or reattached to compatible parent organs.
+
+//CitRP Port
+#define CYBERBEAST_MONITOR_STYLES "blank=cyber_blank;\
+	default=cyber_default;\
+	eyes=eyes;\
+	static=cyber_static;\
+	alert=cyber_alert;\
+	happy=cyber_happ;\
+	unhappy=cyber_unhapp;\
+	flat=cyber_flat;\
+	sad=cyber_sad;\
+	heart=cyber_heart;\
+	cross=cyber_cross;\
+	wave=cyber_wave;\
+	uwu=cyber_uwu;\
+	question=cyber_question;\
+	lowpower=cyber_lowpower;\
+	idle=cyber_idle;\
+	nwn=cyber_nwn"

@@ -9,11 +9,10 @@
 	pick_message_server()
 
 /datum/event/pda_spam/proc/pick_message_server()
-	if(message_servers)
-		for (var/obj/machinery/message_server/MS in message_servers)
-			if(MS.active)
-				useMS = MS
-				break
+	for(var/obj/machinery/message_server/MS in GLOB.message_servers)
+		if(MS.active)
+			useMS = MS
+			break
 
 /datum/event/pda_spam/tick()
 	if(world.time > last_spam_time + 3000)
@@ -60,7 +59,7 @@
 				if(2)
 					sender = pick(300;"QuickDatingSystem",200;"Find your russian bride",50;"Tajaran beauties are waiting",50;"Find your secret skrell crush",50;"Beautiful unathi brides")
 					message = pick("Your profile caught my attention and I wanted to write and say hello (QuickDating).",\
-					"If you will write to me on my email [pick(first_names_female)]@[pick(last_names)].[pick("ru","ck","tj","ur","nt")] I shall necessarily send you a photo (QuickDating).",\
+					"If you will write to me on my email [pick(GLOB.first_names_female)]@[pick(GLOB.last_names)].[pick("ru","ck","tj","ur","nt")] I shall necessarily send you a photo (QuickDating).",\
 					"I want that we write each other and I hope, that you will like my profile and you will answer me (QuickDating).",\
 					"You have (1) new message!",\
 					"You have (2) new profile views!")

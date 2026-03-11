@@ -4,7 +4,7 @@ GLOBAL_VAR_INIT(floorIsLava, 0)
 ////////////////////////////////
 /proc/message_admins(var/msg)
 	msg = span_filter_adminlog(span_log_message(span_prefix("ADMIN LOG:") + span_message("[msg]")))
-	//log_adminwarn(msg) //log_and_message_admins is for this
+	//log_admin_private(msg) //log_and_message_admins is for this
 
 	for(var/client/C in GLOB.admins)
 		if(check_rights_for(C, (R_ADMIN|R_MOD|R_SERVER)))
@@ -227,11 +227,9 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(show_player_panel, R_HOLDER, "Show Player Panel", m
 			if(!f) body += " | "
 			else f = 0
 			if(L in player.languages)
-				k = span_green(k)
-				body += "<a href='byond://?_src_=holder;[HrefToken()];toglang=\ref[player];lang=[html_encode(k)]'>[k]</a>"
+				body += "<a href='byond://?_src_=holder;[HrefToken()];toglang=\ref[player];lang=[html_encode(k)]'>[span_green(k)]</a>"
 			else
-				k = span_red(k)
-				body += "<a href='byond://?_src_=holder;[HrefToken()];toglang=\ref[player];lang=[html_encode(k)]'>[k]</a>"
+				body += "<a href='byond://?_src_=holder;[HrefToken()];toglang=\ref[player];lang=[html_encode(k)]'>[span_red(k)]</a>"
 
 	body += {"<br>"}
 
@@ -321,7 +319,7 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(show_player_panel, R_HOLDER, "Show Player Panel", m
 				<BR>Feed channels and stories entered through here will be uneditable and handled as official news by the rest of the units.
 				<BR>Note that this panel allows full freedom over the news network, there are no constrictions except the few basic ones. Don't break things!
 			"}
-			if(news_network.wanted_issue)
+			if(GLOB.news_network.wanted_issue)
 				dat+= "<HR><A href='byond://?src=\ref[src];[HrefToken()];ac_view_wanted=1'>Read Wanted Issue</A>"
 
 			dat+= {"<HR><BR><A href='byond://?src=\ref[src];[HrefToken()];ac_create_channel=1'>Create Feed Channel</A>
@@ -331,7 +329,7 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(show_player_panel, R_HOLDER, "Show Player Panel", m
 			"}
 
 			var/wanted_already = 0
-			if(news_network.wanted_issue)
+			if(GLOB.news_network.wanted_issue)
 				wanted_already = 1
 
 			dat+={"<HR>"} + span_bold("Feed Security functions:") + {"<BR>
@@ -342,10 +340,10 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(show_player_panel, R_HOLDER, "Show Player Panel", m
 			"}
 		if(1)
 			dat+= "Station Feed Channels<HR>"
-			if( isemptylist(news_network.network_channels) )
+			if( isemptylist(GLOB.news_network.network_channels) )
 				dat+=span_italics("No active channels found...")
 			else
-				for(var/datum/feed_channel/CHANNEL in news_network.network_channels)
+				for(var/datum/feed_channel/CHANNEL in GLOB.news_network.network_channels)
 					if(CHANNEL.is_admin_channel)
 						dat+=span_bold("<FONT style='BACKGROUND-COLOR: LightGreen'><A href='byond://?src=\ref[src];[HrefToken()];ac_show_channel=\ref[CHANNEL]'>[CHANNEL.channel_name]</A></FONT>") + "<BR>"
 					else
@@ -392,7 +390,7 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(show_player_panel, R_HOLDER, "Show Player Panel", m
 			if(src.admincaster_feed_channel.channel_name =="" || src.admincaster_feed_channel.channel_name == "\[REDACTED\]")
 				dat+=span_maroon("Invalid channel name.") + "<BR>"
 			var/check = 0
-			for(var/datum/feed_channel/FC in news_network.network_channels)
+			for(var/datum/feed_channel/FC in GLOB.news_network.network_channels)
 				if(FC.channel_name == src.admincaster_feed_channel.channel_name)
 					check = 1
 					break
@@ -432,10 +430,10 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(show_player_panel, R_HOLDER, "Show Player Panel", m
 				"} + span_small("Keep in mind that users attempting to view a censored feed will instead see the \[REDACTED\] tag above it.") + {"
 				<HR>Select Feed channel to get Stories from:<BR>
 			"}
-			if(isemptylist(news_network.network_channels))
+			if(isemptylist(GLOB.news_network.network_channels))
 				dat+=span_italics("No feed channels found active...") + "<BR>"
 			else
-				for(var/datum/feed_channel/CHANNEL in news_network.network_channels)
+				for(var/datum/feed_channel/CHANNEL in GLOB.news_network.network_channels)
 					dat+="<A href='byond://?src=\ref[src];[HrefToken()];ac_pick_censor_channel=\ref[CHANNEL]'>[CHANNEL.channel_name]</A> [(CHANNEL.censored) ? (span_red("***")) : null]<BR>"
 			dat+="<BR><A href='byond://?src=\ref[src];[HrefToken()];ac_setScreen=[0]'>Cancel</A>"
 		if(11)
@@ -445,10 +443,10 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(show_player_panel, R_HOLDER, "Show Player Panel", m
 				"} + span_small("morale, integrity or disciplinary behaviour. A D-Notice will render a channel unable to be updated by anyone, without deleting any feed") + {"
 				"} + span_small("stories it might contain at the time. You can lift a D-Notice if you have the required access at any time.") + {"<HR>
 			"}
-			if(isemptylist(news_network.network_channels))
+			if(isemptylist(GLOB.news_network.network_channels))
 				dat+=span_italics("No feed channels found active...") + "<BR>"
 			else
-				for(var/datum/feed_channel/CHANNEL in news_network.network_channels)
+				for(var/datum/feed_channel/CHANNEL in GLOB.news_network.network_channels)
 					dat+="<A href='byond://?src=\ref[src];[HrefToken()];ac_pick_d_notice=\ref[CHANNEL]'>[CHANNEL.channel_name]</A> [(CHANNEL.censored) ? (span_red("***")) : null]<BR>"
 
 			dat+="<BR><A href='byond://?src=\ref[src];[HrefToken()];ac_setScreen=[0]'>Back</A>"
@@ -488,7 +486,7 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(show_player_panel, R_HOLDER, "Show Player Panel", m
 			dat+=span_bold("Wanted Issue Handler:")
 			var/wanted_already = 0
 			var/end_param = 1
-			if(news_network.wanted_issue)
+			if(GLOB.news_network.wanted_issue)
 				wanted_already = 1
 				end_param = 2
 			if(wanted_already)
@@ -499,7 +497,7 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(show_player_panel, R_HOLDER, "Show Player Panel", m
 				<A href='byond://?src=\ref[src];[HrefToken()];ac_set_wanted_desc=1'>Description</A>: [src.admincaster_feed_message.body] <BR>
 			"}
 			if(wanted_already)
-				dat+=span_bold("Wanted Issue created by:") + span_green(" [news_network.wanted_issue.backup_author]") + "<BR>"
+				dat+=span_bold("Wanted Issue created by:") + span_green(" [GLOB.news_network.wanted_issue.backup_author]") + "<BR>"
 			else
 				dat+=span_bold("Wanted Issue will be created under prosecutor:") + span_green(" [src.admincaster_signature]") + "<BR>"
 			dat+="<BR><A href='byond://?src=\ref[src];[HrefToken()];ac_submit_wanted=[end_param]'>[(wanted_already) ? ("Edit Issue") : ("Submit")]</A>"
@@ -525,13 +523,13 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(show_player_panel, R_HOLDER, "Show Player Panel", m
 			"}
 		if(18)
 			dat+={"
-				"} + span_bold(span_maroon("-- STATIONWIDE WANTED ISSUE --")) + {"<BR>"} + span_normal("\[Submitted by: [span_green("[news_network.wanted_issue.backup_author]")]\]") + {"<HR>
-				"} + span_bold("Criminal") + {": [news_network.wanted_issue.author]<BR>
-				"} + span_bold("Description") + {": [news_network.wanted_issue.body]<BR>
+				"} + span_bold(span_maroon("-- STATIONWIDE WANTED ISSUE --")) + {"<BR>"} + span_normal("\[Submitted by: [span_green("[GLOB.news_network.wanted_issue.backup_author]")]\]") + {"<HR>
+				"} + span_bold("Criminal") + {": [GLOB.news_network.wanted_issue.author]<BR>
+				"} + span_bold("Description") + {": [GLOB.news_network.wanted_issue.body]<BR>
 				"} + span_bold("Photo:") + {":
 			"}
-			if(news_network.wanted_issue.img)
-				usr << browse_rsc(news_network.wanted_issue.img, "tmp_photow.png")
+			if(GLOB.news_network.wanted_issue.img)
+				usr << browse_rsc(GLOB.news_network.wanted_issue.img, "tmp_photow.png")
 				dat+="<BR><img src='tmp_photow.png' width = '180'>"
 			else
 				dat+="None"
@@ -544,8 +542,8 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(show_player_panel, R_HOLDER, "Show Player Panel", m
 		else
 			dat+="I'm sorry to break your immersion. This shit's bugged. Report this bug to Agouri, polyxenitopalidou@gmail.com"
 
-	//to_world("Channelname: [src.admincaster_feed_channel.channel_name] [src.admincaster_feed_channel.author]")
-	//to_world("Msg: [src.admincaster_feed_message.author] [src.admincaster_feed_message.body]")
+	//to_chat(world, "Channelname: [src.admincaster_feed_channel.channel_name] [src.admincaster_feed_channel.author]")
+	//to_chat(world, "Msg: [src.admincaster_feed_message.author] [src.admincaster_feed_message.body]")
 
 	var/datum/browser/popup = new(owner, "admincaster_main", "Admin Newscaster", 400, 600)
 	popup.add_head_content("<TITLE>Admin Newscaster</TITLE>")
@@ -625,29 +623,69 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(show_player_panel, R_HOLDER, "Show Player Panel", m
 /////////////////////////////////////////////////////////////////////////////////////////////////admins2.dm merge
 //i.e. buttons/verbs
 
+#define REGULAR_RESTART "Regular Restart"
+#define REGULAR_RESTART_DELAYED "Regular Restart (with delay)"
+#define HARD_RESTART "Hard Restart (No Delay/Feedback Reason)"
+#define HARDEST_RESTART "Hardest Restart (No actions, just reboot)"
+#define TGS_RESTART "Server Restart (Kill and restart DD)"
+ADMIN_VERB(restart, R_SERVER, "Reboot World", "Restarts the world immediately.", "Server.Game")
+	var/list/options = list(REGULAR_RESTART, REGULAR_RESTART_DELAYED, HARD_RESTART)
 
-/datum/admins/proc/restart()
-	set category = "Server.Game"
-	set name = "Restart"
-	set desc="Restarts the world"
-	if (!check_rights_for(usr.client, R_HOLDER))
+	// this option runs a codepath that can leak db connections because it skips subsystem (specifically SSdbcore) shutdown
+	if(!SSdbcore.IsConnected())
+		options += HARDEST_RESTART
+
+	if(world.TgsAvailable())
+		options += TGS_RESTART;
+
+	if(SSticker.admin_delay_notice)
+		if(alert(user, "Are you sure? An admin has already delayed the round end for the following reason: [SSticker.admin_delay_notice]", "Confirmation", "Yes", "No") != "Yes")
+			return FALSE
+
+	var/result = input(user, "Select reboot method", "World Reboot", options[1]) as null|anything in options
+	if(isnull(result))
 		return
-	var/confirm = alert(usr, "Restart the game world?", "Restart", "Yes", "Cancel") // Not tgui_alert for safety
-	if(!confirm || confirm == "Cancel")
+
+	feedback_add_details("admin_verb","R")
+	if(blackbox)
+		blackbox.save_all_data_to_sql()
+
+	var/init_by = "Initiated by [user.holder.fakekey ? "Admin" : user.key]."
+	switch(result)
+		if(REGULAR_RESTART)
+			if(!user.is_localhost())
+				if(alert(user, "Are you sure you want to restart the server?","This server is live", "Restart", "Cancel") != "Restart")
+					return FALSE
+			SSticker.Reboot(init_by, "admin reboot - by [user.key] [user.holder.fakekey ? "(stealth)" : ""]", 10)
+		if(REGULAR_RESTART_DELAYED)
+			var/delay = input("What delay should the restart have (in seconds)?", "Restart Delay", 5) as num|null
+			if(!delay)
+				return FALSE
+			if(!user.is_localhost())
+				if(alert(user,"Are you sure you want to restart the server?","This server is live", "Restart", "Cancel") != "Restart")
+					return FALSE
+			SSticker.Reboot(init_by, "admin reboot - by [user.key] [user.holder.fakekey ? "(stealth)" : ""]", delay * 10)
+		if(HARD_RESTART)
+			to_chat(world, "World reboot - [init_by]")
+			world.Reboot()
+		if(HARDEST_RESTART)
+			to_chat(world, "Hard world reboot - [init_by]")
+			world.Reboot(fast_track = TRUE)
+		if(TGS_RESTART)
+			to_chat(world, "Server restart - [init_by]")
+			world.TgsEndProcess()
+
+#undef REGULAR_RESTART
+#undef REGULAR_RESTART_DELAYED
+#undef HARD_RESTART
+#undef HARDEST_RESTART
+#undef TGS_RESTART
+
+ADMIN_VERB(cancel_reboot, R_SERVER, "Cancel Reboot", "Cancels a pending world reboot.", "Server.Game")
+	if(!SSticker.cancel_reboot(user))
 		return
-	if(confirm == "Yes")
-		to_world(span_danger("Restarting world!" ) + span_notice("Initiated by [usr.client.holder.fakekey ? "Admin" : usr.key]!"))
-		log_admin("[key_name(usr)] initiated a reboot.")
-
-		feedback_set_details("end_error","admin reboot - by [usr.key] [usr.client.holder.fakekey ? "(stealth)" : ""]")
-		feedback_add_details("admin_verb","R") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-
-		if(blackbox)
-			blackbox.save_all_data_to_sql()
-
-		sleep(50)
-		world.Reboot()
-
+	log_admin("[key_name(user)] cancelled the pending world reboot.")
+	message_admins("[key_name_admin(user)] cancelled the pending world reboot.")
 
 /datum/admins/proc/announce()
 	set category = "Admin.Chat"
@@ -664,16 +702,13 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(show_player_panel, R_HOLDER, "Show Player Panel", m
 		log_admin("Announce: [key_name(usr)] : [message]")
 	feedback_add_details("admin_verb","A") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-//VOREStation Edit to this verb for the purpose of making it compliant with the annunciator system
-var/datum/announcement/priority/admin_pri_announcer = new
-var/datum/announcement/minor/admin_min_announcer = new
 /datum/admins/proc/intercom()
 	set category = "Fun.Event Kit"
 	set name = "Intercom Msg"
 	set desc = "Send an intercom message, like an arrivals announcement."
 	if(!check_rights(0))	return
 
-	var/channel = tgui_input_list(usr, "Channel for message:","Channel", radiochannels)
+	var/channel = tgui_input_list(usr, "Channel for message:","Channel", GLOB.radiochannels)
 
 	if(channel) //They picked a channel
 		var/sender = tgui_input_text(usr, "Name of sender (max 75):", "Announcement", "Announcement Computer")
@@ -684,13 +719,11 @@ var/datum/announcement/minor/admin_min_announcer = new
 			var/msgverb = tgui_input_text(usr, "Name of verb (Such as 'states', 'says', 'asks', etc):", "Verb", "says")
 			if(message) //They put a message
 				message = sanitize(message, 500, extra = 0)
-				//VOREStation Edit Start
 				if(msgverb)
 					msgverb = sanitize(msgverb, 50, extra = 0)
 				else
 					msgverb = "states"
 				GLOB.global_announcer.autosay("[message]", "[sender]", "[channel == "Common" ? null : channel]", states = msgverb) //Common is a weird case, as it's not a "channel", it's just talking into a radio without a channel set.
-				//VOREStation Edit End
 				log_admin("Intercom: [key_name(usr)] : [sender]:[message]")
 
 	feedback_add_details("admin_verb","IN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
@@ -702,7 +735,7 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set waitfor = FALSE //Why bother? We have some sleeps. You can leave tho!
 	if(!check_rights(0))	return
 
-	var/channel = tgui_input_list(usr, "Channel for message:","Channel", radiochannels)
+	var/channel = tgui_input_list(usr, "Channel for message:","Channel", GLOB.radiochannels)
 
 	if(!channel) //They picked a channel
 		return
@@ -779,7 +812,7 @@ var/datum/announcement/minor/admin_min_announcer = new
 			var/this_sender = decomposed[i]
 			var/this_message = decomposed[++i]
 			var/this_wait = decomposed[++i]
-			GLOB.global_announcer.autosay("[this_message]", "[this_sender]", "[channel == "Common" ? null : channel]", states = speech_verb) //Common is a weird case, as it's not a "channel", it's just talking into a radio without a channel set.	//VOREStation Edit
+			GLOB.global_announcer.autosay("[this_message]", "[this_sender]", "[channel == "Common" ? null : channel]", states = speech_verb) //Common is a weird case, as it's not a "channel", it's just talking into a radio without a channel set.
 			sleep(this_wait SECONDS)
 
 /datum/admins/proc/toggleooc()
@@ -792,9 +825,9 @@ var/datum/announcement/minor/admin_min_announcer = new
 
 	CONFIG_SET(flag/ooc_allowed, !CONFIG_GET(flag/ooc_allowed))
 	if (CONFIG_GET(flag/ooc_allowed))
-		to_world(span_world("The OOC channel has been globally enabled!"))
+		to_chat(world, span_world("The OOC channel has been globally enabled!"))
 	else
-		to_world(span_world("The OOC channel has been globally disabled!"))
+		to_chat(world, span_world("The OOC channel has been globally disabled!"))
 	log_and_message_admins("toggled OOC.")
 	feedback_add_details("admin_verb","TOOC") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
@@ -808,9 +841,9 @@ var/datum/announcement/minor/admin_min_announcer = new
 
 	CONFIG_SET(flag/looc_allowed, !CONFIG_GET(flag/looc_allowed))
 	if (CONFIG_GET(flag/looc_allowed))
-		to_world(span_world("The LOOC channel has been globally enabled!"))
+		to_chat(world, span_world("The LOOC channel has been globally enabled!"))
 	else
-		to_world(span_world("The LOOC channel has been globally disabled!"))
+		to_chat(world, span_world("The LOOC channel has been globally disabled!"))
 	log_and_message_admins("toggled LOOC.")
 	feedback_add_details("admin_verb","TLOOC") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
@@ -825,11 +858,11 @@ var/datum/announcement/minor/admin_min_announcer = new
 
 	CONFIG_SET(flag/dsay_allowed, !CONFIG_GET(flag/dsay_allowed))
 	if (CONFIG_GET(flag/dsay_allowed))
-		to_world(span_world("Deadchat has been globally enabled!"))
+		to_chat(world, span_world("Deadchat has been globally enabled!"))
 	else
-		to_world(span_world("Deadchat has been globally disabled!"))
+		to_chat(world, span_world("Deadchat has been globally disabled!"))
 	log_admin("[key_name(usr)] toggled deadchat.")
-	message_admins("[key_name_admin(usr)] toggled deadchat.", 1)
+	message_admins("[key_name_admin(usr)] toggled deadchat.")
 	feedback_add_details("admin_verb","TDSAY") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc
 
 /datum/admins/proc/toggleoocdead()
@@ -842,7 +875,7 @@ var/datum/announcement/minor/admin_min_announcer = new
 
 	CONFIG_SET(flag/dooc_allowed, !CONFIG_GET(flag/dooc_allowed))
 	log_admin("[key_name(usr)] toggled Dead OOC.")
-	message_admins("[key_name_admin(usr)] toggled Dead OOC.", 1)
+	message_admins("[key_name_admin(usr)] toggled Dead OOC.")
 	feedback_add_details("admin_verb","TDOOC") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /datum/admins/proc/togglehubvisibility()
@@ -855,7 +888,7 @@ var/datum/announcement/minor/admin_min_announcer = new
 
 	world.visibility = !(world.visibility)
 	log_admin("[key_name(usr)] toggled hub visibility.")
-	message_admins("[key_name_admin(usr)] toggled hub visibility.  The server is now [world.visibility ? "visible" : "invisible"] ([world.visibility]).", 1)
+	message_admins("[key_name_admin(usr)] toggled hub visibility.  The server is now [world.visibility ? "visible" : "invisible"] ([world.visibility]).")
 	feedback_add_details("admin_verb","THUB") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc
 
 /datum/admins/proc/toggletraitorscaling()
@@ -864,7 +897,7 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set name="Toggle Traitor Scaling"
 	CONFIG_SET(flag/traitor_scaling, !CONFIG_GET(flag/traitor_scaling))
 	log_admin("[key_name(usr)] toggled Traitor Scaling to [CONFIG_GET(flag/traitor_scaling)].")
-	message_admins("[key_name_admin(usr)] toggled Traitor Scaling [CONFIG_GET(flag/traitor_scaling) ? "on" : "off"].", 1)
+	message_admins("[key_name_admin(usr)] toggled Traitor Scaling [CONFIG_GET(flag/traitor_scaling) ? "on" : "off"].")
 	feedback_add_details("admin_verb","TTS") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /datum/admins/proc/startnow()
@@ -880,14 +913,14 @@ var/datum/announcement/minor/admin_min_announcer = new
 	if(!SSticker.start_immediately)
 		SSticker.start_immediately = TRUE
 		var/msg = ""
-		if(SSticker.current_state == GAME_STATE_INIT)
+		if(SSticker.current_state == GAME_STATE_STARTUP)
 			msg = " (The server is still setting up, but the round will be started as soon as possible.)"
 		log_admin("[key_name(usr)] has started the game.[msg]")
 		message_admins(span_notice("[key_name_admin(usr)] has started the game.[msg]"))
 		feedback_add_details("admin_verb","SN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	else
 		SSticker.start_immediately = FALSE
-		to_world(span_filter_system(span_blue("Immediate game start canceled. Normal startup resumed.")))
+		to_chat(world, span_filter_system(span_blue("Immediate game start canceled. Normal startup resumed.")))
 		log_and_message_admins("cancelled immediate game start.")
 
 /datum/admins/proc/toggleenter()
@@ -896,11 +929,11 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set name="Toggle Entering"
 	CONFIG_SET(flag/enter_allowed, !CONFIG_GET(flag/enter_allowed))
 	if (!CONFIG_GET(flag/enter_allowed))
-		to_world(span_world("New players may no longer enter the game."))
+		to_chat(world, span_world("New players may no longer enter the game."))
 	else
-		to_world(span_world("New players may now enter the game."))
+		to_chat(world, span_world("New players may now enter the game."))
 	log_admin("[key_name(usr)] toggled new player game entering.")
-	message_admins(span_blue("[key_name_admin(usr)] toggled new player game entering."), 1)
+	message_admins(span_blue("[key_name_admin(usr)] toggled new player game entering."))
 	world.update_status()
 	feedback_add_details("admin_verb","TE") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
@@ -910,9 +943,9 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set name="Toggle AI"
 	CONFIG_SET(flag/allow_ai, !CONFIG_GET(flag/allow_ai))
 	if (!CONFIG_GET(flag/allow_ai))
-		to_world(span_world("The AI job is no longer chooseable."))
+		to_chat(world, span_world("The AI job is no longer chooseable."))
 	else
-		to_world(span_world("The AI job is chooseable now."))
+		to_chat(world, span_world("The AI job is chooseable now."))
 	log_admin("[key_name(usr)] toggled AI allowed.")
 	world.update_status()
 	feedback_add_details("admin_verb","TAI") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
@@ -923,10 +956,10 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set name="Toggle Respawn"
 	CONFIG_SET(flag/abandon_allowed, !CONFIG_GET(flag/abandon_allowed))
 	if(CONFIG_GET(flag/abandon_allowed))
-		to_world(span_world("You may now respawn."))
+		to_chat(world, span_world("You may now respawn."))
 	else
-		to_world(span_world("You may no longer respawn :("))
-	message_admins(span_blue("[key_name_admin(usr)] toggled respawn to [CONFIG_GET(flag/abandon_allowed) ? "On" : "Off"]."), 1)
+		to_chat(world, span_world("You may no longer respawn :("))
+	message_admins(span_blue("[key_name_admin(usr)] toggled respawn to [CONFIG_GET(flag/abandon_allowed) ? "On" : "Off"]."))
 	log_admin("[key_name(usr)] toggled respawn to [CONFIG_GET(flag/abandon_allowed) ? "On" : "Off"].")
 	world.update_status()
 	feedback_add_details("admin_verb","TR") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
@@ -936,7 +969,7 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set desc="Whether persistent data will be saved from now on."
 	set name="Toggle Persistent Data"
 	CONFIG_SET(flag/persistence_disabled, !CONFIG_GET(flag/persistence_disabled))
-	message_admins(span_blue("[key_name_admin(usr)] toggled persistence to [CONFIG_GET(flag/persistence_disabled) ? "Off" : "On"]."), 1)
+	message_admins(span_blue("[key_name_admin(usr)] toggled persistence to [CONFIG_GET(flag/persistence_disabled) ? "Off" : "On"]."))
 	log_admin("[key_name(usr)] toggled persistence to [CONFIG_GET(flag/persistence_disabled) ? "Off" : "On"].")
 	world.update_status()
 	feedback_add_details("admin_verb","TPD") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
@@ -947,30 +980,24 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set name="Toggle Mapload Persistent Data"
 	CONFIG_SET(flag/persistence_ignore_mapload, !CONFIG_GET(flag/persistence_ignore_mapload))
 	if(!CONFIG_GET(flag/persistence_ignore_mapload))
-		to_world(span_world("Persistence is now enabled."))
+		to_chat(world, span_world("Persistence is now enabled."))
 	else
-		to_world(span_world("Persistence is no longer enabled."))
-	message_admins(span_blue("[key_name_admin(usr)] toggled persistence to [CONFIG_GET(flag/persistence_ignore_mapload) ? "Off" : "On"]."), 1)
+		to_chat(world, span_world("Persistence is no longer enabled."))
+	message_admins(span_blue("[key_name_admin(usr)] toggled persistence to [CONFIG_GET(flag/persistence_ignore_mapload) ? "Off" : "On"]."))
 	log_admin("[key_name(usr)] toggled persistence to [CONFIG_GET(flag/persistence_ignore_mapload) ? "Off" : "On"].")
 	world.update_status()
 	feedback_add_details("admin_verb","TMPD") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/datum/admins/proc/toggle_aliens()
-	set category = "Server.Game"
-	set desc="Toggle alien mobs"
-	set name="Toggle Aliens"
+ADMIN_VERB(toggle_aliens, R_FUN|R_SERVER, "Toggle Aliens", "Toggle alien mobs.", ADMIN_CATEGORY_SERVER_GAME)
 	CONFIG_SET(flag/aliens_allowed, !CONFIG_GET(flag/aliens_allowed))
-	log_admin("[key_name(usr)] toggled Aliens to [CONFIG_GET(flag/aliens_allowed)].")
-	message_admins("[key_name_admin(usr)] toggled Aliens [CONFIG_GET(flag/aliens_allowed) ? "on" : "off"].", 1)
+	log_admin("[key_name(user)] toggled Aliens to [CONFIG_GET(flag/aliens_allowed)].")
+	message_admins("[key_name_admin(user)] toggled Aliens [CONFIG_GET(flag/aliens_allowed) ? "on" : "off"].")
 	feedback_add_details("admin_verb","TA") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/datum/admins/proc/toggle_space_ninja()
-	set category = "Server.Game"
-	set desc="Toggle space ninjas spawning."
-	set name="Toggle Space Ninjas"
+ADMIN_VERB(toggle_space_ninja, R_FUN|R_SERVER, "Toggle Space Ninjas", "Toggle space ninjas spawning.", ADMIN_CATEGORY_SERVER_GAME)
 	CONFIG_SET(flag/ninjas_allowed, !CONFIG_GET(flag/ninjas_allowed))
-	log_admin("[key_name(usr)] toggled Space Ninjas to [CONFIG_GET(flag/ninjas_allowed)].")
-	message_admins("[key_name_admin(usr)] toggled Space Ninjas [CONFIG_GET(flag/ninjas_allowed) ? "on" : "off"].", 1)
+	log_admin("[key_name(user)] toggled Space Ninjas to [CONFIG_GET(flag/ninjas_allowed)].")
+	message_admins("[key_name_admin(user)] toggled Space Ninjas [CONFIG_GET(flag/ninjas_allowed) ? "on" : "off"].")
 	feedback_add_details("admin_verb","TSN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /datum/admins/proc/delay()
@@ -978,18 +1005,20 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set desc="Delay the game start/end"
 	set name="Delay"
 
-	if(!check_rights(R_SERVER|R_EVENT))	return
+	if(!check_rights(R_SERVER|R_EVENT|R_ADMIN|R_MOD))	return
 	if (SSticker.current_state >= GAME_STATE_PLAYING)
-		SSticker.delay_end = !SSticker.delay_end
+		// Tell the ticker to delay/resume
+		SSticker.toggle_delay()
+
 		log_admin("[key_name(usr)] [SSticker.delay_end ? "delayed the round end" : "has made the round end normally"].")
-		message_admins(span_blue("[key_name(usr)] [SSticker.delay_end ? "delayed the round end" : "has made the round end normally"]."), 1)
+		message_admins(span_blue("[key_name(usr)] [SSticker.delay_end ? "delayed the round end" : "has made the round end normally"]."))
 		return
 	GLOB.round_progressing = !GLOB.round_progressing
 	if (!GLOB.round_progressing)
-		to_world(span_world("The game start has been delayed."))
+		to_chat(world, span_world("The game start has been delayed."))
 		log_admin("[key_name(usr)] delayed the game.")
 	else
-		to_world(span_world("The game will start soon."))
+		to_chat(world, span_world("The game will start soon."))
 		log_admin("[key_name(usr)] removed the delay.")
 	feedback_add_details("admin_verb","DELAY") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
@@ -1017,24 +1046,6 @@ var/datum/announcement/minor/admin_min_announcer = new
 	message_admins(span_blue("Toggled reviving to [CONFIG_GET(flag/allow_admin_rev)]."))
 	feedback_add_details("admin_verb","TAR") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/datum/admins/proc/immreboot()
-	set category = "Server.Game"
-	set desc="Reboots the server post haste"
-	set name="Immediate Reboot"
-	if(!check_rights_for(usr.client, R_HOLDER))	return
-	if(alert(usr, "Reboot server?","Reboot!","Yes","No") != "Yes") // Not tgui_alert for safety
-		return
-	to_world(span_filter_system("[span_red(span_bold("Rebooting world!"))] [span_blue("Initiated by [usr.client.holder.fakekey ? "Admin" : usr.key]!")]"))
-	log_admin("[key_name(usr)] initiated an immediate reboot.")
-
-	feedback_set_details("end_error","immediate admin reboot - by [usr.key] [usr.client.holder.fakekey ? "(stealth)" : ""]")
-	feedback_add_details("admin_verb","IR") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-
-	if(blackbox)
-		blackbox.save_all_data_to_sql()
-
-	world.Reboot()
-
 /datum/admins/proc/unprison(var/mob/M in GLOB.mob_list)
 	set category = "Admin.Moderation"
 	set name = "Unprison"
@@ -1052,7 +1063,7 @@ var/datum/announcement/minor/admin_min_announcer = new
 ////////////////////////////////////////////////////////////////////////////////////////////////ADMIN HELPER PROCS
 
 /proc/is_special_character(var/character) // returns 1 for special characters and 2 for heroes of gamemode
-	if(!ticker || !ticker.mode)
+	if(!SSticker|| !SSticker.mode)
 		return 0
 	var/datum/mind/M
 	if (ismob(character))
@@ -1062,8 +1073,8 @@ var/datum/announcement/minor/admin_min_announcer = new
 		M = character
 
 	if(M)
-		if(ticker.mode.antag_templates && ticker.mode.antag_templates.len)
-			for(var/datum/antagonist/antag in ticker.mode.antag_templates)
+		if(SSticker.mode.antag_templates && SSticker.mode.antag_templates.len)
+			for(var/datum/antagonist/antag in SSticker.mode.antag_templates)
 				if(antag.is_antagonist(M))
 					return 2
 		if(M.special_role)
@@ -1197,70 +1208,70 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set desc = "Show the current round configuration."
 	set name = "Show Game Mode"
 
-	if(!ticker || !ticker.mode)
+	if(!SSticker|| !SSticker.mode)
 		tgui_alert_async(usr, "Not before roundstart!", "Alert")
 		return
 
-	var/out = span_large(span_bold("Current mode: [ticker.mode.name] (<a href='byond://?src=\ref[ticker.mode];[HrefToken()];debug_antag=self'>[ticker.mode.config_tag]</a>)")) + "<br/>"
+	var/out = span_large(span_bold("Current mode: [SSticker.mode.name] (<a href='byond://?src=\ref[SSticker.mode];[HrefToken()];debug_antag=self'>[SSticker.mode.config_tag]</a>)")) + "<br/>"
 	out += "<hr>"
 
-	if(ticker.mode.ert_disabled)
-		out += span_bold("Emergency Response Teams:") + "<a href='byond://?src=\ref[ticker.mode];[HrefToken()];toggle=ert'>disabled</a>"
+	if(SSticker.mode.ert_disabled)
+		out += span_bold("Emergency Response Teams:") + "<a href='byond://?src=\ref[SSticker.mode];[HrefToken()];toggle=ert'>disabled</a>"
 	else
-		out += span_bold("Emergency Response Teams:") + "<a href='byond://?src=\ref[ticker.mode];[HrefToken()];toggle=ert'>enabled</a>"
+		out += span_bold("Emergency Response Teams:") + "<a href='byond://?src=\ref[SSticker.mode];[HrefToken()];toggle=ert'>enabled</a>"
 	out += "<br/>"
 
-	if(ticker.mode.deny_respawn)
-		out += span_bold("Respawning:") + "<a href='byond://?src=\ref[ticker.mode];[HrefToken()];toggle=respawn'>disallowed</a>"
+	if(SSticker.mode.deny_respawn)
+		out += span_bold("Respawning:") + "<a href='byond://?src=\ref[SSticker.mode];[HrefToken()];toggle=respawn'>disallowed</a>"
 	else
-		out += span_bold("Respawning:") + "<a href='byond://?src=\ref[ticker.mode];[HrefToken()];toggle=respawn'>allowed</a>"
+		out += span_bold("Respawning:") + "<a href='byond://?src=\ref[SSticker.mode];[HrefToken()];toggle=respawn'>allowed</a>"
 	out += "<br/>"
 
-	out += span_bold("Shuttle delay multiplier:") + " <a href='byond://?src=\ref[ticker.mode];[HrefToken()];set=shuttle_delay'>[ticker.mode.shuttle_delay]</a><br/>"
+	out += span_bold("Shuttle delay multiplier:") + " <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];set=shuttle_delay'>[SSticker.mode.shuttle_delay]</a><br/>"
 
-	if(ticker.mode.auto_recall_shuttle)
-		out += span_bold("Shuttle auto-recall:") + " <a href='byond://?src=\ref[ticker.mode];[HrefToken()];toggle=shuttle_recall'>enabled</a>"
+	if(SSticker.mode.auto_recall_shuttle)
+		out += span_bold("Shuttle auto-recall:") + " <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];toggle=shuttle_recall'>enabled</a>"
 	else
-		out += span_bold("Shuttle auto-recall:") + " <a href='byond://?src=\ref[ticker.mode];[HrefToken()];toggle=shuttle_recall'>disabled</a>"
+		out += span_bold("Shuttle auto-recall:") + " <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];toggle=shuttle_recall'>disabled</a>"
 	out += "<br/><br/>"
 
-	if(ticker.mode.event_delay_mod_moderate)
-		out += span_bold("Moderate event time modifier:") + " <a href='byond://?src=\ref[ticker.mode];[HrefToken()];set=event_modifier_moderate'>[ticker.mode.event_delay_mod_moderate]</a><br/>"
+	if(SSticker.mode.event_delay_mod_moderate)
+		out += span_bold("Moderate event time modifier:") + " <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];set=event_modifier_moderate'>[SSticker.mode.event_delay_mod_moderate]</a><br/>"
 	else
-		out += span_bold("Moderate event time modifier:") + " <a href='byond://?src=\ref[ticker.mode];[HrefToken()];set=event_modifier_moderate'>unset</a><br/>"
+		out += span_bold("Moderate event time modifier:") + " <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];set=event_modifier_moderate'>unset</a><br/>"
 
-	if(ticker.mode.event_delay_mod_major)
-		out += span_bold("Major event time modifier:") + " <a href='byond://?src=\ref[ticker.mode];[HrefToken()];set=event_modifier_severe'>[ticker.mode.event_delay_mod_major]</a><br/>"
+	if(SSticker.mode.event_delay_mod_major)
+		out += span_bold("Major event time modifier:") + " <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];set=event_modifier_severe'>[SSticker.mode.event_delay_mod_major]</a><br/>"
 	else
-		out += span_bold("Major event time modifier:") + " <a href='byond://?src=\ref[ticker.mode];[HrefToken()];set=event_modifier_severe'>unset</a><br/>"
+		out += span_bold("Major event time modifier:") + " <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];set=event_modifier_severe'>unset</a><br/>"
 
 	out += "<hr>"
 
-	if(ticker.mode.antag_tags && ticker.mode.antag_tags.len)
+	if(SSticker.mode.antag_tags && SSticker.mode.antag_tags.len)
 		out += span_bold("Core antag templates:") + "</br>"
-		for(var/antag_tag in ticker.mode.antag_tags)
-			out += "<a href='byond://?src=\ref[ticker.mode];[HrefToken()];debug_antag=[antag_tag]'>[antag_tag]</a>.</br>"
+		for(var/antag_tag in SSticker.mode.antag_tags)
+			out += "<a href='byond://?src=\ref[SSticker.mode];[HrefToken()];debug_antag=[antag_tag]'>[antag_tag]</a>.</br>"
 
-	if(ticker.mode.round_autoantag)
-		out += span_bold("Autotraitor <a href='byond://?src=\ref[ticker.mode];[HrefToken()];toggle=autotraitor'>enabled</a>.")
-		if(ticker.mode.antag_scaling_coeff > 0)
-			out += " (scaling with <a href='byond://?src=\ref[ticker.mode];[HrefToken()];set=antag_scaling'>[ticker.mode.antag_scaling_coeff]</a>)"
+	if(SSticker.mode.round_autoantag)
+		out += span_bold("Autotraitor <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];toggle=autotraitor'>enabled</a>.")
+		if(SSticker.mode.antag_scaling_coeff > 0)
+			out += " (scaling with <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];set=antag_scaling'>[SSticker.mode.antag_scaling_coeff]</a>)"
 		else
-			out += " (not currently scaling, <a href='byond://?src=\ref[ticker.mode];[HrefToken()];set=antag_scaling'>set a coefficient</a>)"
+			out += " (not currently scaling, <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];set=antag_scaling'>set a coefficient</a>)"
 		out += "<br/>"
 	else
-		out += span_bold("Autotraitor <a href='byond://?src=\ref[ticker.mode];[HrefToken()];toggle=autotraitor'>disabled</a>.") + "<br/>"
+		out += span_bold("Autotraitor <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];toggle=autotraitor'>disabled</a>.") + "<br/>"
 
 	out += span_bold("All antag ids:")
-	if(ticker.mode.antag_templates && ticker.mode.antag_templates.len)
-		for(var/datum/antagonist/antag in ticker.mode.antag_templates)
+	if(SSticker.mode.antag_templates && SSticker.mode.antag_templates.len)
+		for(var/datum/antagonist/antag in SSticker.mode.antag_templates)
 			antag.update_current_antag_max()
-			out += " <a href='byond://?src=\ref[ticker.mode];[HrefToken()];debug_antag=[antag.id]'>[antag.id]</a>"
+			out += " <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];debug_antag=[antag.id]'>[antag.id]</a>"
 			out += " ([antag.get_antag_count()]/[antag.cur_max]) "
-			out += " <a href='byond://?src=\ref[ticker.mode];[HrefToken()];remove_antag_type=[antag.id]'>\[-\]</a><br/>"
+			out += " <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];remove_antag_type=[antag.id]'>\[-\]</a><br/>"
 	else
 		out += " None."
-	out += " <a href='byond://?src=\ref[ticker.mode];[HrefToken()];add_antag_type=1'>\[+\]</a><br/>"
+	out += " <a href='byond://?src=\ref[SSticker.mode];[HrefToken()];add_antag_type=1'>\[+\]</a><br/>"
 
 	var/datum/browser/popup = new(owner, "edit_mode[src]", "Edit Game Mode")
 	popup.set_content(out)
@@ -1274,9 +1285,9 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set name="Toggle tinted welding helmets."
 	CONFIG_SET(flag/welder_vision, !CONFIG_GET(flag/welder_vision))
 	if (CONFIG_GET(flag/welder_vision))
-		to_world(span_world("Reduced welder vision has been enabled!"))
+		to_chat(world, span_world("Reduced welder vision has been enabled!"))
 	else
-		to_world(span_world("Reduced welder vision has been disabled!"))
+		to_chat(world, span_world("Reduced welder vision has been disabled!"))
 	log_admin("[key_name(usr)] toggled welder vision.")
 	message_admins("[key_name_admin(usr)] toggled welder vision.", 1)
 	feedback_add_details("admin_verb","TTWH") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
@@ -1287,11 +1298,11 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set name="Toggle guests"
 	CONFIG_SET(flag/guests_allowed, !CONFIG_GET(flag/guests_allowed))
 	if (!CONFIG_GET(flag/guests_allowed))
-		to_world(span_world("Guests may no longer enter the game."))
+		to_chat(world, span_world("Guests may no longer enter the game."))
 	else
-		to_world(span_world("Guests may now enter the game."))
+		to_chat(world, span_world("Guests may now enter the game."))
 	log_admin("[key_name(usr)] toggled guests game entering [CONFIG_GET(flag/guests_allowed)?"":"dis"]allowed.")
-	message_admins(span_blue("[key_name_admin(usr)] toggled guests game entering [CONFIG_GET(flag/guests_allowed)?"":"dis"]allowed."), 1)
+	message_admins(span_blue("[key_name_admin(usr)] toggled guests game entering [CONFIG_GET(flag/guests_allowed)?"":"dis"]allowed."))
 	feedback_add_details("admin_verb","TGU") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /client/proc/update_mob_sprite(mob/living/carbon/human/H as mob)
@@ -1404,7 +1415,7 @@ var/datum/announcement/minor/admin_min_announcer = new
 		to_chat(usr, "Error: you are not an admin!")
 		return
 
-	if(!ticker || !ticker.mode)
+	if(!SSticker|| !SSticker.mode)
 		to_chat(usr, "Mode has not started.")
 		return
 
@@ -1428,12 +1439,12 @@ var/datum/announcement/minor/admin_min_announcer = new
 		to_chat(usr, "Error: you are not an admin!")
 		return
 
-	if(!ticker || !ticker.mode)
+	if(!SSticker|| !SSticker.mode)
 		to_chat(usr, "Mode has not started.")
 		return
 
 	log_and_message_admins("attempting to force mode autospawn.")
-	ticker.mode.try_latespawn()
+	SSticker.mode.try_latespawn()
 
 /datum/admins/proc/paralyze_mob(mob/living/H as mob)
 	set category = "Admin.Events"
@@ -1457,7 +1468,7 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set category = "Debug.Game"
 	set name = "Set Telecrystals"
 	set desc = "Allows admins to change telecrystals of a user."
-	set popup_menu = FALSE //VOREStation Edit - Declutter.
+	set popup_menu = FALSE
 	var/crystals
 
 	if(check_rights(R_ADMIN|R_EVENT))
@@ -1473,7 +1484,7 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set category = "Debug.Game"
 	set name = "Add Telecrystals"
 	set desc = "Allows admins to change telecrystals of a user by addition."
-	set popup_menu = FALSE //VOREStation Edit - Declutter.
+	set popup_menu = FALSE
 	var/crystals
 
 	if(check_rights(R_ADMIN|R_EVENT))
@@ -1571,14 +1582,6 @@ var/datum/announcement/minor/admin_min_announcer = new
 		log_game(plaintext_title)
 		log_game(fax_text)
 
-		SSwebhooks.send(
-			WEBHOOK_FAX_SENT,
-			list(
-				"name" = "[key_name(owner)] [plaintext_title].",
-				"body" = fax_text
-			)
-		)
-
 	else
 		to_chat(src.owner, span_warning("Message reply failed."))
 
@@ -1594,7 +1597,7 @@ var/datum/announcement/minor/admin_min_announcer = new
 	set popup_menu = FALSE
 
 	if(check_rights(R_ADMIN|R_DEBUG))
-		traitors.spawn_uplink(H)
+		GLOB.traitors.spawn_uplink(H)
 		H.mind.tcrystals = DEFAULT_TELECRYSTAL_AMOUNT
 		H.mind.accept_tcrystals = 1
 		var/msg = "[key_name(usr)] has given [H.ckey] an uplink."

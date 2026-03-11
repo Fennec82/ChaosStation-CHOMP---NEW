@@ -27,7 +27,7 @@
 	name = "hooligan crab"
 	desc = "A large, hard-shelled crustacean. This one is mostly grey. \
 	You probably shouldn't mess with it."
-	catalogue_data = list(/datum/category_item/catalogue/fauna/hooligan_crab)
+	catalogue_data = list(/datum/category_item/catalogue/fauna/hooligan_crab) // CHOMPEnable
 
 	icon_state = "sif_crab"
 	icon_living = "sif_crab"
@@ -53,15 +53,6 @@
 				"bio" = 0,
 				"rad" = 0
 				)
-	armor_soak = list(
-				"melee" = 10,
-				"bullet" = 5,
-				"laser" = 0,
-				"energy" = 0,
-				"bomb" = 0,
-				"bio" = 0,
-				"rad" = 0
-				)
 
 	mob_size = MOB_LARGE
 
@@ -82,13 +73,12 @@
 	attacktext = list("clawed", "pinched", "crushed")
 	speak_emote = list("clicks")
 
-	organ_names = /decl/mob_organ_names/crab
+	organ_names = /datum/decl/mob_organ_names/crab
 
 	ai_holder_type = /datum/ai_holder/simple_mob/melee/hooligan
 	say_list_type = /datum/say_list/crab
 
 	var/weaken_amount = 2 // Be careful with this number. High values will equal a permastun.
-
 
 // Stuns the thing that got hit briefly.
 /mob/living/simple_mob/animal/sif/hooligan_crab/apply_melee_effects(atom/A)

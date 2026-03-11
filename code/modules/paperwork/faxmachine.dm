@@ -35,14 +35,12 @@ GLOBAL_LIST_EMPTY(adminfaxes)	//cache for faxes that have been sent to admins
 	if( !(("[department]" in GLOB.alldepartments) || ("[department]" in admin_departments)) )
 		GLOB.alldepartments |= department
 
-/obj/machinery/photocopier/faxmachine/attack_hand(mob/user as mob) // CH edit begins here; this allows borgs to use fax machines, meant for the Unity and Clerical modules.
-	user.set_machine(src)
-
-	if(issilicon(user))
+/obj/machinery/photocopier/faxmachine/attack_hand(mob/user as mob)
+	if(issilicon(user)) //CHOMPEdit Start this allows borgs to use fax machines, meant for the Unity and Clerical modules.
 		authenticated = user.name
 		tgui_interact(user)
 	else
-		tgui_interact(user)
+		tgui_interact(user) //CHOMPEdit End
 
 /obj/machinery/photocopier/faxmachine/verb/remove_card()
 	set name = "Remove ID card"
@@ -299,7 +297,7 @@ Extracted to its own procedure for easier logic handling with paper bundles.
 		O.forceMove(src)
 		scan = O
 	else if(O.has_tool_quality(TOOL_MULTITOOL) && panel_open)
-		var/input = sanitize(tgui_input_text(user, "What Department ID would you like to give this fax machine?", "Multitool-Fax Machine Interface", department))
+		var/input = tgui_input_text(user, "What Department ID would you like to give this fax machine?", "Multitool-Fax Machine Interface", department, MAX_MESSAGE_LEN)
 		if(!input)
 			to_chat(user, "No input found. Please hang up and try your call again.")
 			return
@@ -394,6 +392,8 @@ Extracted to its own procedure for easier logic handling with paper bundles.
 		message_admins(sender, "Solar Central Government FAX", rcvdcopy, "CentComFaxReply", "#1F66A0") // Vorestation Edit //CHOMPedit
 	else if(destination == "Supply")
 		message_admins(sender, "[uppertext(using_map.boss_short)] SUPPLY FAX", rcvdcopy, "CentComFaxReply", "#5F4519")
+	else if(destination == "Talon Headquarters")
+		message_admins(sender, "TALON HEADQUARTERS FAX", rcvdcopy, "CentComFaxReply", "#e96046")
 	else
 		message_admins(sender, "[uppertext(destination)] FAX", rcvdcopy, "UNKNOWN")
 
@@ -444,14 +444,6 @@ Extracted to its own procedure for easier logic handling with paper bundles.
 	if(length(summary) > webhook_length_limit)
 		summary = copytext(summary, 1, webhook_length_limit + 1)
 		summary += "\n\[Truncated\]"
-
-	SSwebhooks.send(
-		WEBHOOK_FAX_SENT,
-		list(
-			"name" = "[faxname] '[sent.name]' sent from [key_name(sender)]",
-			"body" = summary
-		)
-	)
 
 /*
 								#####						####

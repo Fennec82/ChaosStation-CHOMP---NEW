@@ -84,28 +84,21 @@
 	R.scrubbing = FALSE
 
 /obj/item/robot_module/Destroy()
-	for(var/module in modules)
-		qdel(module)
-	for(var/emg in emag)
-		qdel(emg)
-	for(var/synth in synths)
-		qdel(synth)
-	modules.Cut()
-	synths.Cut()
-	emag.Cut()
+	QDEL_LIST(modules)
+	QDEL_LIST(emag)
+	QDEL_LIST(synths)
 	return ..()
 
-/obj/item/robot_module/emp_act(severity)
+/obj/item/robot_module/emp_act(severity, recursive)
 	if(modules)
 		for(var/obj/O in modules)
-			O.emp_act(severity)
+			O.emp_act(severity, recursive)
 	if(emag)
 		for(var/obj/O in emag)
-			O.emp_act(severity)
+			O.emp_act(severity, recursive)
 	if(synths)
 		for(var/datum/matter_synth/S in synths)
-			S.emp_act(severity)
-	..()
+			S.emp_act(severity, recursive)
 	return
 
 /obj/item/robot_module/proc/respawn_consumable(var/mob/living/silicon/robot/R, var/rate)
@@ -193,13 +186,19 @@
 	T.water = water
 	src.modules += T
 	//CHOMPEdit End
-	src.modules += new /obj/item/gps/robot(src)
+	var/obj/item/gps/robot/robot_gps = new /obj/item/gps/robot(src)
+	adjust_gps(robot_gps)
+	src.modules += robot_gps
 	src.modules += new /obj/item/boop_module(src)
 	src.modules += new /obj/item/flash/robot(src)
 	src.modules += new /obj/item/extinguisher(src)
 	src.modules += new /obj/item/tool/crowbar/cyborg(src)
 	src.modules += new /obj/item/melee/robotic/jaws/small(src)
 	src.modules += new /obj/item/gripper/scene(src)
+	src.modules += new /obj/item/robo_dice(src)
+
+/obj/item/robot_module/robot/proc/adjust_gps(obj/item/gps/robot/robot_gps)
+	return
 
 /obj/item/robot_module/robot/standard
 	name = "standard robot module"
@@ -369,6 +368,7 @@
 	src.modules += new /obj/item/borg/sight/meson(src)
 	src.modules += new /obj/item/t_scanner(src)
 	src.modules += new /obj/item/analyzer(src)
+	src.modules += new /obj/item/assembly/signaler(src) // Anomaly handling
 	src.modules += new /obj/item/geiger(src)
 	src.modules += new /obj/item/taperoll/engineering(src)
 	src.modules += new /obj/item/gripper/engineering(src)
@@ -381,6 +381,7 @@
 	src.modules += new /obj/item/rcd/electric/mounted/borg(src)
 	src.modules += new /obj/item/pickaxe/plasmacutter/borg(src)
 	src.modules += new /obj/item/dogborg/stasis_clamp(src)
+	src.modules += new /obj/item/storage/pouch/eng_parts/borg(src)
 	src.modules += new /obj/item/holosign_creator/combifan(src) //CHOMPAdd
 
 	var/datum/matter_synth/metal = new /datum/matter_synth/metal(40000)
@@ -427,6 +428,7 @@
 	src.modules += new /obj/item/reagent_containers/spray/pepper(src)
 	src.modules += new /obj/item/gripper/security(src)
 	src.modules += new /obj/item/gun/energy/robotic/phasegun(src) // CHOMPedit: Phasegun for regular sec cyborg.
+	src.modules += new /obj/item/ticket_printer(src)
 	src.emag += new /obj/item/gun/energy/robotic/laser/rifle(src)
 
 	src.modules += new /obj/item/dogborg/sleeper/K9(src) //Eat criminals. Bring them to the brig.
@@ -641,7 +643,7 @@
 	name = "miner robot module"
 	channels = list(CHANNEL_SUPPLY = 1)
 	networks = list(NETWORK_MINE)
-	supported_upgrades = list(/obj/item/borg/upgrade/restricted/pka, /obj/item/borg/upgrade/restricted/diamonddrill)
+	supported_upgrades = list(/obj/item/borg/upgrade/restricted/pka, /obj/item/borg/upgrade/restricted/diamonddrill, /obj/item/borg/upgrade/restricted/adv_scanner, /obj/item/borg/upgrade/restricted/adv_snatcher, /obj/item/borg/upgrade/restricted/adv_mailbag)
 	pto_type = PTO_CARGO
 
 /obj/item/robot_module/robot/miner/create_equipment(var/mob/living/silicon/robot/robot)
@@ -657,6 +659,8 @@
 	src.modules += new /obj/item/card/id/cargo/miner/borg(src)
 	src.modules += new /obj/item/gun/energy/robotic/phasegun(src) //CHOMPedit: Phasegun for regular mining cyborg.
 	src.modules += new /obj/item/vac_attachment(src) //CHOMPAdd
+	src.modules += new /obj/item/mail_scanner(src)
+	src.modules += new /obj/item/storage/bag/mail/borg(src)
 	src.emag += new /obj/item/kinetic_crusher/machete/dagger(src)
 
 	var/datum/matter_synth/beacon = new /datum/matter_synth/beacon(10000)
@@ -679,7 +683,7 @@
 
 /obj/item/robot_module/robot/research/create_equipment(var/mob/living/silicon/robot/robot)
 	..()
-	src.modules += new /obj/item/portable_destructive_analyzer(src)
+	src.modules += new /obj/item/experi_scanner(src)
 	src.modules += new /obj/item/robotanalyzer(src)
 	src.modules += new /obj/item/card/robot(src)
 	src.modules += new /obj/item/gripper/research(src)
@@ -697,6 +701,9 @@
 	src.modules += new /obj/item/gun/energy/robotic/taser/xeno(src)
 	src.modules += new /obj/item/xenoarch_multi_tool(src)
 	src.modules += new /obj/item/pickaxe/excavationdrill(src)
+	// Anomaly handling
+	src.modules += new /obj/item/analyzer(src)
+	src.modules += new /obj/item/assembly/signaler(src)
 
 	src.emag += new /obj/item/hand_tele(src)
 

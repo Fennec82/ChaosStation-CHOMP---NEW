@@ -147,10 +147,6 @@
 /obj/structure/shuttle/engine/router,
 /turf/simulated/wall/thull,
 /area/shuttle/whiteshipOM2)
-"fg" = (
-/obj/screen/alert/highpressure,
-/turf/simulated/wall/thull,
-/area/shuttle/whiteshipOM2)
 "fs" = (
 /obj/machinery/door/airlock/maintenance/common,
 /obj/machinery/atmospherics/pipe/simple/hidden{
@@ -728,7 +724,6 @@
 /obj/item/clothing/shoes/footwraps,
 /obj/item/clothing/shoes/footwraps,
 /obj/item/clothing/shoes/footwraps,
-/obj/item/toy/bosunwhistle/fluff/strix,
 /obj/item/blobcore_chunk,
 /obj/item/towel/random,
 /obj/item/towel/random,
@@ -1465,10 +1460,6 @@
 /obj/random/soap,
 /turf/simulated/floor/plating,
 /area/shuttle/whiteshipOM2)
-"Kx" = (
-/obj/screen/alert/highpressure,
-/turf/template_noop,
-/area/template_noop)
 "KD" = (
 /obj/machinery/atmospherics/unary/vent_pump{
 	dir = 1;
@@ -1696,7 +1687,7 @@
 /obj/item/paper_bin,
 /obj/item/pen/fountain,
 /obj/item/pen/chameleon,
-/obj/item/gps/advanced/science,
+/obj/item/gps/science,
 /obj/machinery/button/remote/blast_door{
 	id = "estrella_blast";
 	name = "remote blast shielding control";
@@ -1866,7 +1857,7 @@
 	desc = "Someone has crossed out the 'Space' from Space Cleaner and written in Chemistry. Scrawled on the back is, 'Okay, whoever filled this with polytrinic acid, it was only funny the first time. It was hard enough replacing the CMO's first cat!'";
 	name = "Chemistry Cleaner"
 	},
-/obj/item/gps/advanced/science,
+/obj/item/gps/science,
 /turf/simulated/shuttle/floor/purple,
 /area/shuttle/whiteshipOM2)
 "Ug" = (
@@ -2127,7 +2118,6 @@
 /obj/item/ore/marble,
 /obj/item/ore/osmium,
 /obj/item/ore/rutile,
-/obj/item/toy/bosunwhistle/fluff/strix,
 /obj/item/toy/character/wizard,
 /obj/item/reagent_containers/hypospray/autoinjector/biginjector/mindbreaker/unidentified,
 /obj/item/reagent_containers/hypospray/autoinjector/biginjector/mindbreaker/unidentified,
@@ -2254,14 +2244,14 @@ Eq
 Eq
 Eq
 Eq
-Kx
-fg
+Eq
+sH
 Bn
 Bn
 Bn
-fg
-Kx
-Kx
+sH
+Eq
+Eq
 Eq
 Eq
 Eq
@@ -2290,14 +2280,14 @@ Eq
 Eq
 sH
 Bn
-fg
+sH
 hb
 Cz
 TF
-fg
+sH
 Bn
-fg
-Kx
+sH
+Eq
 Eq
 Eq
 Eq
@@ -2332,7 +2322,7 @@ ez
 JG
 lu
 sH
-Kx
+Eq
 Eq
 Eq
 Eq

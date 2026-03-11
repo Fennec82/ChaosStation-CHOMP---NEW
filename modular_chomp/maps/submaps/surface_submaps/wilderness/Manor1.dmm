@@ -602,7 +602,7 @@
 /turf/simulated/floor/holofloor/wood,
 /area/submap/Manor1)
 "ck" = (
-/mob/living/simple_mob/animal/giant_spider/carrier,
+/mob/living/simple_mob/animal/giant_spider/lurker,
 /turf/simulated/floor/carpet/turcarpet,
 /area/submap/Manor1)
 "cl" = (
@@ -871,7 +871,7 @@
 /area/submap/Manor1)
 "ie" = (
 /obj/effect/decal/cleanable/dirt,
-/mob/living/simple_mob/animal/giant_spider/carrier,
+/mob/living/simple_mob/animal/giant_spider/lurker,
 /obj/effect/spider/stickyweb,
 /turf/simulated/floor/carpet/purcarpet,
 /area/submap/Manor1)
@@ -984,7 +984,7 @@
 /turf/simulated/floor/holofloor/wood,
 /area/submap/Manor1)
 "pf" = (
-/mob/living/simple_mob/animal/giant_spider/ion,
+/mob/living/simple_mob/animal/giant_spider/tunneler/frequent,
 /turf/simulated/floor/carpet/bcarpet,
 /area/submap/Manor1)
 "pl" = (
@@ -1098,13 +1098,9 @@
 /obj/item/bone/ribs,
 /turf/simulated/floor/holofloor/wood,
 /area/submap/Manor1)
-"yn" = (
-/obj/effect/map_helper/no_phaseshift,
-/turf/simulated/wall/wood,
-/area/submap/Manor1)
 "yI" = (
 /obj/effect/decal/cleanable/dirt,
-/mob/living/simple_mob/animal/giant_spider/carrier,
+/mob/living/simple_mob/animal/giant_spider/lurker,
 /turf/simulated/floor/holofloor/wood,
 /area/submap/Manor1)
 "zV" = (
@@ -1205,7 +1201,7 @@
 	icon_state = "wooden_chair"
 	},
 /obj/effect/decal/cleanable/dirt,
-/mob/living/simple_mob/animal/giant_spider/carrier,
+/mob/living/simple_mob/animal/giant_spider/lurker,
 /obj/effect/spider/stickyweb,
 /turf/simulated/floor/holofloor/wood,
 /area/submap/Manor1)
@@ -1219,7 +1215,7 @@
 /turf/simulated/floor/carpet/purcarpet,
 /area/submap/Manor1)
 "GM" = (
-/mob/living/simple_mob/animal/giant_spider/ion,
+/mob/living/simple_mob/animal/giant_spider/tunneler/frequent,
 /turf/simulated/floor/holofloor/wood,
 /area/submap/Manor1)
 "GU" = (
@@ -1235,10 +1231,6 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/spider/stickyweb,
 /obj/effect/spider/stickyweb,
-/turf/simulated/floor/holofloor/wood,
-/area/submap/Manor1)
-"Hl" = (
-/mob/living/simple_mob/animal/giant_spider/carrier,
 /turf/simulated/floor/holofloor/wood,
 /area/submap/Manor1)
 "Hu" = (
@@ -1306,7 +1298,7 @@
 /turf/simulated/floor/holofloor/wood,
 /area/submap/Manor1)
 "Md" = (
-/mob/living/simple_mob/animal/giant_spider/carrier,
+/mob/living/simple_mob/animal/giant_spider/lurker,
 /obj/effect/spider/stickyweb,
 /turf/simulated/floor/holofloor/wood,
 /area/submap/Manor1)
@@ -1391,7 +1383,7 @@
 	icon_state = "wooden_chair"
 	},
 /obj/effect/decal/cleanable/dirt,
-/mob/living/simple_mob/animal/giant_spider/carrier,
+/mob/living/simple_mob/animal/giant_spider/lurker,
 /obj/effect/spider/stickyweb/dark,
 /obj/effect/spider/stickyweb/dark,
 /turf/simulated/floor/holofloor/wood,
@@ -1452,7 +1444,7 @@
 /turf/simulated/floor/holofloor/wood,
 /area/submap/Manor1)
 "VX" = (
-/mob/living/simple_mob/animal/giant_spider/carrier,
+/mob/living/simple_mob/animal/giant_spider/lurker,
 /turf/simulated/floor/carpet/bcarpet,
 /area/submap/Manor1)
 "VY" = (
@@ -2384,7 +2376,7 @@ ab
 ab
 ab
 ab
-yn
+ab
 ab
 ab
 ab
@@ -3011,7 +3003,7 @@ ag
 ag
 ag
 ag
-Hl
+aM
 ag
 ag
 ag
@@ -3056,7 +3048,7 @@ ag
 ag
 ag
 ag
-Hl
+aM
 bF
 bA
 bE
@@ -3139,7 +3131,7 @@ ag
 cE
 ag
 ag
-Hl
+aM
 ag
 ag
 aK

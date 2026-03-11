@@ -224,23 +224,26 @@
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroport)
 "aE" = (
-/obj/structure/ghost_pod/ghost_activated/maintpred/no_announce,
+/obj/structure/ghost_pod/ghost_activated/maintpred,
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/abcargo)
 "aF" = (
 /obj/effect/floor_decal/techfloor/corner{
 	dir = 5
 	},
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
 /obj/machinery/atmospherics/pipe/manifold/hidden/supply,
 /obj/machinery/atmospherics/pipe/manifold/hidden/scrubbers,
+/obj/structure/cable{
+	icon_state = "4-8"
+	},
+/obj/structure/cable{
+	icon_state = "1-8"
+	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "aG" = (
 /obj/effect/decal/cleanable/flour,
-/obj/structure/ghost_pod/ghost_activated/maintpred/no_announce,
+/obj/structure/ghost_pod/ghost_activated/morphspawn,
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/abchemistry)
 "aH" = (
@@ -250,7 +253,7 @@
 /turf/simulated/floor/wood/alt/parquet/turfpack/station,
 /area/maintenance/lookout)
 "aI" = (
-/obj/structure/ghost_pod/ghost_activated/maintpred/no_announce,
+/obj/structure/ghost_pod/ghost_activated/maintpred,
 /turf/simulated/floor/wood/turfpack/station,
 /area/maintenance/zerobar)
 "aJ" = (
@@ -261,9 +264,15 @@
 /turf/simulated/floor/tiled/techfloor,
 /area/engineering/gravgen)
 "aK" = (
-/obj/structure/ghost_pod/ghost_activated/maintpred/no_announce,
+/obj/structure/ghost_pod/ghost_activated/maintpred,
 /turf/simulated/floor/tiled/white,
 /area/maintenance/abscience)
+"aL" = (
+/obj/structure/sign/directions/teleporter{
+	dir = 5
+	},
+/turf/simulated/wall/turfpack/station,
+/area/maintenance/zerocent)
 "aM" = (
 /obj/effect/floor_decal/rust,
 /obj/structure/catwalk,
@@ -289,6 +298,12 @@
 	},
 /turf/simulated/floor/plating,
 /area/maintenance/janitoral)
+"aP" = (
+/obj/structure/sign/directions/teleporter{
+	dir = 9
+	},
+/turf/simulated/wall/turfpack/station,
+/area/maintenance/zerocent)
 "aQ" = (
 /obj/structure/cable{
 	icon_state = "4-8"
@@ -298,6 +313,10 @@
 /obj/machinery/atmospherics/pipe/manifold/hidden/scrubbers,
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroaft)
+"aR" = (
+/obj/machinery/maint_vendor,
+/turf/simulated/floor/tiled/techmaint,
+/area/maintenance/gravlobby)
 "aS" = (
 /obj/machinery/firealarm{
 	layer = 3.3;
@@ -358,6 +377,10 @@
 	},
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroaft)
+"aW" = (
+/obj/machinery/light/small/flicker,
+/turf/simulated/floor/plating/turfpack/station,
+/area/maintenance/zerocent)
 "aX" = (
 /obj/structure/table/marble,
 /obj/random/drinksoft,
@@ -412,12 +435,27 @@
 /obj/machinery/light/small{
 	dir = 4
 	},
+/obj/structure/cable{
+	icon_state = "1-2"
+	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "bd" = (
 /obj/random/trash,
 /turf/simulated/floor/plating,
 /area/maintenance/ragecage)
+"be" = (
+/obj/effect/floor_decal/industrial/warning{
+	dir = 4
+	},
+/turf/simulated/floor/plating/turfpack/station,
+/area/maintenance/zerocent)
+"bf" = (
+/mob/living/simple_mob/animal/passive/mimepet{
+	name = "potted plant"
+	},
+/turf/simulated/floor/plating/turfpack/station,
+/area/maintenance/zerocent)
 "bg" = (
 /obj/machinery/alarm{
 	pixel_y = 22
@@ -433,6 +471,10 @@
 	},
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zerostarboard)
+"bh" = (
+/mob/living/simple_mob/animal/passive/mothroach/bar,
+/turf/simulated/floor/lino,
+/area/maintenance/zerobar)
 "bi" = (
 /obj/structure/table/rack/shelf,
 /obj/random/soap,
@@ -446,6 +488,13 @@
 /obj/effect/floor_decal/rust,
 /turf/simulated/floor/plating,
 /area/maintenance/fieldhallway)
+"bk" = (
+/obj/structure/mob_spawner/mouse_nest/mousehole,
+/obj/machinery/computer/cryopod/gateway{
+	pixel_y = 32
+	},
+/turf/simulated/floor/plating/turfpack/station,
+/area/maintenance/zerocent)
 "bl" = (
 /obj/effect/floor_decal/borderfloor{
 	dir = 8
@@ -566,9 +615,6 @@
 	dir = 8
 	},
 /obj/random/trash,
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "bO" = (
@@ -1254,11 +1300,14 @@
 /obj/effect/floor_decal/techfloor{
 	dir = 1
 	},
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
 /obj/machinery/atmospherics/pipe/manifold/hidden/supply,
 /obj/machinery/atmospherics/pipe/manifold/hidden/scrubbers,
+/obj/structure/cable{
+	icon_state = "1-8"
+	},
+/obj/structure/cable{
+	icon_state = "4-8"
+	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "eO" = (
@@ -1981,6 +2030,9 @@
 /obj/machinery/light/small{
 	dir = 1
 	},
+/obj/structure/cable{
+	icon_state = "2-8"
+	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "hU" = (
@@ -2469,11 +2521,11 @@
 /obj/effect/floor_decal/techfloor{
 	dir = 9
 	},
-/obj/structure/cable{
-	icon_state = "2-8"
-	},
 /obj/machinery/light/small{
 	dir = 1
+	},
+/obj/structure/cable{
+	icon_state = "4-8"
 	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
@@ -2798,11 +2850,11 @@
 /obj/effect/floor_decal/techfloor/corner{
 	dir = 6
 	},
-/obj/structure/cable{
-	icon_state = "4-8"
-	},
 /obj/machinery/atmospherics/pipe/simple/hidden/supply,
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
+/obj/structure/cable{
+	icon_state = "1-2"
+	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "ls" = (
@@ -3290,11 +3342,7 @@
 /obj/structure/sign/warning/radioactive{
 	pixel_y = 32
 	},
-/obj/machinery/power/smes/buildable{
-	charge = 5e+006;
-	input_attempt = 1;
-	input_level = 200000;
-	output_level = 200000;
+/obj/machinery/power/smes/buildable/max_charge_max_input{
 	RCon_tag = "Gravity Generator"
 	},
 /obj/structure/cable/cyan{
@@ -3325,6 +3373,9 @@
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden/supply,
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
+/obj/structure/cable{
+	icon_state = "1-2"
+	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "nr" = (
@@ -3487,9 +3538,6 @@
 	name = "north bump";
 	pixel_y = 24
 	},
-/obj/structure/cable{
-	icon_state = "0-2"
-	},
 /obj/machinery/atmospherics/pipe/simple/hidden/supply{
 	dir = 4
 	},
@@ -3500,6 +3548,9 @@
 	pixel_x = 11;
 	pixel_y = 24;
 	on = 0
+	},
+/obj/structure/cable{
+	icon_state = "0-4"
 	},
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zerostarboard)
@@ -3618,6 +3669,9 @@
 /obj/machinery/firealarm{
 	layer = 3.3;
 	pixel_y = 26
+	},
+/obj/structure/cable{
+	icon_state = "2-8"
 	},
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zerostarboard)
@@ -3769,6 +3823,9 @@
 /obj/structure/catwalk,
 /obj/machinery/atmospherics/pipe/simple/hidden/supply,
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
+/obj/structure/cable{
+	icon_state = "1-2"
+	},
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroaft)
 "pp" = (
@@ -3857,9 +3914,6 @@
 /obj/effect/floor_decal/techfloor{
 	dir = 8
 	},
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "pE" = (
@@ -3935,9 +3989,6 @@
 /area/maintenance/fieldhallway)
 "pW" = (
 /obj/structure/catwalk,
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
 /obj/machinery/floodlight,
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroaft)
@@ -3972,9 +4023,7 @@
 /turf/simulated/floor/tiled,
 /area/maintenance/abcargo)
 "qi" = (
-/obj/structure/closet/secure_closet/freezer/fridge{
-	starts_with = null
-	},
+/obj/structure/closet/secure_closet/freezer/fridge/empty,
 /turf/simulated/floor/reinforced,
 /area/maintenance/abchemistry)
 "qk" = (
@@ -4012,16 +4061,6 @@
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
 /turf/simulated/floor/tiled/techmaint,
 /area/maintenance/gravlobby)
-"qs" = (
-/obj/effect/floor_decal/techfloor,
-/obj/structure/cable{
-	icon_state = "4-8"
-	},
-/obj/structure/cable{
-	icon_state = "1-4"
-	},
-/turf/simulated/floor/tiled/techfloor,
-/area/maintenance/engineering/gravgen)
 "qt" = (
 /obj/structure/cable{
 	icon_state = "4-8"
@@ -4417,7 +4456,7 @@
 /obj/structure/cable{
 	icon_state = "4-8"
 	},
-/obj/structure/ghost_pod/ghost_activated/maintpred/no_announce,
+/obj/structure/ghost_pod/ghost_activated/morphspawn,
 /turf/simulated/floor/tiled/white,
 /area/maintenance/abfirstaid)
 "rZ" = (
@@ -4622,6 +4661,9 @@
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers{
 	dir = 4
 	},
+/obj/structure/cable{
+	icon_state = "4-8"
+	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "sS" = (
@@ -4663,17 +4705,17 @@
 /area/engineering/gravgen)
 "tg" = (
 /obj/effect/floor_decal/techfloor,
-/obj/structure/cable{
-	icon_state = "4-8"
-	},
-/obj/structure/cable{
-	icon_state = "2-8"
-	},
 /obj/machinery/atmospherics/pipe/manifold/hidden/supply{
 	dir = 8
 	},
 /obj/machinery/atmospherics/pipe/manifold/hidden/scrubbers{
 	dir = 8
+	},
+/obj/structure/cable{
+	icon_state = "1-2"
+	},
+/obj/structure/cable{
+	icon_state = "1-4"
 	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
@@ -5195,6 +5237,9 @@
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers{
 	dir = 9
 	},
+/obj/structure/cable{
+	icon_state = "1-8"
+	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "vC" = (
@@ -5206,9 +5251,6 @@
 /area/maintenance/zeroport)
 "vE" = (
 /obj/effect/floor_decal/techfloor,
-/obj/structure/cable{
-	icon_state = "4-8"
-	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "vF" = (
@@ -5273,13 +5315,11 @@
 /obj/random/drinksoft,
 /obj/random/drinksoft,
 /obj/random/drinksoft,
-/obj/structure/closet/secure_closet/freezer/fridge{
-	starts_with = null
-	},
 /obj/random/drinksoft,
 /obj/random/drinksoft,
 /obj/random/drinksoft,
 /obj/random/drinksoft,
+/obj/structure/closet/secure_closet/freezer/fridge/empty,
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/thrift)
 "vS" = (
@@ -5317,12 +5357,6 @@
 /obj/random/tool/powermaint,
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zerocent)
-"wd" = (
-/obj/structure/cable{
-	icon_state = "1-4"
-	},
-/turf/simulated/floor/plating/turfpack/station,
-/area/maintenance/zerostarboard)
 "we" = (
 /turf/simulated/wall,
 /area/maintenance/zerocent)
@@ -5502,6 +5536,9 @@
 	pixel_x = -36;
 	pixel_y = -6;
 	on = 0
+	},
+/obj/structure/cable{
+	icon_state = "1-2"
 	},
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroaft)
@@ -6566,6 +6603,9 @@
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers{
 	dir = 4
 	},
+/obj/structure/cable{
+	icon_state = "4-8"
+	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "BL" = (
@@ -6713,13 +6753,6 @@
 /obj/machinery/atmospherics/unary/vent_scrubber/on,
 /turf/simulated/floor/wood/turfpack/station,
 /area/maintenance/bar/dorms/dorm_1)
-"Cr" = (
-/obj/random/junk,
-/obj/structure/cable{
-	icon_state = "1-8"
-	},
-/turf/simulated/floor/plating/turfpack/station,
-/area/maintenance/zeroaft)
 "Cs" = (
 /obj/machinery/door/firedoor/border_only,
 /obj/effect/floor_decal/industrial/arrows/yellow,
@@ -6736,14 +6769,14 @@
 /area/maintenance/substation/gravgen)
 "Cu" = (
 /obj/effect/floor_decal/techfloor,
-/obj/structure/cable{
-	icon_state = "1-8"
-	},
 /obj/machinery/atmospherics/pipe/simple/hidden/supply{
 	dir = 4
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers{
 	dir = 4
+	},
+/obj/structure/cable{
+	icon_state = "4-8"
 	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
@@ -6860,13 +6893,6 @@
 /obj/structure/flora/pottedplant/decorative,
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zerocent)
-"CT" = (
-/obj/structure/catwalk,
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
-/turf/simulated/floor/plating/turfpack/station,
-/area/maintenance/zeroaft)
 "CU" = (
 /obj/effect/wingrille_spawn/reinforced,
 /obj/machinery/door/firedoor/border_only,
@@ -7390,14 +7416,12 @@
 /obj/random/maintenance/foodstuff,
 /obj/random/maintenance/foodstuff,
 /obj/random/maintenance/foodstuff,
-/obj/structure/closet/secure_closet/freezer/fridge{
-	starts_with = null
-	},
 /obj/random/maintenance/foodstuff,
 /obj/random/maintenance/foodstuff,
 /obj/random/maintenance/foodstuff,
 /obj/random/maintenance/foodstuff,
 /obj/random/maintenance/foodstuff,
+/obj/structure/closet/secure_closet/freezer/fridge/empty,
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/thrift)
 "Fr" = (
@@ -7414,6 +7438,9 @@
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden/supply,
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
+/obj/structure/cable{
+	icon_state = "1-2"
+	},
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroaft)
 "Ft" = (
@@ -7529,6 +7556,9 @@
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers{
 	dir = 4
+	},
+/obj/structure/cable{
+	icon_state = "4-8"
 	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
@@ -7857,6 +7887,9 @@
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers{
 	dir = 10
 	},
+/obj/structure/cable{
+	icon_state = "2-8"
+	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "Hk" = (
@@ -7874,14 +7907,14 @@
 /area/maintenance/zerocent)
 "Hm" = (
 /obj/structure/catwalk,
-/obj/structure/cable{
-	icon_state = "2-4"
-	},
 /obj/machinery/atmospherics/pipe/simple/hidden/supply{
 	dir = 4
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers{
 	dir = 4
+	},
+/obj/structure/cable{
+	icon_state = "4-8"
 	},
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroaft)
@@ -7966,12 +7999,6 @@
 "HE" = (
 /turf/simulated/wall/r_wall/turfpack/station,
 /area/maintenance/ragecage)
-"HG" = (
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
-/turf/simulated/floor/plating/turfpack/station,
-/area/maintenance/zeroaft)
 "HH" = (
 /obj/structure/cable{
 	icon_state = "4-8"
@@ -8130,14 +8157,12 @@
 /obj/random/meat,
 /obj/random/meat,
 /obj/effect/decal/cleanable/cobweb,
-/obj/structure/closet/secure_closet/freezer/fridge{
-	starts_with = null
-	},
 /obj/random/meat,
 /obj/random/meat,
 /obj/random/meat,
 /obj/random/meat,
 /obj/random/meat,
+/obj/structure/closet/secure_closet/freezer/fridge/empty,
 /turf/simulated/floor/tiled,
 /area/maintenance/thrift)
 "Ip" = (
@@ -8265,19 +8290,6 @@
 	},
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zerocent)
-"IU" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 8
-	},
-/obj/random/trash,
-/obj/structure/cable{
-	icon_state = "2-4"
-	},
-/obj/structure/cable{
-	icon_state = "1-4"
-	},
-/turf/simulated/floor/tiled/techfloor,
-/area/maintenance/engineering/gravgen)
 "IX" = (
 /obj/machinery/firealarm{
 	layer = 3.3;
@@ -8521,14 +8533,12 @@
 /obj/random/organ,
 /obj/random/organ,
 /obj/random/organ,
-/obj/structure/closet/secure_closet/freezer/fridge{
-	starts_with = null
-	},
 /obj/random/organ,
 /obj/random/organ,
 /obj/random/organ,
 /obj/random/organ,
 /obj/random/organ,
+/obj/structure/closet/secure_closet/freezer/fridge/empty,
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/thrift)
 "Kf" = (
@@ -8582,6 +8592,7 @@
 "Kl" = (
 /obj/effect/floor_decal/rust,
 /obj/effect/decal/cleanable/cobweb2,
+/obj/machinery/cryopod/robot/door/gateway/quiet,
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zerocent)
 "Km" = (
@@ -8911,13 +8922,11 @@
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden/supply,
 /obj/machinery/door/airlock/maintenance/common,
+/obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
 /turf/simulated/floor/tiled/techmaint,
 /area/maintenance/zerocent)
 "Mi" = (
 /obj/effect/floor_decal/techfloor,
-/obj/structure/cable{
-	icon_state = "4-8"
-	},
 /obj/machinery/door/firedoor/multi_tile/glass{
 	dir = 1
 	},
@@ -8940,13 +8949,6 @@
 /area/maintenance/zerocent)
 "Mq" = (
 /turf/simulated/wall/r_wall/turfpack/station,
-/area/maintenance/zeroaft)
-"Mr" = (
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
-/obj/structure/catwalk,
-/turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroaft)
 "Ms" = (
 /obj/structure/table/reinforced,
@@ -8985,14 +8987,14 @@
 /area/maintenance/zeroport)
 "MA" = (
 /obj/effect/floor_decal/techfloor,
-/obj/structure/cable{
-	icon_state = "4-8"
-	},
 /obj/machinery/atmospherics/pipe/simple/hidden/supply{
 	dir = 5
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers{
 	dir = 5
+	},
+/obj/structure/cable{
+	icon_state = "1-4"
 	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
@@ -9046,14 +9048,14 @@
 /obj/effect/floor_decal/techfloor/corner{
 	dir = 10
 	},
-/obj/structure/cable{
-	icon_state = "2-8"
-	},
 /obj/machinery/atmospherics/pipe/simple/hidden/supply{
 	dir = 4
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers{
 	dir = 4
+	},
+/obj/structure/cable{
+	icon_state = "4-8"
 	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
@@ -9094,11 +9096,11 @@
 /area/maintenance/zerostarboard)
 "Na" = (
 /obj/structure/catwalk,
-/obj/structure/cable{
-	icon_state = "2-4"
-	},
 /obj/machinery/atmospherics/pipe/simple/hidden/supply,
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
+/obj/structure/cable{
+	icon_state = "1-2"
+	},
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroaft)
 "Nc" = (
@@ -9144,9 +9146,6 @@
 "Nk" = (
 /obj/effect/floor_decal/techfloor,
 /obj/random/trash,
-/obj/structure/cable{
-	icon_state = "4-8"
-	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "Nl" = (
@@ -9401,6 +9400,9 @@
 	pixel_x = -24
 	},
 /obj/structure/mob_spawner/mouse_nest/mousehole,
+/obj/structure/cable{
+	icon_state = "1-2"
+	},
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroaft)
 "Om" = (
@@ -9526,6 +9528,7 @@
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers{
 	dir = 4
 	},
+/obj/machinery/maint_recycler,
 /turf/simulated/floor/tiled/techmaint,
 /area/maintenance/gravlobby)
 "OM" = (
@@ -9831,6 +9834,9 @@
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden/supply,
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
+/obj/structure/cable{
+	icon_state = "1-2"
+	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "Qh" = (
@@ -10220,13 +10226,6 @@
 /obj/structure/catwalk,
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroaft)
-"Sl" = (
-/obj/random/mouseremains,
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
-/turf/simulated/floor/plating/turfpack/station,
-/area/maintenance/zeroaft)
 "Sm" = (
 /obj/random/crate,
 /turf/simulated/floor/tiled,
@@ -10241,17 +10240,6 @@
 /obj/effect/wingrille_spawn/reinforced,
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/ragecage)
-"Sq" = (
-/obj/structure/cable{
-	icon_state = "2-8"
-	},
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
-/obj/machinery/atmospherics/pipe/simple/hidden/supply,
-/obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
-/turf/simulated/floor/plating/turfpack/station,
-/area/maintenance/zerostarboard)
 "Sr" = (
 /obj/effect/floor_decal/borderfloorblack{
 	dir = 4
@@ -10376,9 +10364,6 @@
 /obj/effect/floor_decal/techfloor{
 	dir = 10
 	},
-/obj/structure/cable{
-	icon_state = "1-4"
-	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "SX" = (
@@ -10403,9 +10388,6 @@
 "Tc" = (
 /obj/effect/floor_decal/techfloor/corner{
 	dir = 9
-	},
-/obj/structure/cable{
-	icon_state = "1-2"
 	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
@@ -10634,6 +10616,9 @@
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers{
 	dir = 6
+	},
+/obj/structure/cable{
+	icon_state = "2-4"
 	},
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroaft)
@@ -10925,6 +10910,7 @@
 /obj/machinery/atmospherics/pipe/simple/hidden/supply{
 	dir = 10
 	},
+/mob/living/bot/medbot/mysterious,
 /turf/simulated/floor/tiled/white,
 /area/maintenance/abfirstaid)
 "Vr" = (
@@ -11029,6 +11015,7 @@
 /obj/structure/cable{
 	icon_state = "1-4"
 	},
+/obj/machinery/atmospherics/pipe/manifold4w/hidden/scrubbers,
 /turf/simulated/floor/plating/turfpack/station,
 /area/maintenance/zeroaft)
 "VI" = (
@@ -11643,6 +11630,12 @@
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers{
 	dir = 6
 	},
+/obj/structure/cable{
+	icon_state = "2-4"
+	},
+/obj/structure/cable{
+	icon_state = "4-8"
+	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
 "Yh" = (
@@ -11755,12 +11748,6 @@
 "YF" = (
 /obj/effect/floor_decal/techfloor/corner{
 	dir = 10
-	},
-/obj/structure/cable{
-	icon_state = "1-8"
-	},
-/obj/structure/cable{
-	icon_state = "1-2"
 	},
 /turf/simulated/floor/tiled/techfloor,
 /area/maintenance/engineering/gravgen)
@@ -35766,7 +35753,7 @@ In
 Kr
 Uq
 Xq
-fW
+bh
 oY
 EP
 ly
@@ -36814,7 +36801,7 @@ pe
 gk
 wq
 jR
-IU
+bM
 pD
 Tc
 Cu
@@ -38362,7 +38349,7 @@ WF
 WF
 WF
 aF
-qs
+vE
 Pb
 PK
 Fo
@@ -45855,7 +45842,7 @@ ND
 IR
 Km
 ez
-Kc
+aR
 OY
 Kc
 yo
@@ -46629,8 +46616,8 @@ Bo
 Km
 Km
 Dr
-xS
-wn
+aW
+aL
 Nm
 xS
 su
@@ -46886,7 +46873,7 @@ gp
 Yp
 YD
 Km
-fb
+bk
 xS
 xS
 xS
@@ -47144,9 +47131,9 @@ YD
 Yp
 YD
 Km
-xS
+be
 Dr
-wn
+aP
 xS
 Sb
 rU
@@ -47646,7 +47633,7 @@ wn
 lv
 It
 jv
-xS
+bf
 KQ
 pt
 uU
@@ -50468,7 +50455,7 @@ wZ
 Ky
 Ky
 oc
-wd
+jC
 LV
 sI
 jC
@@ -50726,7 +50713,7 @@ wZ
 wZ
 Ky
 ow
-Sq
+BI
 BI
 BI
 EC
@@ -52827,9 +52814,9 @@ Fs
 wQ
 Ok
 pn
-Vg
-Vg
-Vg
+Na
+Na
+Na
 pn
 Na
 dR
@@ -53081,15 +53068,15 @@ kt
 Wl
 Sk
 Hm
-Mr
-Mr
-CT
-CT
-HG
-Sl
+Sk
+Sk
+Sk
+Sk
+Bh
+qf
 pW
-CT
-Cr
+Sk
+Fz
 Mq
 Mq
 wZ

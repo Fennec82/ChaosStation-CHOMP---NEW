@@ -1,4 +1,9 @@
-import { Component, type CSSProperties, type PropsWithChildren } from 'react';
+import {
+  Component,
+  type CSSProperties,
+  type PropsWithChildren,
+  type ReactNode,
+} from 'react';
 import { resolveAsset } from 'tgui/assets';
 import { useBackend } from 'tgui/backend';
 import {
@@ -229,7 +234,7 @@ type NanoMapMarkerProps = {
   y: number;
   zoom: number;
   icon: string;
-  tooltip: string;
+  tooltip: ReactNode;
   color: string;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 };
@@ -280,12 +285,13 @@ const NanoMapZoomer = (props: NanoMapZoomerProps) => {
       <LabeledList>
         <LabeledList.Item label="Zoom">
           <Slider
+            tickWhileDragging
             minValue={1}
             maxValue={8}
             stepPixelSize={10}
             format={(v) => `${v}x`}
             value={props.zoom}
-            onDrag={(e, v) => props.onZoom(e, v)}
+            onChange={(e, v) => props.onZoom(e, v)}
           />
         </LabeledList.Item>
         <LabeledList.Item label="Z-Level">

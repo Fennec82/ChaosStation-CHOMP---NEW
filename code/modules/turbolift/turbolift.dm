@@ -9,7 +9,7 @@
 	var/floor_wait_delay = 85                           // Time to wait at floor stops.
 	var/obj/structure/lift/panel/control_panel_interior // Lift control panel.
 	var/doors_closing = 0								// Whether doors are in the process of closing
-	var/list/music = null								// Elevator music to set on areas
+	var/list/music = list('sound/music/elevator.ogg')	// Elevator music to set on areas
 	var/priority_mode = FALSE							// Flag to block buttons from calling the elevator if in priority mode.
 	var/fire_mode = FALSE								// Flag to indicate firefighter mode is active.
 
@@ -70,7 +70,6 @@
 		if(floor.ext_panel)
 			floor.ext_panel.reset()
 	queued_floors.Cut()
-	control_panel_interior.updateDialog()
 
 // Update the icons of all exterior panels (after we change modes etc)
 /datum/turbolift/proc/update_ext_panel_icons()
@@ -114,7 +113,7 @@
 					target_floor = null
 				return PROCESS_KILL
 			else if(!next_process)
-				log_debug("Turbolift [src] do_move() returned 1 but next_process = null; busy_state=[busy_state]")
+				log_runtime("Turbolift [src] do_move() returned 1 but next_process = null; busy_state=[busy_state]")
 				return PROCESS_KILL
 		if(LIFT_WAITING_A)
 			var/area/turbolift/origin = locate(current_floor.area_ref)
@@ -128,7 +127,7 @@
 				busy_state = null
 				return PROCESS_KILL
 		else
-			log_debug("Turbolift [src] process() called with unknown busy_state='[busy_state]'")
+			log_runtime("Turbolift [src] process() called with unknown busy_state='[busy_state]'")
 			return PROCESS_KILL
 
 // Called by process when in LIFT_MOVING
@@ -146,7 +145,6 @@
 			moving_upwards = 1
 		else
 			moving_upwards = 0
-		control_panel_interior.updateDialog()
 
 	if(doors_are_open())
 		if(!doors_closing)

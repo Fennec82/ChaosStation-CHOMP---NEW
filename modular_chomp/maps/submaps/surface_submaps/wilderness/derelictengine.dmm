@@ -3,13 +3,11 @@
 /obj/effect/floor_decal/techfloor{
 	dir = 1
 	},
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/siege/emp{
-	loot_list = list(/obj/item/prop/alien/junk = 20, /obj/item/prop/alien/junk = 20)
-	},
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "ab" = (
@@ -18,27 +16,89 @@
 	maxHealth = 15
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
-	oxygen = 20.7263;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
-"am" = (
-/mob/living/carbon/alien/diona{
-	adult_name = "Schmeinkie";
-	can_namepick_as_adult = 0;
-	desc = "An overfed diona nymph that looks weirdly like scrumbulous, currently has a hollocollar tagged 'Schmeinkie' on it";
-	faction = "hivebot";
-	health = 150;
-	maxHealth = 150;
-	name = "Schmeinkie";
-	voice_name = "Schmeinkie"
-	},
-/turf/simulated/floor/greengrid{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
 	temperature = 243.15
 	},
+/area/submap/DerelictEngine)
+"ad" = (
+/obj/effect/floor_decal/techfloor{
+	dir = 4
+	},
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
+/turf/simulated/shuttle/floor/alienplating/external,
+/area/submap/DerelictEngine)
+"ae" = (
+/obj/effect/floor_decal/techfloor{
+	dir = 8
+	},
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
+/turf/simulated/shuttle/floor/alienplating/external,
+/area/submap/DerelictEngine)
+"af" = (
+/obj/effect/floor_decal/techfloor/orange{
+	dir = 4
+	},
+/obj/effect/floor_decal/techfloor/orange{
+	dir = 8
+	},
+/obj/effect/floor_decal/techfloor/hole{
+	dir = 4
+	},
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
+/turf/simulated/floor/tiled/techfloor{
+	nitrogen = 93.7835;
+	oxygen = 20.7263;
+	temperature = 243.15
+	},
+/area/submap/DerelictEngine)
+"ag" = (
+/obj/effect/floor_decal/techfloor{
+	dir = 8
+	},
+/obj/random/trash,
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
+/turf/simulated/shuttle/floor/alienplating/external,
+/area/submap/DerelictEngine)
+"ah" = (
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
+/turf/simulated/floor/outdoors/rocks/sif/planetuse,
+/area/template_noop)
+"ai" = (
+/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_bullet{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
+/turf/simulated/shuttle/floor/alienplating/external,
+/area/submap/DerelictEngine)
+"aj" = (
+/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_laser,
+/turf/simulated/shuttle/floor/alienplating/external,
+/area/submap/DerelictEngine)
+"ak" = (
+/obj/effect/floor_decal/techfloor{
+	dir = 4
+	},
+/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_bullet{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
+/turf/simulated/shuttle/floor/alienplating/external,
+/area/submap/DerelictEngine)
+"al" = (
+/obj/effect/floor_decal/techfloor{
+	dir = 8
+	},
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
+/turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "an" = (
 /obj/effect/floor_decal/techfloor/orange{
@@ -51,15 +111,19 @@
 	icon_state = "4-8"
 	},
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
-"ap" = (
-/mob/living/simple_mob/mechanical/hivebot/swarm,
-/turf/template_noop,
-/area/template_noop)
+"ao" = (
+/obj/effect/floor_decal/techfloor{
+	dir = 4
+	},
+/obj/effect/gibspawner/robot,
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
+/turf/simulated/shuttle/floor/alienplating/external,
+/area/submap/DerelictEngine)
 "aq" = (
 /obj/structure/grille/cult{
 	name = "Alien grille"
@@ -71,10 +135,132 @@
 	dir = 8
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
+/area/submap/DerelictEngine)
+"ar" = (
+/obj/effect/floor_decal/techfloor{
+	dir = 4
+	},
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
+/turf/simulated/shuttle/floor/alienplating/external,
+/area/submap/DerelictEngine)
+"as" = (
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
+/turf/simulated/floor/outdoors/dirt,
+/area/template_noop)
+"at" = (
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
+/turf/simulated/shuttle/floor/alienplating/external,
+/area/submap/DerelictEngine)
+"au" = (
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
+/turf/simulated/shuttle/floor/alien{
+	nitrogen = 93.7835;
+	oxygen = 20.7263;
+	temperature = 243.15
+	},
+/area/submap/DerelictEngine)
+"av" = (
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
+/turf/simulated/shuttle/floor/alienplating/external,
+/area/submap/DerelictEngine)
+"aw" = (
+/obj/effect/floor_decal/techfloor{
+	dir = 4
+	},
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
+/turf/simulated/shuttle/floor/alienplating/external,
+/area/submap/DerelictEngine)
+"ax" = (
+/obj/effect/floor_decal/techfloor{
+	dir = 8
+	},
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
+/turf/simulated/shuttle/floor/alienplating/external,
+/area/submap/DerelictEngine)
+"ay" = (
+/obj/effect/floor_decal/techfloor{
+	dir = 4
+	},
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
+/turf/simulated/floor/tiled/techfloor{
+	nitrogen = 93.7835;
+	oxygen = 20.7263;
+	temperature = 243.15
+	},
+/area/submap/DerelictEngine)
+"az" = (
+/obj/effect/floor_decal/techfloor{
+	dir = 8
+	},
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
+/turf/simulated/floor/tiled/techfloor{
+	nitrogen = 93.7835;
+	oxygen = 20.7263;
+	temperature = 243.15
+	},
+/area/submap/DerelictEngine)
+"aA" = (
+/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_bullet,
+/turf/simulated/floor/greengrid{
+	nitrogen = 93.7835;
+	oxygen = 20.7263;
+	temperature = 243.15
+	},
+/area/submap/DerelictEngine)
+"aB" = (
+/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_laser,
+/turf/simulated/floor/tiled/techfloor{
+	nitrogen = 93.7835;
+	oxygen = 20.7263;
+	temperature = 243.15
+	},
+/area/submap/DerelictEngine)
+"aC" = (
+/obj/structure/cable/green{
+	icon_state = "4-8"
+	},
+/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_laser,
+/turf/simulated/floor/tiled/techfloor{
+	nitrogen = 93.7835;
+	oxygen = 20.7263;
+	temperature = 243.15
+	},
+/area/submap/DerelictEngine)
+"aD" = (
+/obj/effect/floor_decal/techfloor{
+	dir = 1
+	},
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
+/turf/simulated/shuttle/floor/alienplating/external,
+/area/submap/DerelictEngine)
+"aE" = (
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/dot,
+/turf/simulated/shuttle/floor/alien{
+	nitrogen = 93.7835;
+	oxygen = 20.7263;
+	temperature = 243.15
+	},
+/area/submap/DerelictEngine)
+"aF" = (
+/obj/effect/decal/remains/xeno,
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/siege,
+/turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "aG" = (
 /obj/effect/decal/remains/xeno,
@@ -84,12 +270,23 @@
 	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
+"aH" = (
+/obj/effect/floor_decal/techfloor{
+	dir = 1
+	},
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/siege,
+/turf/simulated/shuttle/floor/alien{
+	nitrogen = 93.7835;
+	oxygen = 20.7263;
+	temperature = 243.15
+	},
+/area/submap/DerelictEngine)
 "aJ" = (
 /obj/machinery/vr_sleeper/alien/alpha_replicant,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "aO" = (
@@ -104,11 +301,11 @@
 /obj/effect/floor_decal/techfloor/orange{
 	dir = 1
 	},
-/obj/random/mob/robotic/hivebot,
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "bk" = (
@@ -121,13 +318,6 @@
 /obj/item/material/shard/phoron,
 /turf/simulated/floor/outdoors/rocks/sif/planetuse,
 /area/template_noop)
-"bn" = (
-/obj/structure/girder/reinforced,
-/obj/effect/floor_decal/techfloor{
-	dir = 8
-	},
-/turf/simulated/shuttle/floor/alienplating/external,
-/area/submap/DerelictEngine)
 "bp" = (
 /obj/structure/bed/alien,
 /turf/simulated/shuttle/floor/alienplating/external,
@@ -141,9 +331,9 @@
 	},
 /obj/effect/decal/cleanable/generic,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "bG" = (
@@ -156,33 +346,20 @@
 "bH" = (
 /obj/machinery/power/emitter/gyrotron,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "bN" = (
 /turf/simulated/floor/outdoors/rocks,
 /area/template_noop)
-"bX" = (
-/mob/living/simple_mob/mechanical/hivebot/tank,
-/turf/template_noop,
-/area/template_noop)
-"cE" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 8
-	},
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/laser{
-	loot_list = list(/obj/item/prop/alien/junk = 20)
-	},
-/turf/simulated/shuttle/floor/alienplating/external,
-/area/submap/DerelictEngine)
 "cH" = (
 /obj/structure/prop/alien/pod/hybrid,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "cQ" = (
@@ -218,36 +395,15 @@
 	pixel_y = 10
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
-/area/submap/DerelictEngine)
-"dh" = (
-/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_laser,
-/obj/effect/floor_decal/techfloor{
-	dir = 4
-	},
-/obj/effect/floor_decal/techfloor/hole{
-	dir = 4
-	},
-/turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "dy" = (
 /obj/structure/shuttle/engine/propulsion/burst,
 /obj/structure/shuttle/engine/propulsion/burst,
 /turf/simulated/floor/outdoors/rocks/sif/planetuse,
-/area/submap/DerelictEngine)
-"dC" = (
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/laser,
-/obj/effect/floor_decal/techfloor{
-	dir = 4
-	},
-/turf/simulated/shuttle/floor/alien{
-	nitrogen = 93.7835;
-	oxygen = 20.7263;
-	temperature = 243.15
-	},
 /area/submap/DerelictEngine)
 "dG" = (
 /obj/machinery/door/airlock/alien/blue/public,
@@ -259,9 +415,9 @@
 	open_layer = 3.3
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "dL" = (
@@ -272,9 +428,9 @@
 	amount = 10
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "dO" = (
@@ -288,12 +444,11 @@
 /obj/structure/table/alien,
 /obj/effect/floor_decal/techfloor,
 /obj/item/storage/belt/medical/alien,
-/obj/item/telecube/precursor/mated/mirrorcolor,
 /obj/item/implantcase/sprinter,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "el" = (
@@ -302,9 +457,9 @@
 	},
 /obj/structure/loot_pile/surface/alien/engineering,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "eq" = (
@@ -324,6 +479,7 @@
 	dir = 1
 	},
 /obj/effect/gibspawner/human/xenochimera,
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
 /turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "eV" = (
@@ -340,9 +496,9 @@
 	dir = 8
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "fn" = (
@@ -357,10 +513,13 @@
 	dir = 8
 	},
 /obj/random/trash,
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "fy" = (
@@ -369,9 +528,9 @@
 	},
 /obj/item/trash/material/metal,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "fG" = (
@@ -384,9 +543,9 @@
 	pixel_x = 7
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "fH" = (
@@ -396,17 +555,15 @@
 /obj/effect/floor_decal/techfloor/orange{
 	dir = 8
 	},
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/dot,
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
-"fJ" = (
-/mob/living/simple_mob/mechanical/hivebot/tank,
-/turf/simulated/floor/outdoors/dirt/sif/planetuse,
-/area/template_noop)
 "fO" = (
 /turf/simulated/shuttle/wall/alien,
 /area/submap/DerelictEngine)
@@ -419,9 +576,9 @@
 	dir = 1
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "gj" = (
@@ -429,9 +586,9 @@
 	dir = 10
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "gk" = (
@@ -445,18 +602,18 @@
 	pixel_y = 10
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "go" = (
 /obj/effect/decal/cleanable/generic,
 /obj/item/gun/energy/toxgun,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "gy" = (
@@ -488,28 +645,20 @@
 	pixel_x = 7;
 	pixel_y = 10
 	},
-/obj/random/mob/robotic/hivebot,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
-"hb" = (
-/mob/living/simple_mob/humanoid/merc/ranged/ionrifle{
-	health = 15;
-	maxHealth = 15
-	},
-/turf/simulated/floor/outdoors/rocks/sif/planetuse,
-/area/template_noop)
 "ht" = (
 /obj/effect/floor_decal/techfloor/orange{
 	dir = 5
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "hu" = (
@@ -528,9 +677,9 @@
 /obj/effect/decal/cleanable/generic,
 /obj/effect/decal/cleanable/ash,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "hU" = (
@@ -546,18 +695,18 @@
 	pixel_y = -7
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "hW" = (
 /obj/effect/floor_decal/techfloor/orange,
 /obj/effect/floor_decal/techfloor/hole,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "hY" = (
@@ -569,25 +718,28 @@
 	pixel_y = -7
 	},
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "hZ" = (
 /obj/structure/girder/reinforced,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "ib" = (
 /obj/random/trash,
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "ig" = (
@@ -600,9 +752,9 @@
 	info = "\[i]This tablet has a large collection of symbols that you've never seen before outside this ship. You have no hope of figuring out what any of the mean...\[/i]"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "il" = (
@@ -621,10 +773,6 @@
 	},
 /turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
-"iu" = (
-/obj/random/mob/robotic/hivebot,
-/turf/simulated/shuttle/floor/alienplating/external,
-/area/submap/DerelictEngine)
 "iz" = (
 /obj/effect/floor_decal/techfloor/orange{
 	dir = 8
@@ -635,11 +783,10 @@
 /obj/structure/cable{
 	icon_state = "1-2"
 	},
-/obj/random/mob/robotic/hivebot,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "iB" = (
@@ -649,26 +796,26 @@
 /obj/effect/floor_decal/techfloor{
 	dir = 8
 	},
-/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_laser,
 /obj/effect/floor_decal/techfloor/hole/right{
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "iK" = (
 /obj/structure/prop/alien/computer/camera,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "iO" = (
 /obj/effect/gibspawner/robot,
+/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_laser,
 /turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "iP" = (
@@ -680,9 +827,9 @@
 "iQ" = (
 /obj/item/trash/material/metal,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "iW" = (
@@ -700,20 +847,10 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
-/area/submap/DerelictEngine)
-"ja" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 8
-	},
-/mob/living/simple_mob/humanoid/merc/ranged/ionrifle{
-	health = 15;
-	maxHealth = 15
-	},
-/turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "je" = (
 /turf/simulated/shuttle/floor/alienplating/external,
@@ -747,9 +884,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "jG" = (
@@ -760,9 +897,9 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "jO" = (
@@ -777,9 +914,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "jY" = (
@@ -801,9 +938,9 @@
 	},
 /obj/structure/prop/alien/pod/hybrid,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "kx" = (
@@ -812,9 +949,9 @@
 	pixel_y = -7
 	},
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "lg" = (
@@ -826,17 +963,17 @@
 	dir = 8
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "lj" = (
 /obj/machinery/artifact,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "lr" = (
@@ -845,9 +982,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "ls" = (
@@ -861,19 +998,11 @@
 /obj/effect/gibspawner/human,
 /turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
-"lE" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 8
-	},
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/siege/radiation{
-	loot_list = list(/obj/item/prop/alien/junk = 20)
-	},
-/turf/simulated/shuttle/floor/alienplating/external,
-/area/submap/DerelictEngine)
 "lV" = (
 /obj/effect/floor_decal/techfloor{
 	dir = 9
 	},
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
 /turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "lX" = (
@@ -882,9 +1011,9 @@
 	pixel_y = -7
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "lY" = (
@@ -897,9 +1026,9 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "ms" = (
@@ -912,14 +1041,6 @@
 	amount = 10
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
-	oxygen = 20.7263;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
-"mu" = (
-/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_melee,
-/turf/simulated/floor/greengrid{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
 	temperature = 243.15
@@ -931,9 +1052,9 @@
 	pixel_y = 10
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "mE" = (
@@ -943,33 +1064,24 @@
 /obj/item/stock_parts/micro_laser,
 /turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
-"mI" = (
-/obj/effect/decal/remains/xeno,
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/siege/fragmentation,
-/turf/simulated/shuttle/floor/alien{
-	nitrogen = 93.7835;
-	oxygen = 20.7263;
-	temperature = 243.15
-	},
-/area/submap/DerelictEngine)
 "mM" = (
 /obj/effect/floor_decal/techfloor{
 	dir = 4
 	},
 /obj/effect/decal/remains/xeno,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "mN" = (
 /obj/structure/prop/alien/computer/camera/flipped,
 /obj/structure/prop/alien/computer/camera/flipped,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "mR" = (
@@ -981,9 +1093,9 @@
 	},
 /obj/effect/decal/cleanable/molten_item,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "nM" = (
@@ -991,9 +1103,9 @@
 	pixel_x = 7
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "nO" = (
@@ -1010,9 +1122,9 @@
 "nQ" = (
 /obj/structure/prop/alien/computer/camera/flipped,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "nW" = (
@@ -1021,9 +1133,9 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "nZ" = (
@@ -1036,9 +1148,9 @@
 	name = "Anchors"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "od" = (
@@ -1058,9 +1170,9 @@
 	},
 /obj/machinery/porta_turret/alien/destroyed,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "oD" = (
@@ -1074,9 +1186,9 @@
 	icon_state = "4-8"
 	},
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "oL" = (
@@ -1095,9 +1207,9 @@
 	pixel_x = 24
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "oN" = (
@@ -1108,9 +1220,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "pg" = (
@@ -1130,9 +1242,9 @@
 	},
 /obj/effect/decal/cleanable/blood/gibs/robot,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "pm" = (
@@ -1150,6 +1262,7 @@
 /obj/effect/floor_decal/techfloor/hole/right{
 	dir = 1
 	},
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/siege,
 /turf/simulated/shuttle/floor/alien{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
@@ -1157,10 +1270,13 @@
 	},
 /area/submap/DerelictEngine)
 "pt" = (
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/template_noop)
 "pu" = (
@@ -1177,9 +1293,9 @@
 	icon_state = "1-4"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "py" = (
@@ -1195,9 +1311,9 @@
 	},
 /obj/effect/decal/remains/xeno,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "pC" = (
@@ -1206,9 +1322,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "pF" = (
@@ -1222,10 +1338,6 @@
 	},
 /turf/simulated/floor/outdoors/rocks/sif/planetuse,
 /area/template_noop)
-"ql" = (
-/obj/item/gps/internal/poi,
-/turf/simulated/shuttle/wall/alien,
-/area/submap/DerelictEngine)
 "qn" = (
 /obj/effect/floor_decal/techfloor/orange{
 	dir = 4
@@ -1235,9 +1347,9 @@
 	},
 /obj/structure/girder/reinforced,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "qt" = (
@@ -1246,15 +1358,6 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
-	oxygen = 20.7263;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
-"qA" = (
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
-/obj/effect/decal/remains/xeno,
-/turf/simulated/shuttle/floor/alien{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
 	temperature = 243.15
@@ -1266,14 +1369,6 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
-	oxygen = 20.7263;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
-"qJ" = (
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/laser,
-/turf/simulated/shuttle/floor/alien{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
 	temperature = 243.15
@@ -1285,9 +1380,9 @@
 	},
 /obj/machinery/power/grounding_rod,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "qT" = (
@@ -1301,9 +1396,9 @@
 /obj/structure/prop/alien/pod/open,
 /obj/structure/prop/alien/pod/open,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "rb" = (
@@ -1317,17 +1412,14 @@
 /obj/structure/cable/green{
 	icon_state = "4-8"
 	},
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/laser{
-	loot_list = list(/obj/item/prop/alien/junk = 20)
-	},
 /obj/item/material/shard/phoron{
 	pixel_x = 7;
 	pixel_y = 10
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "rg" = (
@@ -1342,31 +1434,6 @@
 	},
 /turf/simulated/floor/tiled/techfloor,
 /area/submap/DerelictEngine)
-"rh" = (
-/obj/effect/floor_decal/techfloor/orange{
-	dir = 4
-	},
-/obj/effect/floor_decal/techfloor/orange{
-	dir = 8
-	},
-/obj/effect/floor_decal/techfloor/hole{
-	dir = 4
-	},
-/obj/random/mob/robotic/hivebot,
-/turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
-	oxygen = 20.7263;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
-"rl" = (
-/obj/random/mob/robotic/hivebot,
-/turf/simulated/floor/greengrid{
-	nitrogen = 93.7835;
-	oxygen = 20.7263;
-	temperature = 243.15
-	},
-/area/submap/DerelictEngine)
 "rI" = (
 /obj/effect/floor_decal/techfloor/orange{
 	dir = 4
@@ -1375,10 +1442,13 @@
 	dir = 8
 	},
 /obj/item/surgical/retractor/alien,
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "sa" = (
@@ -1391,9 +1461,9 @@
 	info = "\[i]This tablet has a large collection of symbols that you've never seen before outside this ship. You have no hope of figuring out what any of the mean...\[/i]"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "sl" = (
@@ -1404,11 +1474,6 @@
 	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
-"sn" = (
-/obj/random/trash,
-/obj/random/mob/robotic/hivebot,
-/turf/simulated/shuttle/floor/alienplating/external,
-/area/submap/DerelictEngine)
 "sq" = (
 /obj/effect/floor_decal/techfloor/orange{
 	dir = 9
@@ -1418,13 +1483,14 @@
 	},
 /obj/structure/frame,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "st" = (
 /obj/random/trash,
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
 /turf/simulated/shuttle/floor/alien{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
@@ -1462,17 +1528,17 @@
 	},
 /obj/machinery/the_singularitygen/tesla,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "sG" = (
 /obj/effect/decal/cleanable/molten_item,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "tj" = (
@@ -1488,17 +1554,6 @@
 	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
-"tl" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 8
-	},
-/obj/random/mob/robotic/hivebot,
-/turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
-	oxygen = 20.7263;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
 "ts" = (
 /obj/effect/floor_decal/techfloor/orange{
 	dir = 6
@@ -1508,9 +1563,9 @@
 /obj/item/prop/alien/junk,
 /obj/item/prop/alien/junk,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "tt" = (
@@ -1520,16 +1575,15 @@
 	icon_state = "0-8"
 	},
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "tx" = (
 /obj/effect/floor_decal/techfloor{
 	dir = 9
 	},
-/obj/random/mob/robotic/hivebot,
 /turf/simulated/shuttle/floor/alien{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
@@ -1540,9 +1594,9 @@
 /obj/effect/decal/cleanable/generic,
 /obj/effect/decal/cleanable/blood/gibs/robot,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "tP" = (
@@ -1551,9 +1605,9 @@
 	},
 /obj/machinery/power/tesla_coil/pre_mapped,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "tW" = (
@@ -1562,9 +1616,9 @@
 	state = 1
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "ut" = (
@@ -1573,9 +1627,9 @@
 	},
 /obj/structure/loot_pile/surface/alien/security,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "uA" = (
@@ -1590,9 +1644,9 @@
 	},
 /obj/effect/gibspawner/human/xenochimera,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "uB" = (
@@ -1609,9 +1663,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "uH" = (
@@ -1622,10 +1676,11 @@
 	icon_state = "4-8"
 	},
 /obj/item/clothing/under/psysuit,
+/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_bullet,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "uJ" = (
@@ -1635,9 +1690,9 @@
 /obj/structure/closet/alien,
 /obj/item/implanter/adrenalin,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "uP" = (
@@ -1648,9 +1703,9 @@
 	item_state = 2
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "uX" = (
@@ -1663,9 +1718,9 @@
 /obj/structure/table/alien/blue,
 /obj/item/paper/alien,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "vl" = (
@@ -1674,9 +1729,9 @@
 	},
 /obj/effect/decal/cleanable/molten_item,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "vC" = (
@@ -1693,9 +1748,9 @@
 	},
 /obj/item/trash/material/metal,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "vN" = (
@@ -1706,9 +1761,9 @@
 	icon_state = "1-2"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "vU" = (
@@ -1727,9 +1782,9 @@
 /obj/effect/decal/cleanable/blood/gibs/robot,
 /obj/effect/decal/cleanable/ash,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "wh" = (
@@ -1745,17 +1800,17 @@
 /obj/effect/decal/cleanable/generic,
 /obj/effect/decal/cleanable/blood/gibs/robot,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "wp" = (
 /obj/machinery/door/airlock/alien/blue/public,
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "wq" = (
@@ -1766,10 +1821,11 @@
 	icon_state = "4-8"
 	},
 /obj/effect/decal/remains/xeno,
+/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_bullet,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "wx" = (
@@ -1792,17 +1848,17 @@
 	icon_state = "1-2"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "wG" = (
 /obj/structure/bed/alien,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "wK" = (
@@ -1820,9 +1876,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "wV" = (
@@ -1841,9 +1897,9 @@
 	icon_state = "1-4"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "xo" = (
@@ -1865,9 +1921,9 @@
 	pixel_y = 10
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "xq" = (
@@ -1884,29 +1940,14 @@
 /obj/effect/decal/remains/xeno,
 /turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
-"xz" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 4
-	},
-/mob/living/simple_mob/humanoid/merc/ranged{
-	health = 15;
-	maxHealth = 15
-	},
-/turf/simulated/shuttle/floor/alien{
-	nitrogen = 93.7835;
-	oxygen = 20.7263;
-	temperature = 243.15
-	},
-/area/submap/DerelictEngine)
 "xC" = (
 /obj/effect/floor_decal/techfloor{
 	dir = 6
 	},
-/obj/random/mob/robotic/hivebot,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "xQ" = (
@@ -1919,6 +1960,9 @@
 /obj/effect/floor_decal/techfloor/hole{
 	dir = 4
 	},
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
 /turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "xR" = (
@@ -1930,17 +1974,6 @@
 	},
 /obj/effect/decal/cleanable/ash,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
-	oxygen = 20.7263;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
-"yg" = (
-/mob/living/simple_mob/humanoid/merc/melee/sword/poi{
-	health = 15;
-	maxHealth = 15
-	},
-/turf/simulated/shuttle/floor/alien{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
 	temperature = 243.15
@@ -1952,9 +1985,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "yj" = (
@@ -1963,15 +1996,11 @@
 	dir = 4
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
-"yk" = (
-/mob/living/simple_mob/mechanical/hivebot/swarm,
-/turf/simulated/floor/outdoors/rocks/sif/planetuse,
-/area/template_noop)
 "yA" = (
 /obj/structure/table/alien,
 /obj/effect/floor_decal/techfloor{
@@ -1979,10 +2008,11 @@
 	},
 /obj/item/prop/alien/junk,
 /obj/item/perfect_tele/alien,
+/obj/item/prop/deconstructable/gigacell,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "yB" = (
@@ -1991,9 +2021,9 @@
 /obj/item/tool/crowbar/alien,
 /obj/item/tool/wirecutters/alien,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "yE" = (
@@ -2005,25 +2035,9 @@
 	},
 /obj/effect/decal/cleanable/generic,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
-"yQ" = (
-/obj/effect/floor_decal/techfloor/orange{
-	dir = 8
-	},
-/obj/effect/floor_decal/techfloor/orange{
-	dir = 4
-	},
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/rapid{
-	loot_list = list(/obj/item/prop/alien/junk = 20)
-	},
-/turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
-	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "yZ" = (
@@ -2031,6 +2045,9 @@
 	dir = 4
 	},
 /obj/effect/gibspawner/robot,
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
 /turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "zb" = (
@@ -2051,9 +2068,9 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "zf" = (
@@ -2062,9 +2079,9 @@
 	},
 /obj/machinery/power/tesla_coil/pre_mapped,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "zk" = (
@@ -2093,9 +2110,9 @@
 	amount = 10
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "zw" = (
@@ -2121,9 +2138,9 @@
 	icon_state = "4-8"
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "zP" = (
@@ -2134,9 +2151,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "zY" = (
@@ -2153,17 +2170,17 @@
 	info = "\[i]This tablet has a large collection of symbols that you've never seen before outside this ship. You have no hope of figuring out what any of the mean...\[/i]"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ao" = (
 /obj/item/material/shard/phoron,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ap" = (
@@ -2172,25 +2189,18 @@
 	},
 /obj/structure/bed/alien,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "AF" = (
 /obj/machinery/porta_turret/alien/destroyed,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
-/area/submap/DerelictEngine)
-"AT" = (
-/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_laser,
-/obj/effect/floor_decal/techfloor{
-	dir = 8
-	},
-/turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "AX" = (
 /obj/structure/loot_pile/surface/alien/end,
@@ -2207,9 +2217,9 @@
 /obj/effect/decal/cleanable/blood/gibs/robot,
 /obj/effect/decal/cleanable/ash,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Bd" = (
@@ -2233,9 +2243,9 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Bh" = (
@@ -2247,9 +2257,9 @@
 	},
 /obj/structure/loot_pile/surface/alien/engineering,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Bs" = (
@@ -2258,9 +2268,9 @@
 	},
 /obj/effect/decal/cleanable/ash,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Bz" = (
@@ -2274,9 +2284,9 @@
 "BR" = (
 /obj/machinery/door/airlock/alien/blue/locked,
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "BX" = (
@@ -2286,9 +2296,9 @@
 /obj/machinery/power/tesla_coil/pre_mapped,
 /obj/effect/decal/cleanable/ash,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Cl" = (
@@ -2297,9 +2307,9 @@
 	},
 /obj/machinery/giga_drill,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Cp" = (
@@ -2311,16 +2321,15 @@
 	icon_state = "1-2"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ct" = (
 /obj/effect/floor_decal/techfloor{
 	dir = 5
 	},
-/obj/random/mob/robotic/hivebot,
 /turf/simulated/shuttle/floor/alien{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
@@ -2330,9 +2339,9 @@
 "Cz" = (
 /obj/structure/prop/alien/pod/open,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "CI" = (
@@ -2343,17 +2352,17 @@
 	dir = 1
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "CL" = (
 /obj/effect/decal/cleanable/generic,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "CV" = (
@@ -2372,9 +2381,9 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Dj" = (
@@ -2391,9 +2400,9 @@
 "DA" = (
 /obj/structure/loot_pile/surface/alien/engineering,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "DJ" = (
@@ -2425,37 +2434,10 @@
 /obj/item/paper/alien,
 /obj/item/cell/device/weapon/recharge/alien,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
-	oxygen = 20.7263;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
-"Ee" = (
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline{
-	loot_list = list(/obj/item/prop/alien/junk = 20)
-	},
-/obj/effect/floor_decal/techfloor{
-	dir = 1
-	},
-/turf/simulated/shuttle/floor/alienplating/external,
-/area/submap/DerelictEngine)
-"Em" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 8
-	},
-/mob/living/simple_mob/humanoid/merc/ranged/ionrifle{
-	health = 15;
-	maxHealth = 15
-	},
-/turf/simulated/shuttle/floor/alien{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
 	temperature = 243.15
 	},
-/area/submap/DerelictEngine)
-"Et" = (
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/strong/guard,
-/turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "Eu" = (
 /obj/effect/floor_decal/techfloor/orange{
@@ -2469,9 +2451,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ey" = (
@@ -2484,9 +2466,9 @@
 	},
 /obj/item/material/shard/phoron,
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "EC" = (
@@ -2498,9 +2480,9 @@
 	faction = "hivebot"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "EM" = (
@@ -2523,17 +2505,17 @@
 	icon_state = "1-4"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Fb" = (
 /obj/structure/loot_pile/surface/alien/medical,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Fd" = (
@@ -2545,21 +2527,6 @@
 	},
 /turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
-"Fv" = (
-/obj/effect/map_helper/no_phaseshift,
-/turf/simulated/shuttle/floor/alien{
-	nitrogen = 93.7835;
-	oxygen = 20.7263;
-	temperature = 243.15
-	},
-/area/submap/DerelictEngine)
-"FC" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 4
-	},
-/obj/random/mob/robotic/hivebot,
-/turf/simulated/shuttle/floor/alienplating/external,
-/area/submap/DerelictEngine)
 "FE" = (
 /obj/effect/floor_decal/techfloor/orange{
 	dir = 9
@@ -2568,9 +2535,9 @@
 	icon_state = "2-4"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "FH" = (
@@ -2579,9 +2546,9 @@
 	dir = 1
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "FI" = (
@@ -2595,28 +2562,28 @@
 	icon_state = "1-2"
 	},
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "FS" = (
 /obj/structure/closet/alien,
-/obj/item/shield_projector/line,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ga" = (
 /obj/effect/floor_decal/techfloor{
 	dir = 5
 	},
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Gw" = (
@@ -2625,9 +2592,9 @@
 	dir = 1
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "GM" = (
@@ -2642,9 +2609,9 @@
 	},
 /mob/living/simple_mob/mechanical/hivebot/support/commander,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "GU" = (
@@ -2652,20 +2619,19 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Hb" = (
 /obj/effect/floor_decal/techfloor{
 	dir = 9
 	},
-/mob/living/simple_mob/mechanical/hivebot/tank/meatshield,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Hi" = (
@@ -2674,9 +2640,9 @@
 	dir = 10
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Hw" = (
@@ -2697,9 +2663,9 @@
 	dir = 1
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "HH" = (
@@ -2708,18 +2674,18 @@
 	},
 /obj/effect/decal/cleanable/ash,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "HL" = (
 /obj/effect/floor_decal/techfloor/orange,
 /obj/effect/decal/cleanable/molten_item,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "HS" = (
@@ -2732,9 +2698,9 @@
 "HX" = (
 /obj/structure/loot_pile/surface/alien/security,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "HY" = (
@@ -2749,9 +2715,9 @@
 	dir = 8
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "HZ" = (
@@ -2763,9 +2729,9 @@
 	},
 /obj/effect/decal/cleanable/molten_item,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ia" = (
@@ -2777,9 +2743,9 @@
 	dir = 4
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ij" = (
@@ -2789,17 +2755,17 @@
 /obj/effect/decal/cleanable/generic,
 /obj/effect/gibspawner/human/xenochimera,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Io" = (
 /obj/machinery/particle_accelerator/control_box,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Is" = (
@@ -2809,10 +2775,11 @@
 /obj/effect/floor_decal/techfloor/hole{
 	dir = 4
 	},
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Iv" = (
@@ -2835,9 +2802,9 @@
 	icon_state = "0-8"
 	},
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "IS" = (
@@ -2846,9 +2813,9 @@
 	icon_state = "4-8"
 	},
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "IV" = (
@@ -2857,9 +2824,9 @@
 	},
 /obj/effect/gibspawner/human/xenochimera,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ja" = (
@@ -2867,24 +2834,14 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
-"Je" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 4
-	},
-/obj/random/mob/robotic/hivebot,
-/turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
-	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Jg" = (
 /obj/effect/gibspawner/human,
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
 /turf/simulated/shuttle/floor/alien{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
@@ -2897,9 +2854,9 @@
 	},
 /obj/effect/decal/cleanable/generic,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Jm" = (
@@ -2911,9 +2868,9 @@
 	},
 /obj/effect/decal/cleanable/ash,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "JG" = (
@@ -2924,9 +2881,9 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "JT" = (
@@ -2938,9 +2895,9 @@
 	icon_state = "1-2"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "JX" = (
@@ -2952,9 +2909,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ki" = (
@@ -2976,9 +2933,9 @@
 "KB" = (
 /obj/effect/decal/cleanable/ash,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "KL" = (
@@ -2990,9 +2947,9 @@
 	},
 /obj/effect/decal/cleanable/ash,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "KU" = (
@@ -3010,9 +2967,9 @@
 	},
 /obj/effect/decal/remains/xeno,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ld" = (
@@ -3023,9 +2980,9 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Lo" = (
@@ -3045,9 +3002,9 @@
 	open_layer = 3.3
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "LG" = (
@@ -3063,9 +3020,9 @@
 	},
 /obj/effect/decal/cleanable/generic,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "LT" = (
@@ -3075,33 +3032,18 @@
 /obj/effect/decal/cleanable/blood/gibs/robot,
 /obj/effect/decal/cleanable/molten_item,
 /turf/simulated/floor/plating{
-	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
-"Ma" = (
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/siege/fragmentation,
-/turf/simulated/shuttle/floor/alien{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
 	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "MC" = (
-/mob/living/simple_mob/mechanical/hivebot/precusor/lobber,
+/mob/living/simple_mob/mechanical/hivebot/precusor/machinegun,
 /turf/simulated/floor/greengrid{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
 	temperature = 243.15
 	},
-/area/submap/DerelictEngine)
-"MD" = (
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/rapid,
-/obj/effect/floor_decal/techfloor{
-	dir = 8
-	},
-/turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "MG" = (
 /obj/structure/table/alien/blue,
@@ -3121,9 +3063,9 @@
 	icon_state = "2-4"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "MZ" = (
@@ -3132,9 +3074,9 @@
 	},
 /obj/machinery/door/airlock/alien/blue/public,
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ng" = (
@@ -3149,9 +3091,9 @@
 	},
 /obj/item/implantcase/surge,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Nm" = (
@@ -3190,17 +3132,17 @@
 /obj/item/cell/device/weapon/recharge/alien/omni/empty,
 /obj/item/circuitboard/mecha/imperion/phasing,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ok" = (
 /obj/machinery/vr_sleeper/alien/beta_replicant,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Os" = (
@@ -3214,9 +3156,9 @@
 	},
 /obj/effect/gibspawner/human/xenochimera,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "OB" = (
@@ -3238,14 +3180,11 @@
 /obj/effect/floor_decal/techfloor/orange{
 	dir = 8
 	},
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/rapid{
-	loot_list = list(/obj/item/prop/alien/junk = 20)
-	},
 /obj/effect/decal/remains/xeno,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "OZ" = (
@@ -3259,31 +3198,6 @@
 /obj/item/cell/device/weapon/recharge/alien/omni/empty,
 /obj/item/gun/energy/laser/sleek,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
-	oxygen = 20.7263;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
-"Pe" = (
-/obj/effect/floor_decal/techfloor/orange,
-/obj/structure/cable{
-	icon_state = "4-8"
-	},
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/laser{
-	loot_list = list(/obj/item/prop/alien/junk = 20)
-	},
-/turf/simulated/floor/plating{
-	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
-"Pn" = (
-/obj/random/mob/robotic/hivebot,
-/obj/effect/floor_decal/techfloor{
-	dir = 8
-	},
-/turf/simulated/shuttle/floor/alien{
 	nitrogen = 93.7835;
 	oxygen = 20.7263;
 	temperature = 243.15
@@ -3303,9 +3217,9 @@
 	icon_state = "0-2"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Pv" = (
@@ -3324,9 +3238,9 @@
 	dir = 1
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Pw" = (
@@ -3338,16 +3252,16 @@
 /obj/effect/floor_decal/techfloor/orange,
 /obj/effect/floor_decal/techfloor/hole/right,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "PF" = (
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "PK" = (
@@ -3356,9 +3270,9 @@
 	icon_state = "1-4"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "PU" = (
@@ -3382,9 +3296,9 @@
 /obj/effect/decal/cleanable/generic,
 /obj/effect/decal/cleanable/blood/gibs/robot,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Qk" = (
@@ -3393,9 +3307,9 @@
 	icon_state = "4-8"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ql" = (
@@ -3404,17 +3318,10 @@
 	},
 /obj/item/clothing/under/psysuit,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
-/area/submap/DerelictEngine)
-"Qm" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 8
-	},
-/obj/random/mob/robotic/hivebot,
-/turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "Qv" = (
 /turf/simulated/floor/outdoors/dirt/sif/planetuse,
@@ -3436,17 +3343,19 @@
 	icon_state = "4-8"
 	},
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "QS" = (
-/obj/random/mob/robotic/hivebot,
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "QT" = (
@@ -3463,9 +3372,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "QY" = (
@@ -3479,30 +3388,11 @@
 /obj/structure/cable{
 	icon_state = "0-8"
 	},
-/obj/machinery/power/smes/buildable{
-	icon = 'icons/obj/alien_smes.dmi';
-	icon_state = "unit";
-	input_level = 950000;
-	name = "Alien Royal Capacitor";
-	output_level = 950000
-	},
+/obj/machinery/power/smes/buildable/alien_royal,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
-"Ro" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 4
-	},
-/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_bullet{
-	loot_list = list(/obj/item/prop/alien/junk = 20)
-	},
-/turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
-	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "RA" = (
@@ -3514,9 +3404,9 @@
 	},
 /mob/living/simple_mob/mechanical/hivebot/precusor/machinegun,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "RB" = (
@@ -3530,9 +3420,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "RF" = (
@@ -3550,9 +3440,9 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "RU" = (
@@ -3560,41 +3450,30 @@
 /obj/item/weldingtool/alien,
 /obj/item/storage/belt/utility/alien,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "RW" = (
 /obj/machinery/door/airlock/alien/blue/public,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "SB" = (
 /obj/structure/prop/alien/computer,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "SF" = (
 /turf/template_noop,
 /area/template_noop)
-"SJ" = (
-/obj/effect/decal/cleanable/generic,
-/mob/living/simple_mob/mechanical/hivebot/precusor/laser{
-	loot_list = list(/obj/item/prop/alien/junk = 20, /obj/item/prop/alien/junk = 20, /obj/item/storage/belt/utility/alien = 50)
-	},
-/turf/simulated/floor/plating{
-	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
 "ST" = (
 /obj/effect/floor_decal/techfloor/orange{
 	dir = 8
@@ -3608,19 +3487,10 @@
 /obj/structure/table/alien/blue,
 /obj/item/prop/alien/junk,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
-/area/submap/DerelictEngine)
-"SV" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 4
-	},
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/rapid{
-	loot_list = list(/obj/item/prop/alien/junk = 20)
-	},
-/turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "SW" = (
 /obj/effect/gibspawner/robot,
@@ -3634,10 +3504,11 @@
 	icon_state = "4-8"
 	},
 /obj/item/trash/material/metal,
+/mob/living/simple_mob/mechanical/hivebot/tank/armored/anti_laser,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "TB" = (
@@ -3651,9 +3522,9 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "TF" = (
@@ -3663,23 +3534,6 @@
 	},
 /turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
-"TK" = (
-/obj/effect/floor_decal/techfloor/orange{
-	dir = 8
-	},
-/obj/effect/floor_decal/techfloor/orange{
-	dir = 4
-	},
-/obj/effect/floor_decal/techfloor/hole{
-	dir = 4
-	},
-/obj/random/mob/robotic/hivebot,
-/turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
-	oxygen = 20.7263;
-	nitrogen = 93.7835
-	},
-/area/submap/DerelictEngine)
 "TO" = (
 /obj/effect/floor_decal/techfloor/orange/corner,
 /obj/structure/cable/green{
@@ -3687,9 +3541,9 @@
 	},
 /obj/effect/decal/cleanable/molten_item,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "TP" = (
@@ -3699,11 +3553,11 @@
 /obj/structure/cable/green{
 	icon_state = "4-8"
 	},
-/obj/random/mob/robotic/hivebot,
+/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "TV" = (
@@ -3717,9 +3571,9 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Ue" = (
@@ -3733,15 +3587,6 @@
 	oxygen = 20.7263;
 	temperature = 243.15
 	},
-/area/submap/DerelictEngine)
-"Ui" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 1
-	},
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/siege/emp{
-	loot_list = list(/obj/item/prop/alien/junk = 20, /obj/item/prop/alien/junk = 20)
-	},
-/turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "Um" = (
 /obj/structure/bed/alien,
@@ -3767,9 +3612,9 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "UQ" = (
@@ -3782,9 +3627,9 @@
 /obj/effect/decal/cleanable/generic,
 /obj/effect/decal/cleanable/blood/gibs/robot,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "UV" = (
@@ -3797,9 +3642,9 @@
 	},
 /obj/item/gun/energy/alien,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "UW" = (
@@ -3813,9 +3658,9 @@
 	icon_state = "1-8"
 	},
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "UZ" = (
@@ -3847,9 +3692,9 @@
 "Vg" = (
 /obj/effect/floor_decal/techfloor/orange,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Vk" = (
@@ -3874,18 +3719,21 @@
 /turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "Vs" = (
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Vy" = (
 /obj/effect/gibspawner/robot,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "VA" = (
@@ -3904,17 +3752,16 @@
 	dir = 1
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "VQ" = (
-/obj/effect/map_helper/no_phaseshift/area,
 /turf/simulated/floor/plating{
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	temperature = 243.15;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "VX" = (
@@ -3953,9 +3800,9 @@
 	},
 /obj/machinery/power/tesla_coil,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "WQ" = (
@@ -3964,9 +3811,9 @@
 	},
 /obj/structure/loot_pile/surface/alien/medical,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "WV" = (
@@ -3985,9 +3832,9 @@
 	state = 1
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Xa" = (
@@ -3996,19 +3843,10 @@
 	name = "Alien grille"
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
-/area/submap/DerelictEngine)
-"Xm" = (
-/obj/effect/floor_decal/techfloor{
-	dir = 1
-	},
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/backline{
-	loot_list = list(/obj/item/prop/alien/junk = 20)
-	},
-/turf/simulated/shuttle/floor/alienplating/external,
 /area/submap/DerelictEngine)
 "Xp" = (
 /mob/living/simple_mob/humanoid/merc/ranged{
@@ -4019,6 +3857,9 @@
 /area/template_noop)
 "Xq" = (
 /obj/random/trash,
+/mob/living/simple_mob/mechanical/hivebot/swarm{
+	loot_list = list(/obj/item/prop/alien/junk = 20)
+	},
 /turf/template_noop,
 /area/template_noop)
 "XE" = (
@@ -4027,9 +3868,9 @@
 	},
 /obj/machinery/door/airlock/alien/blue/public,
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "XI" = (
@@ -4059,9 +3900,9 @@
 	icon_state = "4-8"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "XX" = (
@@ -4069,9 +3910,9 @@
 	dir = 8
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Yl" = (
@@ -4079,9 +3920,9 @@
 	dir = 6
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Yn" = (
@@ -4097,11 +3938,10 @@
 	dir = 8
 	},
 /obj/item/circuitboard/pacman,
-/obj/item/telecube/precursor/mated/zone,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "Yr" = (
@@ -4124,9 +3964,9 @@
 	dir = 4
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "YG" = (
@@ -4140,9 +3980,9 @@
 	item_state = 2
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "YH" = (
@@ -4153,11 +3993,10 @@
 	pixel_x = -9;
 	pixel_y = -7
 	},
-/obj/random/mob/robotic/hivebot,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "YI" = (
@@ -4166,9 +4005,9 @@
 	icon_state = "1-2"
 	},
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "YJ" = (
@@ -4176,14 +4015,6 @@
 	dir = 8
 	},
 /turf/simulated/shuttle/floor/alienplating/external,
-/area/submap/DerelictEngine)
-"YW" = (
-/mob/living/simple_mob/mechanical/hivebot/ranged_damage/siege/emp,
-/turf/simulated/shuttle/floor/alien{
-	nitrogen = 93.7835;
-	oxygen = 20.7263;
-	temperature = 243.15
-	},
 /area/submap/DerelictEngine)
 "Zh" = (
 /obj/effect/floor_decal/techfloor/orange{
@@ -4203,9 +4034,9 @@
 	icon_state = "4-8"
 	},
 /turf/simulated/shuttle/floor/voidcraft{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 "ZH" = (
@@ -4216,9 +4047,9 @@
 /obj/effect/floor_decal/techfloor/hole/right,
 /obj/effect/decal/remains/xeno,
 /turf/simulated/floor/tiled/techfloor{
-	temperature = 243.15;
+	nitrogen = 93.7835;
 	oxygen = 20.7263;
-	nitrogen = 93.7835
+	temperature = 243.15
 	},
 /area/submap/DerelictEngine)
 
@@ -4226,7 +4057,7 @@
 SF
 SF
 SF
-vU
+SF
 SF
 SF
 Qv
@@ -4274,8 +4105,8 @@ SF
 (2,1,1) = {"
 SF
 jl
-SF
-SF
+vU
+vU
 Qv
 Qv
 KU
@@ -4322,9 +4153,9 @@ SF
 "}
 (3,1,1) = {"
 SF
-SF
+vU
 Xp
-Qv
+Nr
 KU
 jl
 KU
@@ -4349,11 +4180,11 @@ Qv
 Qv
 Qv
 KU
+Qv
+SF
 Nr
-SF
-Qv
-SF
-Qv
+vU
+Nr
 SF
 SF
 SF
@@ -4370,9 +4201,9 @@ SF
 SF
 "}
 (4,1,1) = {"
-vU
 SF
-fJ
+vU
+Nr
 jl
 KU
 KU
@@ -4400,9 +4231,9 @@ KU
 KU
 Qv
 KU
-fJ
-hb
-Qv
+Nr
+pR
+Nr
 Qv
 Qv
 SF
@@ -4435,10 +4266,10 @@ WQ
 Is
 Is
 mM
-Ro
 QW
-Je
 QW
+ay
+ay
 uJ
 fO
 EC
@@ -4449,9 +4280,9 @@ KU
 Qv
 KU
 Qv
-KU
-KU
-Qv
+ah
+ah
+Nr
 KU
 KU
 KU
@@ -4500,7 +4331,7 @@ SF
 KU
 SF
 KU
-ap
+SF
 KU
 SF
 Qv
@@ -4530,13 +4361,13 @@ fO
 fO
 QT
 YJ
-MD
 YJ
 YJ
 YJ
 YJ
 YJ
-lE
+YJ
+YJ
 YJ
 xs
 fO
@@ -4554,7 +4385,7 @@ SF
 SF
 SF
 SF
-yk
+KU
 KU
 SF
 Qv
@@ -4588,7 +4419,7 @@ je
 LG
 LG
 je
-iu
+je
 gy
 bp
 TB
@@ -4604,9 +4435,9 @@ QY
 SF
 Qv
 Qv
-KU
-Qv
-KU
+ah
+Nr
+ah
 Qv
 KU
 SF
@@ -4622,8 +4453,8 @@ jl
 jl
 fO
 AX
-am
-mu
+HS
+HS
 dG
 Vb
 Vb
@@ -4641,7 +4472,7 @@ Vb
 yj
 Vb
 tj
-dC
+iW
 TF
 fO
 fO
@@ -4653,9 +4484,9 @@ dy
 SF
 KU
 SF
-Qv
+Nr
 Xp
-fJ
+Nr
 SF
 KU
 bN
@@ -4690,8 +4521,8 @@ jG
 fO
 zY
 Ec
-jG
-jG
+fH
+fH
 Os
 fO
 fO
@@ -4702,10 +4533,10 @@ QY
 KU
 KU
 KU
-KU
-KU
-Qv
+ah
+ah
 Nr
+Qv
 SF
 Qv
 KU
@@ -4720,7 +4551,7 @@ hZ
 fO
 fO
 AX
-rl
+HS
 jD
 fO
 gy
@@ -4739,9 +4570,9 @@ gy
 gy
 QT
 YJ
+ae
+ae
 YJ
-YJ
-Qm
 Um
 fO
 fO
@@ -4867,11 +4698,11 @@ tx
 DJ
 QT
 fO
-Ma
+LG
 VA
 fO
 cH
-Ee
+bk
 HZ
 Qf
 UW
@@ -4885,15 +4716,15 @@ je
 rb
 hZ
 wd
-Fv
+LG
 LG
 LG
 pr
 fO
 gy
-ja
 YJ
-YJ
+al
+al
 Ku
 lD
 YJ
@@ -4913,14 +4744,14 @@ jl
 fG
 lX
 ps
-qA
+aG
 RF
 fO
-Ns
+aE
 eV
 fO
 aJ
-bk
+aD
 uH
 Tz
 we
@@ -4933,19 +4764,19 @@ PK
 aG
 je
 BR
-Wk
+av
 LG
 aG
-LG
-Iv
+au
+at
 pr
 hZ
 Vn
 zb
 zb
 aO
-Et
-je
+Iv
+ai
 wd
 fO
 fO
@@ -4962,8 +4793,8 @@ bl
 fY
 mN
 wx
-qJ
-je
+LG
+Wk
 gy
 je
 pr
@@ -4971,7 +4802,7 @@ fO
 RU
 aa
 HE
-XW
+aC
 nO
 HS
 iQ
@@ -4982,21 +4813,21 @@ Qk
 PU
 je
 BR
+av
 je
 je
-iu
-je
-je
+at
+at
 je
 RW
-Et
+je
+sl
+sl
 LG
-LG
-yg
 iO
 WV
 je
-iu
+je
 Pw
 gy
 or
@@ -5021,7 +4852,7 @@ SB
 Ga
 TP
 tP
-HS
+aA
 iB
 iB
 iB
@@ -5031,15 +4862,15 @@ IS
 tj
 Vb
 gy
-Vb
+aw
 gy
 fO
 gy
-dh
+db
 Vb
 wp
 Vb
-xz
+iW
 tj
 iW
 fO
@@ -5050,7 +4881,7 @@ Vb
 MZ
 db
 yZ
-Vb
+ad
 Bd
 pt
 KU
@@ -5059,17 +4890,17 @@ KU
 jl
 hZ
 hZ
-ql
+fO
 JX
 UV
 gy
-rh
+wM
 Yp
 fO
 Uv
 GM
 IM
-SJ
+CL
 VQ
 iB
 nZ
@@ -5092,7 +4923,7 @@ Bh
 ka
 fO
 fO
-QS
+PF
 PF
 Vy
 PF
@@ -5119,7 +4950,7 @@ SB
 lV
 aP
 BX
-HS
+aA
 iB
 iB
 iB
@@ -5128,17 +4959,17 @@ zf
 IS
 XT
 YJ
-bn
 YJ
+ax
 gy
 fO
 gy
-AT
+YJ
 YJ
 wp
 YJ
 DJ
-Em
+DJ
 DJ
 fO
 pg
@@ -5147,10 +4978,10 @@ sv
 YJ
 XE
 qT
-Ku
-YJ
+ag
+ae
 VX
-SF
+vU
 Qv
 "}
 (20,1,1) = {"
@@ -5158,16 +4989,16 @@ bG
 fY
 iK
 wx
-qJ
-xv
+LG
+aF
 gy
 je
 pF
 fO
 Ok
-Ui
+aD
 LT
-XW
+aC
 nO
 iQ
 HS
@@ -5178,26 +5009,26 @@ Qk
 od
 cQ
 BR
+av
 je
 je
-iu
 Vs
-je
+at
 je
 wp
-Et
+je
 Jg
 st
 LG
-je
+Iv
 eq
 je
-sn
+eq
 BG
 gy
 or
 fH
-wM
+af
 hZ
 hZ
 KU
@@ -5206,18 +5037,18 @@ KU
 cX
 fY
 PF
-wx
-sl
+aH
+LG
 RF
 fO
-Ns
+aE
 eV
 fO
 zr
 eR
 wq
 uP
-PF
+aB
 zf
 PF
 fy
@@ -5227,19 +5058,19 @@ ZH
 LG
 je
 BR
-Wk
+av
 LG
 ez
-LG
-Iv
+au
+at
 pF
 fO
 wd
 eV
 zb
 DQ
-Et
 je
+aj
 wd
 fO
 fO
@@ -5259,11 +5090,11 @@ Ct
 tj
 zk
 fO
-mI
+aG
 CV
 fO
 DA
-Xm
+bk
 by
 wh
 xR
@@ -5284,10 +5115,10 @@ rb
 hZ
 fO
 Vb
-Vb
-yZ
+ar
+ao
 db
-Vb
+ak
 Bd
 gy
 gy
@@ -5319,7 +5150,7 @@ YH
 Ao
 nM
 hY
-Pe
+IS
 fn
 zw
 Vn
@@ -5425,9 +5256,9 @@ gy
 gy
 Fd
 il
-Vb
+ad
 xQ
-FC
+Vb
 vC
 fO
 fO
@@ -5461,12 +5292,12 @@ gy
 ms
 ht
 Yl
-TK
+RB
 jU
 vl
 iQ
 Vg
-yQ
+jU
 OZ
 Lb
 jG
@@ -5474,7 +5305,7 @@ jG
 qn
 lY
 uA
-jG
+fH
 rI
 lY
 fO
@@ -5490,7 +5321,7 @@ Qv
 SF
 SF
 SF
-vU
+SF
 SF
 SF
 SF
@@ -5517,17 +5348,17 @@ qH
 hW
 YJ
 OB
-Pn
+DJ
 YJ
 YJ
 fg
-cE
+YJ
 DJ
 DJ
 EM
 fO
 fO
-Ns
+LG
 Vk
 Yr
 EC
@@ -5537,8 +5368,8 @@ KU
 SF
 KU
 Nr
-SF
-Qv
+vU
+Nr
 SF
 SF
 SF
@@ -5565,7 +5396,7 @@ TV
 Yu
 Yl
 je
-YW
+LG
 LG
 je
 je
@@ -5585,9 +5416,9 @@ SF
 SF
 Qv
 KU
-KU
+ah
 pR
-Qv
+Nr
 Qv
 SF
 SF
@@ -5608,7 +5439,7 @@ fO
 fO
 zk
 db
-SV
+Vb
 Vb
 Vb
 Vb
@@ -5634,9 +5465,9 @@ SF
 SF
 SF
 SF
-KU
-SF
-KU
+ah
+vU
+ah
 KU
 Tt
 SF
@@ -5647,7 +5478,7 @@ SF
 SF
 SF
 SF
-vU
+SF
 SF
 SF
 SF
@@ -5682,7 +5513,7 @@ SF
 SF
 SF
 SF
-vU
+SF
 SF
 Qv
 KU
@@ -5695,9 +5526,9 @@ SF
 (31,1,1) = {"
 SF
 SF
-SF
-SF
-SF
+vU
+vU
+vU
 SF
 SF
 SF
@@ -5706,13 +5537,13 @@ SF
 hZ
 fO
 el
-iZ
-iZ
+az
+az
 pB
 iF
 iZ
-tl
-iZ
+az
+az
 Ng
 fO
 EC
@@ -5726,7 +5557,7 @@ SF
 SF
 Qv
 SF
-Nr
+Qv
 SF
 SF
 SF
@@ -5744,9 +5575,9 @@ SF
 (32,1,1) = {"
 SF
 SF
-bX
+vU
 Xp
-SF
+vU
 SF
 SF
 SF
@@ -5771,10 +5602,10 @@ KU
 KU
 KU
 SF
+SF
+ah
 vU
-KU
-SF
-SF
+vU
 SF
 KU
 KU
@@ -5793,11 +5624,11 @@ KU
 (33,1,1) = {"
 SF
 SF
-SF
-SF
-SF
-SF
 vU
+vU
+vU
+SF
+SF
 SF
 SF
 SF
@@ -5821,9 +5652,9 @@ Qv
 Qv
 SF
 KU
-SF
-hb
-bX
+vU
+pR
+vU
 KU
 SF
 SF
@@ -5870,9 +5701,9 @@ SF
 SF
 Qv
 SF
-SF
-KU
-Tt
+vU
+ah
+as
 SF
 KU
 KU

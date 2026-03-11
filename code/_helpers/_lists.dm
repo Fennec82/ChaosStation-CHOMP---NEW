@@ -151,9 +151,17 @@
 	return 0
 
 //Checks for specific paths in a list
-/proc/is_path_in_list(var/atom/A, var/list/L)
+/**
+ * Arguments:
+ * A : Typepath to check
+ * L : A list of typepath to check A against
+ * zebra: Wether to use the value of the path in the list instead of just returning TRUE when a match is found
+ */
+/proc/is_path_in_list(var/atom/A, var/list/L, zebra = FALSE)
 	for(var/path in L)
 		if(ispath(A, path))
+			if(ispath(A, path))
+				return !zebra || L[path]
 			return 1
 	return 0
 
@@ -336,14 +344,6 @@ Checks if a list has the same entries and values as an element of big.
 /*
  * Sorting
  */
-
-//Reverses the order of items in the list
-/proc/reverselist(list/L)
-	var/list/output = list()
-	if(L)
-		for(var/i = L.len; i >= 1; i--)
-			output += L[i]
-	return output
 
 //Randomize: Return the list in a random order
 /proc/shuffle(var/list/L)
@@ -600,7 +600,7 @@ Checks if a list has the same entries and values as an element of big.
 	//to_world_log("descending len input: [L.len]")
 	var/list/out = insertion_sort_numeric_list_ascending(L)
 	//to_world_log("	output: [out.len]")
-	return reverselist(out)
+	return reverseList(out)
 
 /proc/dd_sortedObjectList(var/list/L, var/cache=list())
 	if(L.len < 2)
@@ -849,20 +849,20 @@ Checks if a list has the same entries and values as an element of big.
 			L.Cut(fromIndex, fromIndex+1)
 
 //replaces reverseList ~Carnie
-/proc/reverseRange(list/L, start=1, end=0)
-	if(L.len)
-		start = start % L.len
-		end = end % (L.len+1)
+/proc/reverse_range(list/inserted_list, start = 1, end = 0)
+	if(inserted_list.len)
+		start = start % inserted_list.len
+		end = end % (inserted_list.len + 1)
 		if(start <= 0)
-			start += L.len
+			start += inserted_list.len
 		if(end <= 0)
-			end += L.len + 1
+			end += inserted_list.len + 1
 
 		--end
 		while(start < end)
-			L.Swap(start++,end--)
+			inserted_list.Swap(start++, end--)
 
-	return L
+	return inserted_list
 
 //Copies a list, and all lists inside it recusively
 //Does not copy any other reference type
@@ -910,7 +910,7 @@ GLOBAL_LIST_EMPTY(json_cache)
 			GLOB.json_cache[json_to_decode] = json_decode(json_to_decode)
 		. = GLOB.json_cache[json_to_decode]
 	catch(var/exception/e)
-		log_error("Exception during JSON decoding ([json_to_decode]): [e]")
+		log_runtime("Exception during JSON decoding ([json_to_decode]): [e]")
 		return list()
 
 //takes an input_key, as text, and the list of keys already used, outputting a replacement key in the format of "[input_key] ([number_of_duplicates])" if it finds a duplicate
@@ -995,12 +995,77 @@ GLOBAL_LIST_EMPTY(json_cache)
 		UNTYPED_LIST_ADD(keys, key)
 	return keys
 
+///compare two lists, returns TRUE if they are the same
+/proc/compare_list(list/l,list/d)
+	if(!islist(l) || !islist(d))
+		return FALSE
+
+	if(l.len != d.len)
+		return FALSE
+
+	for(var/i in 1 to l.len)
+		if(l[i] != d[i])
+			return FALSE
+
+	return TRUE
+
 //TG sort_list
 ///uses sort_list() but uses the var's name specifically. This should probably be using mergeAtom() instead
 /proc/sort_names(list/list_to_sort, order=1)
 	return sortTim(list_to_sort.Copy(), order >= 0 ? GLOBAL_PROC_REF(cmp_name_asc) : GLOBAL_PROC_REF(cmp_name_dsc))
 
-//CHOMPAdd start
+/// Compares 2 lists, returns TRUE if they are the same
+/proc/deep_compare_list(list/list_1, list/list_2)
+	if(list_1 == list_2)
+		return TRUE
+
+	if(!islist(list_1) || !islist(list_2))
+		return FALSE
+
+	if(list_1.len != list_2.len)
+		return FALSE
+
+	for(var/i in 1 to list_1.len)
+		var/key_1 = list_1[i]
+		var/key_2 = list_2[i]
+		if (islist(key_1) && islist(key_2))
+			if(!deep_compare_list(key_1, key_2))
+				return FALSE
+		else if(key_1 != key_2)
+			return FALSE
+		if(istext(key_1) || islist(key_1) || ispath(key_1) || isdatum(key_1) || key_1 == world)
+			var/value_1 = list_1[key_1]
+			var/value_2 = list_2[key_1]
+			if (islist(value_1) && islist(value_2))
+				if(!deep_compare_list(value_1, value_2))
+					return FALSE
+			else if(value_1 != value_2)
+				return FALSE
+	return TRUE
+
+/**
+ * Attempts to convert a numeric keyed alist of (2=second, 1=first) to a list of (first, second).
+ *
+ * If you instead want to discard values and keep only keys, just do list + alist.
+ *
+ * Arguments:
+ * * to_flatten - The alist with sequential numeric keys to extract values from into a normal list.
+ * * assert - Whether to assert every key is numeric and in bounds.
+ */
+/proc/flatten_numeric_alist(alist/to_flatten, assert=TRUE)
+	RETURN_TYPE(/list)
+
+	var/count = length(to_flatten)
+	if(assert)
+		for(var/key in to_flatten)
+			if(!isnum(key) || key < 1 || key > count)
+				CRASH("flatten_numeric_alist not possible for alist: [json_encode(to_flatten)]")
+
+	var/list/retval = list()
+	for(var/i in 1 to count)
+		retval += to_flatten[i]
+	return retval
+
 /proc/pick_weight(list/list_to_pick)
 	var/total = 0
 	var/item
@@ -1016,36 +1081,3 @@ GLOBAL_LIST_EMPTY(json_cache)
 			return item
 
 	return null
-
-///Converts a bitfield to a list of numbers (or words if a wordlist is provided)
-/proc/bitfield_to_list(bitfield = 0, list/wordlist)
-	var/list/return_list = list()
-	if(islist(wordlist))
-		var/max = min(wordlist.len, 24)
-		var/bit = 1
-		for(var/i in 1 to max)
-			if(bitfield & bit)
-				return_list += wordlist[i]
-			bit = bit << 1
-	else
-		for(var/bit_number = 0 to 23)
-			var/bit = 1 << bit_number
-			if(bitfield & bit)
-				return_list += bit
-
-	return return_list
-
-///compare two lists, returns TRUE if they are the same
-/proc/compare_list(list/l,list/d)
-	if(!islist(l) || !islist(d))
-		return FALSE
-
-	if(l.len != d.len)
-		return FALSE
-
-	for(var/i in 1 to l.len)
-		if(l[i] != d[i])
-			return FALSE
-
-	return TRUE
-//CHOMPAdd end

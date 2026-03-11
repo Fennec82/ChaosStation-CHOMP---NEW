@@ -1,6 +1,3 @@
-// Not actually used; just forces this into the RSC for TGUI.
-var/const/preview_icons = 'icons/mob/human_races/preview.dmi'
-
 /datum/preferences
 	var/equip_preview_mob = EQUIP_PREVIEW_ALL
 	var/animations_toggle = FALSE
@@ -62,6 +59,8 @@ var/const/preview_icons = 'icons/mob/human_races/preview.dmi'
 		if(instance.ckeys_allowed && (!client || !(client.ckey in instance.ckeys_allowed)))
 			continue
 		if(instance.species_allowed && (!species || !(species in instance.species_allowed)) && (!client || !check_rights_for(client, R_ADMIN | R_EVENT | R_FUN)) && (!custom_base || !(custom_base in instance.species_allowed)))
+			continue
+		if(!instance.can_be_selected && (!client || !check_rights_for(client, R_HOLDER)))
 			continue
 		.[instance.name] = instance
 
@@ -197,7 +196,7 @@ var/const/preview_icons = 'icons/mob/human_races/preview.dmi'
 	var/list/wing_styles = pref.get_available_styles(GLOB.wing_styles_list)
 	character.wing_style = wing_styles[pref.wing_style]
 
-	character.set_gender(pref.biological_gender)
+	character.set_gender(pref.read_preference(/datum/preference/choiced/gender/biological))
 
 	character.synthetic = pref.species == "Protean" ? GLOB.all_robolimbs["protean"] : null //Clear the existing var. (unless protean, then switch it to the normal protean limb)
 	var/list/organs_to_edit = list()
@@ -231,11 +230,11 @@ var/const/preview_icons = 'icons/mob/human_races/preview.dmi'
 			if(E.robotic < ORGAN_ASSISTED)
 				continue
 		if(I)
-			if(status == "assisted")
+			if(status == FBP_ASSISTED)
 				I.mechassist()
-			else if(status == "mechanical")
+			else if(status == FBP_MECHANICAL)
 				I.robotize()
-			else if(status == "digital")
+			else if(status == FBP_DIGITAL)
 				I.digitize()
 
 	for(var/N in character.organs_by_name)
@@ -268,9 +267,12 @@ var/const/preview_icons = 'icons/mob/human_races/preview.dmi'
 		pref.rlimb_data -= null
 
 	// Sanitize the name so that there aren't any numbers sticking around.
-	pref.real_name          = sanitize_name(pref.real_name, pref.species)
-	if(!pref.real_name)
-		pref.real_name      = random_name(pref.identifying_gender, pref.species)
+	// Is this still necessary with TG conversation?
+	var/current_name = pref.read_preference(/datum/preference/name/real_name)
+	current_name = sanitize_name(current_name, pref.species)
+	if(!current_name)
+		current_name = random_name(pref.read_preference(/datum/preference/choiced/gender/identifying), pref.species)
+	pref.update_preference_by_type(/datum/preference/name/real_name, current_name)
 
 /datum/category_item/player_setup_item/general/body/tgui_data(mob/user, datum/tgui/ui, datum/tgui_state/state)
 	var/list/data = ..()
@@ -319,6 +321,7 @@ var/const/preview_icons = 'icons/mob/human_races/preview.dmi'
 
 	data["b_type"] = pref.b_type
 	data["digitigrade"] = pref.digitigrade
+	data["tail_layering"] = pref.read_preference(/datum/preference/choiced/human/tail_layering)
 
 	data["synth_color_toggle"] = pref.synth_color
 	data["synth_color"] = pref.read_preference(/datum/preference/color/human/synth_color)
@@ -753,7 +756,7 @@ var/const/preview_icons = 'icons/mob/human_races/preview.dmi'
 			var/prev_species = pref.species
 			pref.species = params["species"]
 			if(prev_species != pref.species)
-				if(!(pref.biological_gender in mob_species.genders))
+				if(!(pref.read_preference(/datum/preference/choiced/gender/biological) in mob_species.genders))
 					pref.set_biological_gender(mob_species.genders[1])
 				pref.custom_species = null
 				//grab one of the valid hair styles for the newly chosen species
@@ -869,7 +872,7 @@ var/const/preview_icons = 'icons/mob/human_races/preview.dmi'
 				if(BP_R_ARM)
 					second_limb = BP_R_HAND
 				// standardize these to the same settings for full body
-				if(BP_HEAD, BP_TORSO, BP_GROIN)
+				if(BP_TORSO, BP_GROIN)
 					limb = BP_TORSO
 					second_limb = BP_HEAD
 					third_limb = BP_GROIN
@@ -931,9 +934,9 @@ var/const/preview_icons = 'icons/mob/human_races/preview.dmi'
 							pref.organ_data[other_limb] = "cyborg"
 							pref.rlimb_data[other_limb] = choice
 						if(!pref.organ_data[O_BRAIN])
-							pref.organ_data[O_BRAIN] = "assisted"
+							pref.organ_data[O_BRAIN] = FBP_ASSISTED
 						for(var/internal_organ in list(O_HEART,O_EYES))
-							pref.organ_data[internal_organ] = "mechanical"
+							pref.organ_data[internal_organ] = FBP_MECHANICAL
 
 			return TOPIC_REFRESH_UPDATE_PREVIEW
 
@@ -970,15 +973,15 @@ var/const/preview_icons = 'icons/mob/human_races/preview.dmi'
 				if("Normal")
 					pref.organ_data[zone] = null
 				if("Assisted")
-					pref.organ_data[zone] = "assisted"
+					pref.organ_data[zone] = FBP_ASSISTED
 				if("Cybernetic")
-					pref.organ_data[zone] = "assisted"
+					pref.organ_data[zone] = FBP_ASSISTED
 				if("Mechanical")
-					pref.organ_data[zone] = "mechanical"
+					pref.organ_data[zone] = FBP_MECHANICAL
 				if("Drone")
-					pref.organ_data[zone] = "digital"
+					pref.organ_data[zone] = FBP_DIGITAL
 				if("Positronic")
-					pref.organ_data[zone] = "mechanical"
+					pref.organ_data[zone] = FBP_MECHANICAL
 
 			return TOPIC_REFRESH_UPDATE_PREVIEW
 
@@ -995,6 +998,13 @@ var/const/preview_icons = 'icons/mob/human_races/preview.dmi'
 		if("digitigrade")
 			pref.digitigrade = !pref.digitigrade
 			return TOPIC_REFRESH_UPDATE_PREVIEW
+
+		if("set_tail_layering")
+			var/new_tail_layering = tgui_input_list(user, "Select a tail layer.", "Set Tail Layer", GLOB.tail_layer_options,
+				pref.read_preference(/datum/preference/choiced/human/tail_layering))
+			if(new_tail_layering)
+				pref.update_preference_by_type(/datum/preference/choiced/human/tail_layering, new_tail_layering)
+				return TOPIC_REFRESH_UPDATE_PREVIEW
 
 		if("synth_color_toggle")
 			pref.synth_color = !pref.synth_color

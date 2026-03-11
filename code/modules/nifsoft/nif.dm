@@ -107,8 +107,9 @@ You can also set the stat of a NIF to NIF_TEMPFAIL without any issues to disable
 
 //Destructor cleans up references
 /obj/item/nif/Destroy()
-	unregister_human()
-	human = null
+	if(human)
+		unregister_human()
+		human = null
 	QDEL_LIST_NULL(nifsofts)
 	QDEL_NULL(comm)
 	nifsofts_life.Cut()
@@ -177,7 +178,7 @@ You can also set the stat of a NIF to NIF_TEMPFAIL without any issues to disable
 	if(H)
 		remove_verb(H, /mob/living/carbon/human/proc/set_nif_examine)
 		H.nif = null
-	qdel_null(menu)
+	QDEL_NULL(menu)
 	unregister_human()
 	human = null
 	install_done = null
@@ -186,7 +187,7 @@ You can also set the stat of a NIF to NIF_TEMPFAIL without any issues to disable
 /* CHOMPedit Remove: Disabling EMP effect on all Nifs. *
 
 //EMP adds wear and disables all nifsoft
-/obj/item/nif/emp_act(var/severity)
+/obj/item/nif/emp_act(severity, recursive)
 	notify("Danger! Significant electromagnetic interference!",TRUE)
 	for(var/nifsoft in nifsofts)
 		if(nifsoft)
@@ -232,7 +233,7 @@ You can also set the stat of a NIF to NIF_TEMPFAIL without any issues to disable
 //Attackby proc, for maintenance
 /obj/item/nif/attackby(obj/item/W, mob/user as mob)
 	if(open == 0 && W.has_tool_quality(TOOL_SCREWDRIVER))
-		if(do_after(user, 4 SECONDS, src) && open == 0)
+		if(do_after(user, 4 SECONDS, target = src) && open == 0)
 			user.visible_message("[user] unscrews and pries open \the [src].",span_notice("You unscrew and pry open \the [src]."))
 			playsound(src, 'sound/items/Screwdriver.ogg', 50, 1)
 			open = 1
@@ -247,18 +248,18 @@ You can also set the stat of a NIF to NIF_TEMPFAIL without any issues to disable
 			open = 3
 			update_icon()
 			return
-		if(do_after(user, 6 SECONDS, src) && open == 1 && C.use(3))
+		if(do_after(user, 6 SECONDS, target = src) && open == 1 && C.use(3))
 			user.visible_message("[user] replaces some wiring in \the [src].",span_notice("You replace any burned out wiring in \the [src]."))
 			playsound(src, 'sound/items/Deconstruct.ogg', 50, 1)
 			open = 2
 			update_icon()
 	else if(open == 2 && istype(W,/obj/item/multitool))
-		if(do_after(user, 8 SECONDS, src) && open == 2)
+		if(do_after(user, 8 SECONDS, target = src) && open == 2)
 			user.visible_message("[user] resets several circuits in \the [src].",span_notice("You find and repair any faulty circuits in \the [src]."))
 			open = 3
 			update_icon()
 	else if(open == 3 && W.has_tool_quality(TOOL_SCREWDRIVER))
-		if(do_after(user, 3 SECONDS, src) && open == 3)
+		if(do_after(user, 3 SECONDS, target = src) && open == 3)
 			user.visible_message("[user] closes up \the [src].",span_notice("You re-seal \the [src] for use once more."))
 			playsound(src, 'sound/items/Screwdriver.ogg', 50, 1)
 			open = FALSE
@@ -671,6 +672,13 @@ You can also set the stat of a NIF to NIF_TEMPFAIL without any issues to disable
 		/datum/nifsoft/malware
 	)
 
+
+/obj/item/nif/glitch/bad
+	name = "odd NIF"
+	desc = "A NIF of a very dubious origin."
+	durability = 100
+	bioadap = FALSE
+
 ////////////////////////////////
 // Special Promethean """surgery"""
 /obj/item/nif/attack(mob/living/M, mob/living/user, var/target_zone)
@@ -691,7 +699,7 @@ You can also set the stat of a NIF to NIF_TEMPFAIL without any issues to disable
 		U.visible_message(span_notice("[U] begins installing [src] into [T]'s chest by just stuffing it in."),
 		span_notice("You begin installing [src] into [T]'s chest by just stuffing it in."),
 		"There's a wet SQUISH noise.")
-		if(do_mob(user = user, target = T, time = 200, target_zone = BP_TORSO))
+		if(do_after(user, 20 SECONDS, T, target_zone = BP_TORSO))
 			user.unEquip(src)
 			forceMove(eo)
 			eo.implants |= src
@@ -710,7 +718,7 @@ You can also set the stat of a NIF to NIF_TEMPFAIL without any issues to disable
 		to_chat(src,span_warning("You don't have a NIF, not sure why this was here."))
 		return
 
-	var/new_flavor = sanitize(tgui_input_text(src,"Describe how your NIF alters your appearance, like glowy eyes or metal plate on your head, etc. Be sensible. Clear this for no examine text. 128ch max.","Describe NIF", nif.examine_msg, 128), max_length = 128)
+	var/new_flavor = tgui_input_text(src,"Describe how your NIF alters your appearance, like glowy eyes or metal plate on your head, etc. Be sensible. Clear this for no examine text. 128ch max.","Describe NIF", nif.examine_msg, 128)
 	//They clicked cancel or meanwhile lost their NIF
 	if(!nif || isnull(new_flavor))
 		return //No changes

@@ -1,10 +1,12 @@
 SUBSYSTEM_DEF(planets)
 	name = "Planets"
-	init_order = INIT_ORDER_PLANETS
 	priority = FIRE_PRIORITY_PLANETS
 	wait = 2 SECONDS
 	flags = SS_BACKGROUND
 	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME
+	dependencies = list(
+		/datum/controller/subsystem/plants
+	)
 
 	var/static/list/planets = list()
 	var/static/list/z_to_planet = list()
@@ -24,17 +26,12 @@ SUBSYSTEM_DEF(planets)
 	for(var/P in planet_datums)
 		var/datum/planet/NP = new P()
 		planets.Add(NP)
-		// Delete those following two lines with https://github.com/CHOMPStation2/CHOMPStation2/pull/10295
-		for(var/Z in NP.expected_z_levels)
-			if(Z > z_to_planet.len)
-		/* Requires the map update https://github.com/CHOMPStation2/CHOMPStation2/pull/10295
 		for(var/index in 1 to length(NP.expected_z_levels))
 			var/Z = NP.expected_z_levels[index]
 			if(!isnum(Z))
 				Z = GLOB.map_templates_loaded[Z]
 				NP.expected_z_levels[index] = Z
 			if(Z > length(z_to_planet))
-			*/
 				z_to_planet.len = Z
 			if(z_to_planet[Z])
 				admin_notice(span_danger("Z[Z] is shared by more than one planet!"), R_DEBUG)
@@ -45,7 +42,7 @@ SUBSYSTEM_DEF(planets)
 // USE turf/simulated/proc/make_indoors() and
 //     turf/simulated/proc/make_outdoors()
 /datum/controller/subsystem/planets/proc/addTurf(var/turf/T)
-	if(z_to_planet.len >= T.z && z_to_planet[T.z])
+	if(length(z_to_planet) >= T.z && z_to_planet[T.z])
 		var/datum/planet/P = z_to_planet[T.z]
 		if(!istype(P))
 			return
@@ -56,7 +53,7 @@ SUBSYSTEM_DEF(planets)
 			P.weather_holder.apply_to_turf(T)
 
 /datum/controller/subsystem/planets/proc/removeTurf(var/turf/T,var/is_edge)
-	if(z_to_planet.len >= T.z)
+	if(length(z_to_planet) >= T.z)
 		var/datum/planet/P = z_to_planet[T.z]
 		if(!P)
 			return
@@ -73,17 +70,17 @@ SUBSYSTEM_DEF(planets)
 		src.currentrun = planets.Copy()
 
 	var/list/needs_sun_update = src.needs_sun_update
-	while(needs_sun_update.len)
-		var/datum/planet/P = needs_sun_update[needs_sun_update.len]
+	while(length(needs_sun_update))
+		var/datum/planet/P = needs_sun_update[length(needs_sun_update)]
 		needs_sun_update.len--
 		updateSunlight(P)
 		if(MC_TICK_CHECK)
 			return
 
-	#ifndef UNIT_TEST // Don't be updating temperatures and such during unit tests
+	#ifndef UNIT_TESTS // Don't be updating temperatures and such during unit tests
 	var/list/needs_temp_update = src.needs_temp_update
-	while(needs_temp_update.len)
-		var/datum/planet/P = needs_temp_update[needs_temp_update.len]
+	while(length(needs_temp_update))
+		var/datum/planet/P = needs_temp_update[length(needs_temp_update)]
 		needs_temp_update.len--
 		updateTemp(P)
 		if(MC_TICK_CHECK)
@@ -91,8 +88,8 @@ SUBSYSTEM_DEF(planets)
 	#endif
 
 	var/list/currentrun = src.currentrun
-	while(currentrun.len)
-		var/datum/planet/P = currentrun[currentrun.len]
+	while(length(currentrun))
+		var/datum/planet/P = currentrun[length(currentrun)]
 		currentrun.len--
 
 		P.process(last_fire)

@@ -116,6 +116,9 @@
 		..()
 
 /obj/item/areaeditor/attack_self(mob/user) //Convert this to TGUI some time.
+	. = ..(user)
+	if(.)
+		return TRUE
 	add_fingerprint(user)
 	. = "<BODY><HTML><head><title>[src]</title></head> \
 				<h2>[station_name()] [src.name]</h2>"
@@ -177,6 +180,9 @@
 	var/legend = 1
 
 /obj/item/wire_reader/attack_self(mob/user) //Convert this to TGUI some time.
+	. = ..(user)
+	if(.)
+		return TRUE
 	add_fingerprint(user)
 	. = "<BODY><HTML><head><title>[src]</title></head> \
 				<h2>[station_name()] [src.name]</h2>"
@@ -247,7 +253,9 @@
 
 
 /obj/item/areaeditor/blueprints/attack_self(mob/user)
-	. = ..()
+	. = ..(user)
+	if(. == 1) //I hate this so much.
+		return TRUE
 	var/area/A = get_area(user)
 	if(!legend)
 		if(get_area_type() == AREA_STATION)
@@ -376,7 +384,6 @@
 	var/area/A = get_area(usr)
 	var/prevname = "[A.name]"
 	var/str = tgui_input_text(usr, "New area name", "Area Creation", max_length = MAX_NAME_LEN)
-	str = sanitize(str,MAX_NAME_LEN)
 	if(!str || !length(str) || str==prevname) //cancel
 		return
 	if(length(str) > 50)
@@ -453,7 +460,7 @@
 			//I personally think adding walls to an area is a big deal, so this is commented out.
 
 			//BEGIN ESOTERIC BULLSHIT
-			//log_debug("Origin: [origin.c_airblock(checkT)] SourceT: [sourceT.c_airblock(checkT)] 0=NB 1=AB 2=ZB, 3=B")
+			//to_chat(world, "Origin: [origin.c_airblock(checkT)] SourceT: [sourceT.c_airblock(checkT)] 0=NB 1=AB 2=ZB, 3=B")
 			/*
 			if(origin.c_airblock(checkT)) //If everything breaks and it doesn't want to work, turn on the above debug and check this line. C.L. 0 = not blocked.
 				continue
@@ -499,7 +506,6 @@
 	var/area/oldA = get_area(get_turf(creator))
 	if(!isarea(area_choice))
 		var/str = tgui_input_text(creator, "New area name", "Blueprint Editing", max_length = MAX_NAME_LEN)
-		str = sanitize(str,MAX_NAME_LEN)
 		if(!str || !length(str)) //cancel
 			return
 		if(length(str) > 50)
@@ -526,7 +532,7 @@
 	oldA.power_check() //Simply makes the area turn the power off if you nicked an APC from it.
 	to_chat(creator, span_notice("You have created a new area, named [newA.name]. It is now weather proof, and constructing an APC will allow it to be powered."))
 	if(annoy_admins)
-		message_admins("[key_name(creator, creator.client)] just made a new area called [newA.name] ](<A href='byond://?_src_=holder;[HrefToken()];adminmoreinfo=\ref[creator]'>?</A>) at ([creator.x],[creator.y],[creator.z] - <A href='byond://?_src_=holder;[HrefToken()];adminplayerobservecoodjump=1;X=[creator.x];Y=[creator.y];Z=[creator.z]'>JMP</a>)",0,1)
+		message_admins("[key_name(creator, creator.client)] just made a new area called [newA.name] ](<A href='byond://?_src_=holder;[HrefToken()];adminmoreinfo=\ref[creator]'>?</A>) at ([creator.x],[creator.y],[creator.z] - <A href='byond://?_src_=holder;[HrefToken()];adminplayerobservecoodjump=1;X=[creator.x];Y=[creator.y];Z=[creator.z]'>JMP</a>)")
 	log_game("[key_name(creator, creator.client)] just made a new area called [newA.name]")
 	if(AO && istype(AO,/obj/item/areaeditor))
 		if(AO.uses_charges)
@@ -612,7 +618,6 @@
 			to_chat(creator, span_warning("Making a new area here would be meaningless. Renaming it would be a better option."))
 			return
 		str = tgui_input_text(creator, "New area name", "Blueprint Editing", max_length = MAX_NAME_LEN)
-		str = sanitize(str,MAX_NAME_LEN)
 		if(!str || !length(str)) //cancel
 			return
 		if(length(str) > 50)
@@ -653,7 +658,7 @@
 	set_area_machinery(newA, newA.name, oldA.name)
 	oldA.power_check() //Simply makes the area turn the power off if you nicked an APC from it.
 	to_chat(creator, span_notice("You have created a new area, named [newA.name]. It is now weather proof, and constructing an APC will allow it to be powered."))
-	message_admins("[key_name(creator, creator.client)] just made a new area called [newA.name] ](<A href='byond://?_src_=holder;[HrefToken()];adminmoreinfo=\ref[creator]'>?</A>) at ([creator.x],[creator.y],[creator.z] - <A href='byond://?_src_=holder;[HrefToken()];adminplayerobservecoodjump=1;X=[creator.x];Y=[creator.y];Z=[creator.z]'>JMP</a>)",0,1)
+	message_admins("[key_name(creator, creator.client)] just made a new area called [newA.name] ](<A href='byond://?_src_=holder;[HrefToken()];adminmoreinfo=\ref[creator]'>?</A>) at ([creator.x],[creator.y],[creator.z] - <A href='byond://?_src_=holder;[HrefToken()];adminplayerobservecoodjump=1;X=[creator.x];Y=[creator.y];Z=[creator.z]'>JMP</a>)")
 	log_game("[key_name(creator, creator.client)] just made a new area called [newA.name]")
 	charges -= 5
 
@@ -901,7 +906,7 @@
 		return
 
 	//They can select an area they want to turn their current area into.
-	str = sanitizeSafe(tgui_input_text(creator, "What would you like to name the area?", "Area Name", null, MAX_NAME_LEN), MAX_NAME_LEN)
+	str = sanitizeSafe(tgui_input_text(creator, "What would you like to name the area?", "Area Name", null, MAX_NAME_LEN, encode = FALSE), MAX_NAME_LEN)
 	if(isnull(str)) //They pressed cancel.
 		to_chat(creator, span_warning("No new area made. Cancelling."))
 		return
@@ -930,7 +935,7 @@
 	set_area_machinery(newA, newA.name, oldA.name)
 	oldA.power_check() //Simply makes the area turn the power off if you nicked an APC from it.
 	to_chat(creator, span_notice("You have created a new area, named [newA.name]. It is now weather proof, and constructing an APC will allow it to be powered."))
-	message_admins("[key_name(creator, creator.client)] just made a new area called [newA.name] ](<A href='byond://?_src_=holder;[HrefToken()];adminmoreinfo=\ref[creator]'>?</A>) at ([creator.x],[creator.y],[creator.z] - <A href='byond://?_src_=holder;[HrefToken()];adminplayerobservecoodjump=1;X=[creator.x];Y=[creator.y];Z=[creator.z]'>JMP</a>)",0,1)
+	message_admins("[key_name(creator, creator.client)] just made a new area called [newA.name] ](<A href='byond://?_src_=holder;[HrefToken()];adminmoreinfo=\ref[creator]'>?</A>) at ([creator.x],[creator.y],[creator.z] - <A href='byond://?_src_=holder;[HrefToken()];adminplayerobservecoodjump=1;X=[creator.x];Y=[creator.y];Z=[creator.z]'>JMP</a>)")
 	log_game("[key_name(creator, creator.client)] just made a new area called [newA.name]")
 
 	var/list/zLevels = using_map.station_levels.Copy()
