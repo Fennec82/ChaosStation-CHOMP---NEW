@@ -1,11 +1,12 @@
 import { Box, Button, Section, Table } from 'tgui-core/components';
-
+import { MarkdownSpoilerText } from '../common/SpoilerText';
 import { getTagColor } from './constants';
+import { validateLink } from './functions';
 import type { mobEntry } from './types';
 
 export const ViewCharacter = (props: {
   overlay: mobEntry;
-  onOverlay: Function;
+  onOverlay: React.Dispatch<React.SetStateAction<mobEntry | null>>;
 }) => {
   const { overlay, onOverlay } = props;
 
@@ -105,7 +106,16 @@ export const ViewCharacter = (props: {
       </Section>
       <Section title="Flavor Text">
         <Box style={{ wordBreak: 'break-all' }} preserveWhitespace>
-          {overlay.flavor_text || 'Unset.'}
+          <MarkdownSpoilerText text={overlay.flavor_text || 'Unset.'} />
+        </Box>
+      </Section>
+      <Section title="Custom Link">
+        <Box style={{ wordBreak: 'break-all' }} preserveWhitespace>
+          {validateLink(overlay.custom_link) ? (
+            <a href={overlay.custom_link}>{overlay.custom_link}</a>
+          ) : (
+            'Unset.'
+          )}
         </Box>
       </Section>
     </Section>

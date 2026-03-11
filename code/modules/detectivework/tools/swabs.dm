@@ -59,7 +59,7 @@
 			return
 		user.visible_message("[user] swabs [H]'s palm for a sample.")
 		sample_type = "GSR"
-		gsr = H.gunshot_residue
+		gsr = H.forensic_data?.get_gunshotresidue()
 	else
 		return
 
@@ -80,7 +80,7 @@
 	add_fingerprint(user)
 
 	var/list/choices = list()
-	if(A.blood_DNA)
+	if(A.forensic_data?.has_blooddna())
 		choices |= "Blood"
 	if(istype(A, /obj/item/clothing))
 		choices |= "Gunshot Residue"
@@ -99,21 +99,22 @@
 
 	var/sample_type
 	if(choice == "Blood")
-		if(!A.blood_DNA || !A.blood_DNA.len) return
-		dna = A.blood_DNA.Copy()
+		if(!A.forensic_data?.has_blooddna()) return
+		dna = A.forensic_data?.get_blooddna().Copy()
 		sample_type = "blood"
 
 	else if(choice == "Gunshot Residue")
 		var/obj/item/clothing/B = A
-		if(!istype(B) || !B.gunshot_residue)
+		if(!istype(B) || !B.forensic_data?.get_gunshotresidue())
 			to_chat(user, span_warning("There is no residue on \the [A]."))
 			return
-		gsr = B.gunshot_residue
+		gsr = B.forensic_data?.get_gunshotresidue()
 		sample_type = "residue"
 
 	if(sample_type)
 		user.visible_message("\The [user] swabs \the [A] for a sample.", "You swab \the [A] for a sample.")
 		set_used(sample_type, A)
+		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_FORENSICS_COLLECTED, A, user)
 
 /obj/item/forensics/swab/proc/set_used(var/sample_str, var/atom/source)
 	name = "[initial(name)] ([sample_str] - [source])"

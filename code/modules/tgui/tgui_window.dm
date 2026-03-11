@@ -27,19 +27,6 @@
 	var/initial_inline_css
 
 	var/list/oversized_payloads = list()
-	var/mouse_event_macro_set = FALSE
-
-	/**
-	 * Static list used to map in macros that will then emit execute events to the tgui window
-	 * A small disclaimer though I'm no tech wiz: I don't think it's possible to map in right or middle
-	 * clicks in the current state, as they're keywords rather than modifiers.
-	 */
-	var/static/list/byondToTguiEventMap = list(
-		"MouseDown" = "byond/mousedown",
-		"MouseUp" = "byond/mouseup",
-		"Ctrl" = "byond/ctrldown",
-		"Ctrl+UP" = "byond/ctrlup",
-	)
 
 /**
  * public
@@ -234,9 +221,10 @@
  */
 /datum/tgui_window/proc/close(can_be_suspended = TRUE)
 	if(!client)
+		release_lock()
+		status = TGUI_WINDOW_CLOSED
+		message_queue = null
 		return
-	if(mouse_event_macro_set)
-		remove_mouse_macro()
 	if(can_be_suspended && can_be_suspended())
 		#ifdef TGUI_DEBUGGING
 		log_tgui(client, "[id]/close: suspending")
@@ -385,7 +373,7 @@
 			send_message("ping/reply", payload)
 		if("visible")
 			visible = TRUE
-			// SEND_SIGNAL(src, COMSIG_TGUI_WINDOW_VISIBLE, client) // Not used yet
+			SEND_SIGNAL(src, COMSIG_TGUI_WINDOW_VISIBLE, client)
 		if("suspend")
 			close(can_be_suspended = TRUE)
 		if("close")
@@ -396,19 +384,17 @@
 			reinitialize()
 		if("chat/resend")
 			SSchat.handle_resend(client, payload)
-		/* Does not work with tgui say, so not in use yet
 		if("oversizedPayloadRequest")
 			var/payload_id = payload["id"]
-			var/chunk_count = payload["chunkCount"]
-			var/permit_payload = chunk_count <= CONFIG_GET(number/tgui_max_chunk_count)
+			var/chunk_count = text2num(payload["chunkCount"])
+			var/permit_payload = chunk_count <= MAX_MESSAGE_CHUNKS
 			if(permit_payload)
 				create_oversized_payload(payload_id, payload["type"], chunk_count)
 			send_message("oversizePayloadResponse", list("allow" = permit_payload, "id" = payload_id))
 		if("payloadChunk")
 			var/payload_id = payload["id"]
 			append_payload_chunk(payload_id, payload["chunk"])
-			send_message("acknowlegePayloadChunk", list("id" = payload_id))
-		*/
+			send_message("acknowledgePayloadChunk", list("id" = payload_id))
 
 /datum/tgui_window/vv_edit_var(var_name, var_value)
 	return var_name != NAMEOF(src, id) && ..()
@@ -421,7 +407,7 @@
 		"type" = message_type,
 		"count" = chunk_count,
 		"chunks" = list(),
-		"timeout" = addtimer(CALLBACK(src, PROC_REF(remove_oversized_payload), payload_id), 1 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE|TIMER_STOPPABLE)
+		"timeout" = addtimer(CALLBACK(src, PROC_REF(remove_oversized_payload), payload_id), 10 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE|TIMER_STOPPABLE)
 	)
 
 /datum/tgui_window/proc/append_payload_chunk(payload_id, chunk)
@@ -435,38 +421,12 @@
 		var/message_type = payload["type"]
 		var/final_payload = chunks.Join()
 		remove_oversized_payload(payload_id)
+		if (!rustg_json_is_valid(final_payload))
+			log_tgui(usr, "Error: Invalid JSON")
+			return
 		on_message(message_type, json_decode(final_payload), list("type" = message_type, "payload" = final_payload, "tgui" = TRUE, "window_id" = id))
 	else
-		payload["timeout"] = addtimer(CALLBACK(src, PROC_REF(remove_oversized_payload), payload_id), 1 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE|TIMER_STOPPABLE)
+		payload["timeout"] = addtimer(CALLBACK(src, PROC_REF(remove_oversized_payload), payload_id), 10 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE|TIMER_STOPPABLE)
 
 /datum/tgui_window/proc/remove_oversized_payload(payload_id)
 	oversized_payloads -= payload_id
-
-
-/datum/tgui_window/proc/set_mouse_macro()
-	if(mouse_event_macro_set)
-		return
-
-	for(var/mouseMacro in byondToTguiEventMap)
-		var/command_template = ".output CONTROL PAYLOAD"
-		var/event_message = TGUI_CREATE_MESSAGE(byondToTguiEventMap[mouseMacro], null)
-		var target_control = is_browser \
-			? "[id]:update" \
-			: "[id].browser:update"
-		var/with_id = replacetext(command_template, "CONTROL", target_control)
-		var/full_command = replacetext(with_id, "PAYLOAD", event_message)
-
-		var/list/params = list()
-		params["parent"] = "default" //Technically this is external to tgui but whatever
-		params["name"] = mouseMacro
-		params["command"] = full_command
-
-		winset(client, "[mouseMacro]Window[id]Macro", params)
-	mouse_event_macro_set = TRUE
-
-/datum/tgui_window/proc/remove_mouse_macro()
-	if(!mouse_event_macro_set)
-		stack_trace("Unsetting mouse macro on tgui window that has none")
-	for(var/mouseMacro in byondToTguiEventMap)
-		winset(client, null, "[mouseMacro]Window[id]Macro.parent=null")
-	mouse_event_macro_set = FALSE

@@ -13,9 +13,9 @@
 	movement_sound = 'sound/effects/servostep.ogg'
 
 	attacktext = list("clawed")
-	projectilesound = 'sound/weapons/Gunshot_old.ogg'
+	projectilesound = 'sound/weapons/gunshot_old.ogg'
 
-	organ_names = /decl/mob_organ_names/hivebot
+	organ_names = /datum/decl/mob_organ_names/hivebot
 
 	ai_holder_type = /datum/ai_holder/simple_mob/hivebot
 	say_list_type = /datum/say_list/hivebot
@@ -30,7 +30,7 @@
 	s.start()
 	qdel(src)
 
-// The hivebot's default projectile. //CHOMP Edit this is no longer actually used by ranged_damage.dm for the hivebot. Hivebot now uses custom 22 long rifle.
+// The hivebot's default projectile.
 /obj/item/projectile/bullet/hivebot
 	damage = 10
 	damage_type = BRUTE
@@ -52,5 +52,5 @@
 	firing_lanes = TRUE
 	can_flee = FALSE // Fearless dumb machines.
 
-/decl/mob_organ_names/hivebot
+/datum/decl/mob_organ_names/hivebot
 	hit_zones = list("central chassis", "positioning servo", "head", "sensor suite", "manipulator arm", "shoulder weapon mount", "weapons array", "front right leg", "front left leg", "rear left leg", "rear right leg")

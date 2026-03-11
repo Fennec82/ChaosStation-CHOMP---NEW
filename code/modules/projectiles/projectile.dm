@@ -103,8 +103,7 @@
 
 	var/damage = 10
 	var/damage_type = BRUTE //BRUTE, BURN, TOX, OXY, CLONE, HALLOSS, ELECTROCUTE, BIOACID, SEARING are the only things that should be in here
-	var/SA_bonus_damage = 0 // Some bullets inflict extra damage on simple animals.
-	var/SA_vulnerability = null // What kind of simple animal the above bonus damage should be applied to. Set to null to apply to all SAs.
+	var/mob_bonus_damage = 0 // Some bullets inflict extra damage on simple animals.
 	var/nodamage = 0 //Determines if the projectile will skip any damage inflictions
 	var/taser_effect = 0 //If set then the projectile will apply it's agony damage using stun_effect_act() to mobs it hits, and other damage will be ignored
 	var/check_armour = "bullet" //Defines what armor to use when it hits things.  Must be set to bullet, laser, energy,or bomb	//Cael - bio and rad are also valid
@@ -129,7 +128,7 @@
 
 	embed_chance = 0	//Base chance for a projectile to embed
 
-	var/fire_sound = 'sound/weapons/Gunshot1.ogg' // Can be overriden in gun.dm's fire_sound var. It can also be null but I don't know why you'd ever want to do that. -Ace
+	var/fire_sound = 'sound/weapons/gunshot_old.ogg' // Can be overriden in gun.dm's fire_sound var. It can also be null but I don't know why you'd ever want to do that. -Ace
 
 	var/vacuum_traversal = TRUE //Determines if the projectile can exist in vacuum, if false, the projectile will be deleted if it enters vacuum.
 
@@ -145,7 +144,14 @@
 	var/hud_state = "unknown" // What HUD state we use when we have ammunition.
 	var/hud_state_empty = "unknown" // The empty state. DON'T USE _FLASH IN THE NAME OF THE EMPTY STATE STRING, THAT IS ADDED BY THE CODE.
 
+	///If the rounds dephase or not
+	var/dephasing = FALSE
+	///If the rounds hit phased entities or not.
+	var/hits_phased = FALSE
+
 	var/obj/item/ammo_casing/my_case = null
+
+	var/crawl_destroy = FALSE //chompADD: Making bullet hell lite mobs, need something to add to their projectiles to destroy laying folks
 
 
 /obj/item/projectile/Initialize(mapload)
@@ -243,13 +249,15 @@
 	Range()
 
 /obj/item/projectile/Crossed(atom/movable/AM) //A mob moving on a tile with a projectile is hit by it.
-	if(AM.is_incorporeal())
+	if(AM.is_incorporeal() && !hits_phased)
 		return
 	..()
 	if(isliving(AM) && !(pass_flags & PASSMOB))
 		var/mob/living/L = AM
 		if(can_hit_target(L, permutated, (AM == original)))
 			Bump(AM)
+			if(dephasing)
+				L.phase_in() //If the mob is phased, dephase them. If they're not phased, this does nothing.
 
 /obj/item/projectile/proc/process_homing()			//may need speeding up in the future performance wise.
 	if(!homing_target)
@@ -305,22 +313,22 @@
 		trajectory.set_angle(new_angle)
 	return TRUE
 
-/obj/item/projectile/forceMove(atom/target)
-	if(!isloc(target) || !isloc(loc) || !z)
+/obj/item/projectile/forceMove(atom/destination, direction, movetime)
+	if(!isloc(destination) || !isloc(loc) || !z)
 		return ..()
-	var/zc = target.z != z
+	var/zc = destination.z != z
 	var/old = loc
 	if(zc)
-		before_z_change(old, target)
+		before_z_change(old, destination)
 	. = ..()
-	if(trajectory && !trajectory_ignore_forcemove && isturf(target))
+	if(trajectory && !trajectory_ignore_forcemove && isturf(destination))
 		if(hitscan)
 			finalize_hitscan_and_generate_tracers(FALSE)
-		trajectory.initialize_location(target.x, target.y, target.z, 0, 0)
+		trajectory.initialize_location(destination.x, destination.y, destination.z, 0, 0)
 		if(hitscan)
 			record_hitscan_start(RETURN_PRECISE_POINT(src))
 	if(zc)
-		after_z_change(old, target)
+		after_z_change(old, destination)
 
 /obj/item/projectile/proc/fire(angle, atom/direct_target)
 	//If no angle needs to resolve it from xo/yo!
@@ -554,8 +562,12 @@
 			// So we'll check before, just in case. Lying might gives a chance to dodge, however.
 			if(L.GetComponent(/datum/component/swarming) && L.stat != DEAD && !L.lying)
 				return TRUE
+			if(crawl_destroy == TRUE) //chompADD
+				return TRUE
 			if(!L.density)
-				return FALSE
+				var/datum/component/shadekin/SK = L.GetComponent(/datum/component/shadekin)
+				if(!SK || (SK.in_phase && !hits_phased)) //We don't have the phasing component, or we do but we're currently phased and the bullet can't hit phased things...This is needed for simple mobs.
+					return FALSE
 	return TRUE
 
 /obj/item/projectile/Bump(atom/A)
@@ -667,7 +679,7 @@
 
 /obj/item/projectile/proc/get_structure_damage()
 	if(damage_type == BRUTE || damage_type == BURN)
-		return damage + SA_bonus_damage //CHOMP Edit: Added SA_bonus_damage to the returned value so that phaser can do damage against shields.
+		return damage + mob_bonus_damage //CHOMP Edit: Added mob_bonus_damage to the returned value so that phaser can do damage against shields.
 	return 0
 
 //return 1 if the projectile should be allowed to pass through after all, 0 if not.
@@ -687,7 +699,7 @@
 	if(!istype(target_mob))
 		return
 
-	if(target_mob.is_incorporeal())
+	if(target_mob.is_incorporeal() && !hits_phased)
 		return
 
 	if(target_mob in impacted_mobs)
@@ -723,7 +735,7 @@
 	var/impacted_organ = parse_zone(def_zone)
 	if(isanimal(target_mob))
 		var/mob/living/simple_mob/SM = target_mob
-		var/decl/mob_organ_names/organ_plan = SM.organ_names
+		var/datum/decl/mob_organ_names/organ_plan = SM.organ_names
 		impacted_organ = pick(organ_plan.hit_zones)
 
 	//hit messages
@@ -743,6 +755,10 @@
 	if(!no_attack_log)
 		if(istype(firer, /mob) && istype(target_mob))
 			add_attack_logs(firer,target_mob,"Shot with \a [src.type] projectile") //CHOMPEdit
+
+	if(dephasing)
+		target_mob.phase_in() //If the mob is phased, dephase them. If they're not phased, this does nothing.
+
 
 	//sometimes bullet_act() will want the projectile to continue flying
 	if (result == PROJECTILE_CONTINUE)

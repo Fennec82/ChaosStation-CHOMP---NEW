@@ -10,7 +10,7 @@
 	throwforce = 5.0
 	throw_speed = 3
 	throw_range = 15
-	matter = list(MAT_STEEL = 30, MAT_GLASS = 10)
+	matter = RECYCLE_CIRCUIT_MATERIALS
 	var/build_path = null
 	var/board_type = new /datum/frame/frame_types/computer
 	var/list/req_components = null
@@ -19,7 +19,8 @@
 	pickup_sound = 'sound/items/pickup/device.ogg'
 
 /obj/item/circuitboard/Destroy()
-	QDEL_NULL(board_type)
+	if(isobject(board_type)) // Some boards use text instead of an instance...
+		QDEL_NULL(board_type)
 	return ..()
 
 //Called when the circuitboard is used to contruct a new machine.

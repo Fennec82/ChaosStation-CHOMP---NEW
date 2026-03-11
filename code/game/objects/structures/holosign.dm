@@ -100,9 +100,7 @@
 /obj/structure/holosign/barrier/medical/proc/CheckHuman(mob/living/carbon/human/H)
 	if(H.get_species() == SPECIES_XENOCHIMERA)
 		return FALSE
-	if(H.GetViruses())
-		for(var/datum/disease/D in H.GetSpreadableViruses())
-			if(D.danger == DISEASE_POSITIVE || D.danger == DISEASE_BENEFICIAL)
-				continue
-			return FALSE
+	var/threat = H.check_virus()
+	if(get_disease_danger_value(threat) > get_disease_danger_value(DISEASE_MINOR))
+		return FALSE
 	return TRUE

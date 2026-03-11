@@ -143,6 +143,7 @@
 /datum/robot_sprite/dogborg/janitor/drake
 	name = "Drake"
 	sprite_icon_state = "drake"
+	has_vore_belly_resting_sprites = TRUE
 
 // Tall sprites
 
@@ -232,8 +233,8 @@
 	has_rest_lights_sprites = TRUE
 	has_rest_eyes_sprites = TRUE
 	sprite_decals = list("breastplate")
-	icon_x = 32
-	pixel_x = 0
+	icon_x = 64
+	pixel_x = -16
 
 /datum/robot_sprite/dogborg/tall/janitor/dullahanv3
 	name = "Dullahan v3"
@@ -242,6 +243,8 @@
 	has_eye_light_sprites = TRUE
 	has_rest_sprites = TRUE
 	has_vore_belly_sprites = TRUE
+	has_vore_belly_resting_sprites = TRUE
+	belly_capacity_list = list("sleeper" = 3)
 	rest_sprite_options = list("Default", "Sit")
 	sprite_decals = list("decals")
 	icon_x = 64
@@ -255,15 +258,15 @@
 	has_eye_light_sprites = TRUE
 	has_dead_sprite_overlay = FALSE
 
-/datum/robot_sprite/dogborg/smolraptorjanitorsprite
-	sprite_icon = 'icons/mob/robot/smallraptors/smolraptor_jani.dmi'
+/datum/robot_sprite/dogborg/janitor/smolraptor
+	sprite_icon = 'icons/mob/robot/smallraptors/smolraptor_serv.dmi'
 	module_type = "Janitor"
 	name = "Small Raptor"
-	sprite_icon_state = "smolraptor"
-	has_dead_sprite_overlay = FALSE
+	sprite_icon_state = "smolraptor_alt"
 	has_eye_light_sprites = TRUE
 	has_vore_belly_sprites = TRUE
-	rest_sprite_options = list("Default", "Sit")
+	has_dead_sprite_overlay = FALSE
+	rest_sprite_options = list("Default", "Sit", "Bellyup")
 
 /datum/robot_sprite/dogborg/janitor/possum
 	name = "0-P0SSm"

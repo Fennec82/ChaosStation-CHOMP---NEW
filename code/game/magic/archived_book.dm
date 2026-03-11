@@ -4,7 +4,7 @@
 #define BOOK_VERSION_MAX	2
 #define BOOK_PATH			"data/books/"
 
-var/global/datum/book_manager/book_mgr = new()
+GLOBAL_DATUM_INIT(book_mgr, /datum/book_manager, new)
 
 /datum/book_manager/proc/path(id)
 	if(isnum(id)) // kill any path exploits
@@ -76,8 +76,9 @@ var/global/datum/book_manager/book_mgr = new()
 			dat += "</table>"
 			qdel(query)
 
-	usr << browse("<html>[dat]</html>", "window=library")
-	onclose(usr, "library")
+	var/datum/browser/popup = new(usr, "library", "Library")
+	popup.set_content(dat)
+	popup.open()
 //VOREStation Edit End
 
 // delete a book
@@ -130,7 +131,7 @@ var/global/datum/book_manager/book_mgr = new()
 
 
 /datum/archived_book/proc/save()
-	var/savefile/F = new(book_mgr.path(id))
+	var/savefile/F = new(GLOB.book_mgr.path(id))
 
 	F["version"] << BOOK_VERSION_MAX
 	F["author"] << author

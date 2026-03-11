@@ -74,7 +74,7 @@
 					open()
 					addtimer(CALLBACK(src, PROC_REF(close)), 50)
 		return
-	if (!( ticker ))
+	if (!( SSticker ))
 		return
 	if (src.operating)
 		return
@@ -113,14 +113,17 @@
 /obj/machinery/door/window/open()
 	if (operating == 1 || !density) //doors can still open when emag-disabled
 		return 0
-	if (!ticker)
+	if (!SSticker)
 		return 0
 	if (!operating) //in case of emag
 		operating = 1
 	flick(text("[src.base_state]opening"), src)
 	playsound(src, 'sound/machines/door/windowdoor.ogg', 100, 1)
-	sleep(10)
+	addtimer(CALLBACK(src, PROC_REF(finish_open)), 1 SECONDS, TIMER_DELETE_ME)
 
+/obj/machinery/door/window/proc/finish_open()
+	PRIVATE_PROC(TRUE)
+	SHOULD_NOT_OVERRIDE(TRUE)
 	explosion_resistance = 0
 	density = FALSE
 	update_icon()
@@ -141,8 +144,11 @@
 	update_icon()
 	explosion_resistance = initial(explosion_resistance)
 	update_nearby_tiles()
+	addtimer(CALLBACK(src, PROC_REF(finish_close)), 1 SECONDS, TIMER_DELETE_ME)
 
-	sleep(10)
+/obj/machinery/door/window/proc/finish_close()
+	PRIVATE_PROC(TRUE)
+	SHOULD_NOT_OVERRIDE(TRUE)
 	operating = FALSE
 	return TRUE
 
@@ -160,7 +166,7 @@
 
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
-		if(H.species.can_shred(H))
+		if(H.species.can_shred(H, FALSE, 15))
 			playsound(src, 'sound/effects/Glasshit.ogg', 75, 1)
 			visible_message(span_danger("[user] smashes against the [src.name]."), 1)
 			user.do_attack_animation(src)
@@ -201,7 +207,7 @@
 				if(WT.remove_fuel(1 ,user))
 					to_chat(user, span_notice("You begin repairing [src]..."))
 					playsound(src, WT.usesound, 50, 1)
-					if(do_after(user, 40 * WT.toolspeed, target = src))
+					if(do_after(user, 4 SECONDS * WT.toolspeed, target = src))
 						health = maxhealth
 						update_icon()
 						to_chat(user, span_notice("You repair [src]."))
@@ -224,7 +230,7 @@
 		if (!density && I.has_tool_quality(TOOL_CROWBAR))
 			playsound(src, I.usesound, 50, 1)
 			user.visible_message("[user] begins prying the windoor out of the frame.", "You start to pry the windoor out of the frame.")
-			if (do_after(user,40 * I.toolspeed))
+			if (do_after(user, 4 SECONDS * I.toolspeed, target = src))
 				to_chat(user,span_notice("You pried the windoor out of the frame!"))
 
 				var/obj/structure/windoor_assembly/wa = new/obj/structure/windoor_assembly(src.loc)
@@ -285,7 +291,7 @@
 	icon = 'icons/obj/doors/windoor.dmi'
 	icon_state = "leftsecure"
 	base_state = "leftsecure"
-	req_access = list(access_security)
+	req_access = list(ACCESS_SECURITY)
 	var/id = null
 	maxhealth = 300
 	health = 300.0 //Stronger doors for prison (regular window door health is 150)

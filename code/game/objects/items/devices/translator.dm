@@ -15,6 +15,9 @@
 	drop_sound = 'sound/items/drop/device.ogg'
 
 /obj/item/universal_translator/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(!listening) //Turning ON
 		langset = tgui_input_list(user,"Translate to which of your languages?","Language Selection", user.languages)
 		if(langset)
@@ -24,13 +27,13 @@
 				return
 			else
 				listening = 1
-				listening_objects |= src
+				GLOB.listening_objects |= src
 				if(mult_icons)
 					icon_state = "[initial(icon_state)]1"
 				to_chat(user, span_notice("You enable \the [src], translating into [langset.name]."))
 	else	//Turning OFF
 		listening = 0
-		listening_objects -= src
+		GLOB.listening_objects -= src
 		langset = null
 		icon_state = "[initial(icon_state)]"
 		to_chat(user, span_notice("You disable \the [src]."))
@@ -73,7 +76,7 @@
 	if(!L.say_understands(null, langset))
 		new_message = langset.scramble(new_message)
 
-	to_chat(L, span_filter_say(span_italics(span_bold("[src]") + "translates, ") + " \"<span class='[langset.colour]'>[new_message]</span>\""))
+	to_chat(L, span_filter_say(span_italics(span_bold("[src]") + " translates, ") + " \"<span class='[langset.colour]'>[new_message]</span>\""))
 
 /obj/item/universal_translator/proc/user_understands(mob/M, mob/living/L, list/message_pieces)
 	for(var/datum/multilingual_say_piece/S in message_pieces)

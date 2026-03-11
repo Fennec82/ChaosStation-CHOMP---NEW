@@ -67,7 +67,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 /turf/simulated/open/Initialize(mapload)
 	. = ..()
 	ASSERT(HasBelow(z))
-	add_overlay(GLOB.openspace_backdrop_one_for_all, TRUE) //Special grey square for projecting backdrop darkness filter on it.
+	add_overlay(GLOB.openspace_backdrop_one_for_all) //Special grey square for projecting backdrop darkness filter on it.
 	return INITIALIZE_HINT_LATELOAD
 
 /turf/simulated/open/LateInitialize()
@@ -84,9 +84,9 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 		A.fall()
 
 // Called when thrown object lands on this turf.
-/turf/simulated/open/hitby(var/atom/movable/AM, var/speed)
+/turf/simulated/open/hitby(var/atom/movable/source, datum/thrownthing/throwingdatum)
 	. = ..()
-	AM.fall()
+	source.fall()
 
 /turf/simulated/open/examine(mob/user, distance, infix, suffix)
 	. = ..()
@@ -99,7 +99,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 /turf/simulated/open/update_icon()
 	cut_overlays()
 	update_icon_edge()
-	add_overlay(GLOB.openspace_backdrop_one_for_all, TRUE) //Special grey square for projecting backdrop darkness filter on it. //ChompEDIT - add this on icon update.
+	add_overlay(GLOB.openspace_backdrop_one_for_all) //Special grey square for projecting backdrop darkness filter on it.
 
 // Straight copy from space.
 /turf/simulated/open/attackby(obj/item/C as obj, mob/user as mob)
@@ -110,7 +110,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 		var/obj/item/stack/rods/R = C
 		if (R.use(1))
 			to_chat(user, span_notice("Constructing support lattice ..."))
-			playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)
+			playsound(src, 'sound/weapons/genhit.ogg', 50, 1)
 			ReplaceWithLattice()
 		return
 
@@ -121,7 +121,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 			if (S.get_amount() < 1)
 				return
 			qdel(L)
-			playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)
+			playsound(src, 'sound/weapons/genhit.ogg', 50, 1)
 			S.use(1)
 			ChangeTurf(/turf/simulated/floor/airless)
 			return

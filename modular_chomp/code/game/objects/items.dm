@@ -3,8 +3,6 @@
 	var/user_vars_remembered //not needed for manual editing, just stores the original vars from the above list to make sure they go back to normal later
 
 /obj/item/Destroy(force, ...)
-	if(item_tf_spawn_allowed)
-		item_tf_spawnpoints -= src
 	user_vars_remembered = null
 	return ..()
 
@@ -23,7 +21,7 @@
 	. = ..()
 	if (!istype(user))
 		return
-	if(("[slot_equipped]" in slot_flags_enumeration) && (slot_flags & slot_flags_enumeration["[slot_equipped]"]))
+	if(("[slot_equipped]" in GLOB.slot_flags_enumeration) && (slot_flags & GLOB.slot_flags_enumeration["[slot_equipped]"]))
 		if (LAZYLEN(user_vars_to_edit))
 			for(var/variable in user_vars_to_edit)
 				if(variable in user.vars)

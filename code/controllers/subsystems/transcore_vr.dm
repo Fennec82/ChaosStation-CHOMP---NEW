@@ -12,7 +12,9 @@ SUBSYSTEM_DEF(transcore)
 	wait = 3 MINUTES
 	flags = SS_BACKGROUND
 	runlevels = RUNLEVEL_GAME
-	init_order = INIT_ORDER_TRANSCORE
+	dependencies = list(
+		/datum/controller/subsystem/mapping
+	)
 
 	// THINGS
 	var/overdue_time = 6 MINUTES			// Has to be a multiple of wait var, or else will just round up anyway.
@@ -33,7 +35,7 @@ SUBSYSTEM_DEF(transcore)
 	for(var/t in subtypesof(/datum/transcore_db))
 		var/datum/transcore_db/db = new t()
 		if(!db.key)
-			warning("Instantiated transcore DB without a key: [t]")
+			WARNING("Instantiated transcore DB without a key: [t]")
 			continue
 		databases[db.key] = db
 	return SS_INIT_SUCCESS
@@ -54,8 +56,8 @@ SUBSYSTEM_DEF(transcore)
 				src.current_run[imp] = db
 
 	var/list/current_run = src.current_run
-	while(current_run.len)
-		var/obj/item/implant/backup/imp = current_run[current_run.len]
+	while(length(current_run))
+		var/obj/item/implant/backup/imp = current_run[length(current_run)]
 		var/datum/transcore_db/db = current_run[imp]
 		current_run.len--
 
@@ -74,13 +76,13 @@ SUBSYSTEM_DEF(transcore)
 		//In a human
 		BITSET(H.hud_updateflag, BACKUP_HUD)
 
-		if(H == imp.imp_in && H.stat < DEAD) //CHOMPEdit Start
+		//CHOMPEdit Start
+		if(H == imp.imp_in && H.stat < DEAD)
 			if(H.mind)
 				db.m_backup(H.mind,H.nif)
-				persist_nif_data(H)
 			else if(H.vr_link && H.vr_link.mind)
 				db.m_backup(H.vr_link.mind,H.nif)
-				persist_nif_data(H) //CHOMPEdit End
+		//CHOMPEdit End
 
 		if(MC_TICK_CHECK)
 			return
@@ -96,14 +98,14 @@ SUBSYSTEM_DEF(transcore)
 				src.current_run[mr] = db
 
 	var/list/current_run = src.current_run
-	while(current_run.len)
-		var/datum/transhuman/mind_record/curr_MR = current_run[current_run.len]
+	while(length(current_run))
+		var/datum/transhuman/mind_record/curr_MR = current_run[length(current_run)]
 		var/datum/transcore_db/db = current_run[curr_MR]
 		current_run.len--
 
 		//Invalid record
 		if(!curr_MR)
-			log_debug("Tried to process [name] in transcore w/o a record!")
+			log_runtime("Tried to process [name] in transcore w/o a record!")
 			db.backed_up -= curr_MR.mindname
 			continue
 
@@ -132,20 +134,20 @@ SUBSYSTEM_DEF(transcore)
 	msg += "BK:[round(cost_backups,1)]"
 	msg += "} "
 	msg += "#:{"
-	msg += "DB:[databases.len]|"
+	msg += "DB:[length(databases)]|"
 	if(!default_db)
 		msg += "DEFAULT DB MISSING"
 	else
-		msg += "DFM:[default_db.backed_up.len]|"
-		msg += "DFB:[default_db.body_scans.len]|"
-		msg += "DFI:[default_db.implants.len]"
+		msg += "DFM:[length(default_db.backed_up)]|"
+		msg += "DFB:[length(default_db.body_scans)]|"
+		msg += "DFI:[length(default_db.implants)]"
 	msg += "} "
 	return ..()
 
 /datum/controller/subsystem/transcore/Recover()
 	for(var/key in SStranscore.databases)
 		if(!SStranscore.databases[key])
-			warning("SStranscore recovery found missing database value for key: [key]")
+			WARNING("SStranscore recovery found missing database value for key: [key]")
 			continue
 		if(key == "default")
 			default_db = SStranscore.databases[key]
@@ -154,10 +156,10 @@ SUBSYSTEM_DEF(transcore)
 
 /datum/controller/subsystem/transcore/proc/leave_round(var/mob/M)
 	if(!istype(M))
-		warning("Non-mob asked to be removed from transcore: [M] [M?.type]")
+		WARNING("Non-mob asked to be removed from transcore: [M] [M?.type]")
 		return
 	if(!M.mind)
-		warning("No mind mob asked to be removed from transcore: [M] [M?.type]")
+		WARNING("No mind mob asked to be removed from transcore: [M] [M?.type]")
 		return
 
 	for(var/key in databases)
@@ -173,7 +175,7 @@ SUBSYSTEM_DEF(transcore)
 	if(isnull(key))
 		return default_db
 	if(!databases[key])
-		warning("Tried to find invalid transcore database: [key]")
+		WARNING("Tried to find invalid transcore database: [key]")
 		return default_db
 	return databases[key]
 
@@ -269,7 +271,6 @@ SUBSYSTEM_DEF(transcore)
 	ASSERT(MR)
 	backed_up[MR.mindname] = MR
 	backed_up = sortAssoc(backed_up)
-	log_debug("Added [MR.mindname] to transcore DB.")
 
 // Remove a mind_record from the backup-checking list.  Keeps track of it in has_left // Why do we do that? ~Leshana
 /datum/transcore_db/proc/stop_backup(var/datum/transhuman/mind_record/MR)
@@ -277,7 +278,6 @@ SUBSYSTEM_DEF(transcore)
 	has_left[MR.mindname] = MR
 	backed_up.Remove("[MR.mindname]")
 	MR.cryo_at = world.time
-	log_debug("Put [MR.mindname] in transcore suspended DB.")
 
 // Called from body_record to add itself to the transcore.
 /datum/transcore_db/proc/add_body(var/datum/transhuman/body_record/BR)
@@ -286,13 +286,11 @@ SUBSYSTEM_DEF(transcore)
 		qdel(body_scans[BR.mydna.name])
 	body_scans[BR.mydna.name] = BR
 	body_scans = sortAssoc(body_scans)
-	log_debug("Added [BR.mydna.name] to transcore body DB.")
 
 // Remove a body record from the database (Usually done when someone cryos)  // Why? ~Leshana
 /datum/transcore_db/proc/remove_body(var/datum/transhuman/body_record/BR)
 	ASSERT(BR)
 	body_scans.Remove("[BR.mydna.name]")
-	log_debug("Removed [BR.mydna.name] from transcore body DB.")
 
 // Moves all mind records from the databaes into the disk and shuts down all backup canary processing.
 /datum/transcore_db/proc/core_dump(var/obj/item/disk/transcore/disk)
@@ -303,7 +301,7 @@ SUBSYSTEM_DEF(transcore)
 	disk.stored += backed_up
 	backed_up.Cut()
 	core_dumped = TRUE
-	return disk.stored.len
+	return length(disk.stored)
 
 #undef SSTRANSCORE_BACKUPS
 #undef SSTRANSCORE_IMPLANTS

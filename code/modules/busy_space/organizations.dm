@@ -80,7 +80,6 @@
 			"Columbia",
 			"Eagle",
 			"Intrepid",
-			"Odyssey",
 			"Aquarius",
 			"Kitty Hawk",
 			"Antares",
@@ -205,6 +204,7 @@
 			"Mildly Flammable",
 			"Wave Goodbye",
 			"Hugh Mann",
+			"Hugh Anner",
 			"Savage Chicken",
 			"Homestead",
 			"Peacekeeper",
@@ -236,10 +236,13 @@
 			"Spirit of Alliance",
 			"Surrounded By Idiots",
 			"Honk If You Can Read This",
+			"Terms And Conditions May Apply",
 			"Personal Space Invader",
 			"Sufficient Velocity",
 			"Credible Deniability",
+			"Incredible Deniability",
 			"Crucible",
+			"Empire of the Tyrants",
 			"Nostromo",
 			"Dance Like You Mean It",
 			"Birthday Suit",
@@ -256,7 +259,10 @@
 			"Stockholm Syndrome",
 			"False King",
 			"Bombshell",
+			"End of Everything",
+			"One and Only",
 			"Walking Disaster",
+			"Wild World",
 			"Two-Body Problem",
 			"Instrument of Violence",
 			"Entropic Whisper",
@@ -335,6 +341,7 @@
 			"Inside Outside",
 			"Galley",
 			"Constellation",
+			"Delta-V Deficiency",
 			"Dromedarii",
 			"Golden Hand",
 			"White Company",
@@ -343,7 +350,10 @@
 			"Two For Flinching",
 			"Uninvited Guest",
 			"Iconoclast",
-			"Bluespace Tourist"
+			"Bluespace Tourist",
+			"Fortunate Son",
+			"Unfortunate Son",
+			"Hazard Pay"
 			)
 	var/list/added_ship_names = list()	//List of ship names to add to the above, rather than wholesale replacing
 	var/list/destination_names = list()	//Names of static holdings that the organization's ships visit
@@ -1713,6 +1723,7 @@
 			"Argonaut",
 			"Desert Nomad",
 			"Non-Prophet Organization",
+			"Kessler Syndrome Candidate",
 			"Rest In Pieces",
 			"Sweep Dreams",
 			"Home Sweep Home",
@@ -1899,6 +1910,7 @@
 			"Mattock",
 			"Hatchet",
 			"Machete",
+			"Seax",
 			"Axe",
 			"Tomahawk",
 			"Labrys",
@@ -2165,8 +2177,9 @@
 			the flag of the Commonwealth. The constant tug and pull of government versus corporation, democracy and power \
 			troubles this federation of deeply entrenched human colonies much like it did in the 21st century. Some things \
 			never change. However, they are economically and culturally quite dominant, although not everyone likes that fact. \
-	<br><br> \
-	Ships on official CWS assignments typically carry the designations of Earth\'s largest craters, as a reminder of everything the planet (and humanity itself) has endured."
+			<br><br> \
+			Ships on official CWS assignments typically carry the designations of Earth\'s largest craters, as a reminder of \
+			everything the planet (and humanity itself) has endured."
 	history = "" // Todo
 	work = "governing polity of humanity's systems"
 	headquarters = "Luna, Sol"
@@ -2300,8 +2313,13 @@
 			"Sir, It's One Of Ours",
 			"The Big Stick For Speaking Softly",
 			"Per Our Last E-Mail",
+			"Gunboat Diplomat",
+			"Megaton Express",
+			"Crayon Dispenser",
 			"A Slight Weight Discrepancy",
 			"I Think It's An Asteroid",
+			"Tungsten Deficiency Corrector",
+			"One Ping Only",
 			"Bull Moose",
 			"Engels Needs Some Love Too",
 			"The Icepick",
@@ -2382,6 +2400,10 @@
 			"Libertine Ideals",
 			"The True Free",
 			"Unbound",
+			"Per My Last Email",
+			"Media Illiterate",
+			"Sovereign Citizen",
+			"Antidisestablishmentarianism",
 			"No Man Shackled",
 			"All Men Shackled",
 			"All Women Shackled",
@@ -2390,6 +2412,7 @@
 			"Nobody Deserves Shackles",
 			"Debt Slavery Is Ethical",
 			"Fashioned After Tradition",
+			"Scurvy Builds Character",
 			"Sic Vic Pacem",
 			"Cultivate This",
 			"We Demand Self-Governance",
@@ -2397,6 +2420,10 @@
 			"There Is a Character Limit?",
 			"Slave Galley I",
 			"The Memes of Production",
+			"Mine's Bigger",
+			"Liberace",
+			"Orion Drive Enthusiast",
+			"Ship of Theseus LXIXCDXX",
 			"The Unconquered CCXXII"
 			)
 	destination_names = list(
@@ -2410,7 +2437,7 @@
 			"Forward Base Mara Alpha",
 			"a liberation intervention",
 			"a nav bouy within Cygnus Space",
-			"a Elysian only refuel outpost",
+			"an Elysians-only refuel outpost",
 			"to a killer party the Fredperor is holding right now"
 			)
 
@@ -2520,12 +2547,12 @@
 		fyrdsgen--
 
 /datum/lore/organization/gov/teshari
-	name = "Teshari Expeditionary Fleet"
-	short_name = "Teshari Expeditionary"
-	acronym = "TEF"
-	desc = "Though nominally a client state of the skrell, the teshari nevertheless maintain their own navy in the form of the Teshari Expeditionary Fleet. The TEF are as much civil and combat engineers as a competent space force, as they are the tip of the spear when it comes to locating and surveying new worlds suitable for teshari habitation, and in the establishment of full colonies. That isn't to say there aren't independent teshari colonies out there, but those that are founded under the wings of the TEF tend to be the largest and most prosperous. They're also responsible for maintaining the security of these colonies and protecting trade ships. Like the USDF (and unlike most other governmental fleets), TEF vessels almost universally sport the 'TEF' designator rather than specific terms.\
+	name = "Teshari Union"
+	short_name = "Teshari"
+	acronym = "TUV"
+	desc = "Though nominally a client state of the skrell, the Teshari Union nevertheless maintain their own navy of primarily civilian ships. The fleets of the TUV are the primary source of Teshari expansion, and effectively are the nation itself. That isn't to say there aren't independent teshari colonies out there, but those that are founded under the wings of the TUV tend to be the largest and most prosperous. They're also responsible for maintaining the security of these colonies and protecting trade ships, although heavier work is done by their Skrell allies. Like the USDF (and unlike most other governmental fleets), TU vessels almost universally sport the 'TUV' designator rather than specific terms.\
 	<br><br>\
-	The TEF's ships are named after famous teshari pioneers and explorers and the events surrounding those individuals."
+	The TU's ships are named after famous teshari pioneers and explorers and the events surrounding those individuals."
 	history = ""
 	work = "teshari colonization and infrastructure maintenance"
 	headquarters = "Qerr'balak, Qerr'valis"
@@ -2533,18 +2560,18 @@
 	autogenerate_destination_names = TRUE //big list of own holdings to come
 
 	org_type = "government"
-	//the tesh expeditionary fleet's closest analogue in modern terms would be the US Army Corps of Engineers, just with added combat personnel as well
-	ship_prefixes = list("TEF" = "a diplomatic", "TEF" = "a peacekeeping", "TEF" = "an escort", "TEF" = "an exploration", "TEF" = "a survey", "TEF" = "an expeditionary", "TEF" = "a pioneering")
+	//its more or less a civilian fleet of ships that have a few armed ones sprinkled in to deter pirates when needed. They call in the Skrell for anything heavier.
+	ship_prefixes = list("TUV" = "a diplomatic", "TUV" = "a peacekeeping", "TUV" = "an escort", "TUV" = "an exploration", "TUV" = "a survey", "TUV" = "an expeditionary", "TUV" = "a pioneering")
 	//TODO: better ship names? I just took a bunch of random teshnames from the Random Name button and added a word.
 	ship_names = list()
 	destination_names = list(
-			"an Expeditionary Fleet RV point",
-			"an Expeditionary Fleet Resupply Ship",
-			"an Expeditionary Fleet Supply Depot",
+			"an expeditionary fleet RV point",
+			"an expeditionary fleet Resupply Ship",
+			"an expeditionary fleet Supply Depot",
 			"a newly-founded Teshari colony",
 			"a prospective Teshari colony site",
 			"a potential Teshari colony site",
-			"Expeditionary Fleet HQ"
+			"a fleet hub"
 			)
 
 /datum/lore/organization/gov/teshari/New()
@@ -2575,12 +2602,14 @@
 			"Voyage",
 			"Talons",
 			"Fang",
+			"Claw",
 			"Wing",
 			"Pride",
 			"Glory",
 			"Wit",
 			"Insight",
 			"Wisdom",
+			"Foresight",
 			"Mind",
 			"Cry",
 			"Howl",
@@ -2968,13 +2997,17 @@
 			"Crusader",
 			"Maverick",
 			"Nighthawk",
+			"Foxbat",
 			"Redshift",
 			"Challenger",
 			"Starlight",
 			"Sunray",
 			"Ironside",
 			"Holdfast",
-			"Foxhound"
+			"Foxhound",
+			"Zerstorer",
+			"Skyhawk",
+			"Thunderhead"
 			)
 	var/list/numbersone = list(
 			"Zero",

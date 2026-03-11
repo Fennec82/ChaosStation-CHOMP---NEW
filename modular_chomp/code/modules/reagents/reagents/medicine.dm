@@ -5,9 +5,12 @@
 	id = REAGENT_ID_AMORPHOROVIR
 	metabolism = 100 //set high enough that it does not process multiple times(delay implemented below)
 	description = "the bloods DNA in this seems aggressive"
+	scannable = SCANNABLE_BENEFICIAL
 	taste_description = "this shouldn't be here" //unobtainable ingame
 	color = "#7F0000"
 	var/gender_change = null //set the gender variable here so we can set it to others in varients
+	supply_conversion_value = REFINERYEXPORT_VALUE_COMMON
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
 
 /datum/reagent/change_drug/male //inherits base chemical properties listed above
 	name = REAGENT_ANDROROVIR
@@ -61,7 +64,7 @@
 			if (alert(M,"This chemical will change your gender, proceed?", "Warning", "Yes", "No") == "Yes")
 				M.change_gender_identity(gender_change)
 				M.change_gender(gender_change)
-				M << span_warning("You feel like a new person.") //success
+				to_chat(M, span_warning("You feel like a new person."))
 
 //Chemist expansion
 //deathblood
@@ -70,10 +73,14 @@
 	id = REAGENT_ID_CLEANSINGAGENT
 	description = "An agent that purges one's body of toxins."
 	reagent_state = LIQUID
+	scannable = SCANNABLE_ADVANCED
 	color = "#225722"
 	scannable = 1
+	dermal_absorption = 0.2
 	overdose = REAGENTS_OVERDOSE
 	overdose_mod = 0
+	supply_conversion_value = REFINERYEXPORT_VALUE_HIGHREFINED
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
 
 /datum/reagent/cleansingagent/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	var/chem_effective = 1 * M.species.chem_strength_heal
@@ -90,10 +97,14 @@
 	id = REAGENT_ID_PURIFYINGAGENT
 	description = "An agent that purges one's body of rads and toxins."
 	reagent_state = LIQUID
+	scannable = SCANNABLE_BENEFICIAL
 	color = "#225722"
 	scannable = 1
+	dermal_absorption = 0.2
 	overdose = REAGENTS_OVERDOSE
 	overdose_mod = 0
+	supply_conversion_value = REFINERYEXPORT_VALUE_HIGHREFINED
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
 
 /datum/reagent/purifyingagent/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	var/chem_effective = 1 * M.species.chem_strength_heal
@@ -110,19 +121,24 @@
 	id = REAGENT_ID_BURNCARD
 	description = "A more powerful variation of bicard that also burns the subject."
 	taste_description = "bitterness"
+	scannable = SCANNABLE_BENEFICIAL
 	taste_mult = 3
 	reagent_state = LIQUID
 	color = "#BF0000"
-	overdose = REAGENTS_OVERDOSE
+	overdose = REAGENTS_OVERDOSE * 0.2
+	dermal_absorption = 0.2
 	overdose_mod = 1.25
 	scannable = 1
+	supply_conversion_value = REFINERYEXPORT_VALUE_HIGHREFINED
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
 
 /datum/reagent/burncard/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	var/chem_effective = 1 * M.species.chem_strength_heal
 	if(alien == IS_SLIME)
 		chem_effective = 0.75
 	if(alien != IS_DIONA)
-		M.heal_organ_damage(6 * removed * chem_effective * chem_effective, -1 * removed)
+		M.heal_organ_damage(13 * removed * chem_effective, 0)
+		M.adjustFireLoss(1 * removed)
 
 /datum/reagent/burncard/overdose(var/mob/living/carbon/M, var/alien, var/removed)
 	..()
@@ -146,10 +162,14 @@
 	id = REAGENT_ID_FLAMECURE
 	description = "Used to rapidly clot internal hemorrhages by burning the wounded areas"
 	reagent_state = LIQUID
+	scannable = SCANNABLE_BENEFICIAL
 	color = "#4246C7"
 	overdose = REAGENTS_OVERDOSE * 0.5
+	dermal_absorption = 0.2
 	scannable = 1
 	var/repair_strength = 9
+	supply_conversion_value = REFINERYEXPORT_VALUE_HIGHREFINED
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
 
 /datum/reagent/flamecure/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -178,9 +198,13 @@
 	description = "An advancement of kelotane that scars and breaks apart the user's flesh to remove the burnt tissue."
 	taste_description = "bitterness"
 	reagent_state = LIQUID
+	scannable = SCANNABLE_BENEFICIAL
 	color = "#FF6600"
-	overdose = REAGENTS_OVERDOSE
+	overdose = REAGENTS_OVERDOSE * 0.2
+	dermal_absorption = 0.2
 	scannable = 1
+	supply_conversion_value = REFINERYEXPORT_VALUE_HIGHREFINED
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
 
 /datum/reagent/neotane/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	var/chem_effective = 1 * M.species.chem_strength_heal
@@ -188,7 +212,8 @@
 		chem_effective = 0.5
 		M.adjustBruteLoss(3 * removed)
 	if(alien != IS_DIONA)
-		M.heal_organ_damage(-1 * removed, 6 * removed * chem_effective * chem_effective)
+		M.heal_organ_damage(0, 13 * removed * chem_effective)
+		M.adjustBruteLoss(1 * removed)
 
 /datum/reagent/bloodsealer
 	name = REAGENT_BLOODSEALER
@@ -196,9 +221,13 @@
 	description = "A strange chemical that will stablize bloodflow by burning the subject"
 	taste_description = "bitterness"
 	reagent_state = LIQUID
+	scannable = SCANNABLE_BENEFICIAL
+	dermal_absorption = 0.2
 	color = "#00BFFF"
 	overdose = REAGENTS_OVERDOSE
 	scannable = 1
+	supply_conversion_value = REFINERYEXPORT_VALUE_HIGHREFINED
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
 
 /datum/reagent/bloodsealer/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien != IS_DIONA)
@@ -209,18 +238,21 @@
 /datum/reagent/livingagent
 	name = REAGENT_LIVINGAGENT
 	id = REAGENT_ID_LIVINGAGENT
+	scannable = SCANNABLE_BENEFICIAL
 	description = "Fill the body with life, while making it more senstive to stimulus."
 	taste_description = "bitterness"
 	reagent_state = LIQUID
+	dermal_absorption = 0.2
 	color = "#8040FF"
 	scannable = 1
 	overdose = REAGENTS_OVERDOSE * 3
+	supply_conversion_value = REFINERYEXPORT_VALUE_HIGHREFINED
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
 
 /datum/reagent/livingagent/overdose(var/mob/living/carbon/M, var/alien)
 	..()
 	M.druggy = max(M.druggy, 5)
 	M.Confuse(5)
-	//YW ADDITIONS END
 
 /datum/reagent/livingagent/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien != IS_DIONA)
@@ -235,12 +267,16 @@
 /datum/reagent/performancepeaker
 	name = REAGENT_PERFORMANCEPEAKER
 	id = REAGENT_ID_PERFORMANCEPEAKER
-	description = "A chemical created to bring a body to peak condition except it's highly toxic"
+	description = "A chemical created to bring a body to peak condition. Highly toxic"
+	scannable = SCANNABLE_ADVANCED
 	taste_description = "bitterness"
 	reagent_state = LIQUID
 	color = "#006666"
 	scannable = 1
+	dermal_absorption = 0 //This chem is a stronger poison than a benefical chem, with a strength of 15.
 	overdose = REAGENTS_OVERDOSE * 0.5
+	supply_conversion_value = REFINERYEXPORT_VALUE_HIGHREFINED
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
 
 /datum/reagent/performancepeaker/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	M.add_chemical_effect(CE_SPEEDBOOST, 0.5)
@@ -258,12 +294,15 @@
 	description = "An experimental drug that solely works upon dead bodies"
 	taste_description = "ash"
 	reagent_state = LIQUID
+	scannable = SCANNABLE_ADVANCED
 	color = "#666699"
 	scannable = 1
 	overdose = REAGENTS_OVERDOSE * 2
 	affects_dead = TRUE
 	mrate_static = TRUE
 	metabolism = 0.5
+	supply_conversion_value = REFINERYEXPORT_VALUE_HIGHREFINED
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
 
 /datum/reagent/souldew/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	var/chem_effective = 1 * M.species.chem_strength_heal
@@ -277,10 +316,13 @@
 	id = REAGENT_ID_QUADCORD
 	description = "An experimental drug that is meant to further enhance tricord"
 	taste_description = "bitterness"
+	scannable = SCANNABLE_BENEFICIAL
 	reagent_state = LIQUID
 	color = "#FF3399"
 	scannable = 1
 	overdose = REAGENTS_OVERDOSE * 2
+	supply_conversion_value = REFINERYEXPORT_VALUE_HIGHREFINED
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
 /datum/reagent/quadcord/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien != IS_DIONA)
 		var/chem_effective = 1 * M.species.chem_strength_heal
@@ -292,20 +334,7 @@
 		M.adjustBrainLoss(-1 * removed * chem_effective)
 
 //tier 2
-/datum/reagent/juggernog
-	name = REAGENT_JUGGERNOG
-	id = REAGENT_ID_JUGGERNOG
-	description = "An experimental drug that toughens the body to blows and knockdown"
-	taste_description = "bitterness"
-	reagent_state = LIQUID
-	color = "#660066"
-	scannable = 1
-	overdose = REAGENTS_OVERDOSE * 0.25
 
-/datum/reagent/juggernog/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	M.AdjustParalysis(-1)
-	M.AdjustStunned(-1)
-	M.AdjustWeakened(-1)
 
 /datum/reagent/curea
 	name = REAGENT_CUREA
@@ -313,9 +342,13 @@
 	description = "An experimental that removes many ailments, such as poison and stiffening of muscles via frost"
 	taste_description = "bitterness"
 	reagent_state = LIQUID
+	scannable = SCANNABLE_BENEFICIAL
 	color = "#660066"
 	scannable = 1
+	dermal_absorption = 1
 	overdose = REAGENTS_OVERDOSE * 0.5
+	supply_conversion_value = REFINERYEXPORT_VALUE_HIGHREFINED
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
 
 /datum/reagent/curea/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	M.remove_a_modifier_of_type(/datum/modifier/poisoned)
@@ -326,7 +359,11 @@
 	M.remove_a_modifier_of_type(/datum/modifier/grievous_wounds)
 	M.remove_a_modifier_of_type(/datum/modifier/deep_wounds)
 	M.remove_a_modifier_of_type(/datum/modifier/hivebot_weaken)
-	M.remove_a_modifier_of_type(/datum/modifier/fire)
+	M.extinguish_mob()
+	M.remove_a_modifier_of_type(/datum/modifier/berserk_exhaustion)
+	M.remove_a_modifier_of_type(/datum/modifier/entangled)
+	M.remove_a_modifier_of_type(/datum/modifier/wizfire)
+	M.remove_a_modifier_of_type(/datum/modifier/wizpoison)
 
 //tier 3
 /datum/reagent/modapplying/liquidhealer
@@ -335,11 +372,14 @@
 	description = "An experimental drug that mimics rapid regeneration seen in squishy creatures."
 	taste_description = "sweet"
 	reagent_state = LIQUID
+	scannable = SCANNABLE_BENEFICIAL
 	color = "#00CCFF"
 	scannable = 1
 	overdose = REAGENTS_OVERDOSE * 0.5
 	modifier_to_add = /datum/modifier/liquidhealer
 	modifier_duration = 3 SECONDS
+	supply_conversion_value = REFINERYEXPORT_VALUE_HIGHREFINED
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
 
 /datum/modifier/liquidhealer
 	name = REAGENT_ID_LIQUIDHEALER
@@ -368,29 +408,23 @@
 	holder.adjustCloneLoss(-1)
 
 
-/datum/reagent/phoenixbreath
+/datum/reagent/modapplying/phoenixbreath
 	name = REAGENT_PHOENIXBREATH
 	id = REAGENT_ID_PHOENIXBREATH
-	description = "An improvement on the original soul dew chemical"
+	description = "An experimental chem that will bring those back from the brink, with severe side effects"
 	taste_description = "ash"
 	reagent_state = LIQUID
-	color = "#FFFFFF"
+	scannable = SCANNABLE_BENEFICIAL
+	color = "#fcac00"
 	scannable = 1
 	overdose = REAGENTS_OVERDOSE
-	affects_dead = TRUE
 	mrate_static = TRUE
-	metabolism = 0.5
+	metabolism = 0.1
+	supply_conversion_value = REFINERYEXPORT_VALUE_HIGHREFINED
+	industrial_use = REFINERYEXPORT_REASON_MEDSCI
+	modifier_to_add = /datum/modifier/life_cloak
+	modifier_duration = 3 SECONDS
 
-/datum/reagent/phoenixbreath/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	var/chem_effective = 1 * M.species.chem_strength_heal
-	if(M.stat == DEAD)
-		M.adjustOxyLoss(-3 * removed * chem_effective)
-		M.heal_organ_damage(4 * removed * chem_effective, 4 * removed * chem_effective)
-		M.adjustToxLoss(-3 * removed * chem_effective)
-	M.adjustOxyLoss(-2 * removed * chem_effective)
-	M.heal_organ_damage(4 * removed * chem_effective, 4 * removed * chem_effective)
-	M.adjustToxLoss(-2 * removed * chem_effective)
-	M.add_chemical_effect(CE_PAINKILLER, 10 * M.species.chem_strength_pain)
 
 /datum/reagent/dryagent
 	name = REAGENT_DRYAGENT
@@ -398,9 +432,12 @@
 	description = "A desiccant. Can be used to dry things."
 	taste_description = "dryness"
 	reagent_state = LIQUID
+	scannable = SCANNABLE_ADVANCED
 	color = "#A70FFF"
 	scannable = 1
 	overdose = REAGENTS_OVERDOSE
+	supply_conversion_value = REFINERYEXPORT_VALUE_PROCESSED
+	industrial_use = REFINERYEXPORT_REASON_INDUSTRY
 
 /datum/reagent/dryagent/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	var/chem_effective = 1 * M.species.chem_strength_heal

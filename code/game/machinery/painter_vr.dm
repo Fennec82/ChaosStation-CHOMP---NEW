@@ -29,7 +29,8 @@
 		/obj/item/clothing,
 		/obj/item/storage/backpack,
 		/obj/item/storage/belt,
-		/obj/item/toy
+		/obj/item/toy,
+		/obj/item/stack/material
 	)
 
 /obj/machinery/gear_painter/Initialize(mapload)
@@ -68,6 +69,8 @@
 		return
 
 	if(is_type_in_list(I, allowed_types) && !inoperable())
+		if(istype(I,/obj/item/stack/material/cyborg)) //Needs an exception for borg materials to avoid glitches.
+			return
 		user.visible_message(span_notice("[user] inserts \the [I] into the Color Mate receptable."))
 		user.drop_from_inventory(I)
 		I.forceMove(src)
@@ -81,12 +84,6 @@
 	if(..())
 		return
 	tgui_interact(user)
-
-/obj/machinery/gear_painter/tgui_interact(mob/user, datum/tgui/ui)
-	ui = SStgui.try_update_ui(user, src, ui)
-	if(!ui)
-		ui = new(user, src, "ColorMate", name)
-		ui.open()
 
 /obj/machinery/gear_painter/proc/insert_mob(mob/victim, mob/user)
 	if(inserted)
@@ -104,7 +101,7 @@
 // 		inserted = null
 // 	return ..()
 
-/obj/machinery/gear_painter/AltClick(mob/user)
+/obj/machinery/gear_painter/click_alt(mob/user)
 	. = ..()
 	drop_item(user)
 
@@ -151,12 +148,13 @@
 	if(temp)
 		.["temp"] = temp
 	if(inserted)
-		.["item"] = list()
-		.["item"]["name"] = inserted.name
-		.["item"]["sprite"] = icon2base64(get_flat_icon(inserted,dir=SOUTH,no_anim=TRUE))
-		.["item"]["preview"] = icon2base64(build_preview(user))
+		.["item_name"] = inserted.name
+		.["item_sprite"] = icon2base64(get_flat_icon(inserted,dir=SOUTH,no_anim=TRUE))
+		.["item_preview"] = icon2base64(build_preview(user))
 	else
-		.["item"] = null
+		.["item_name"] = null
+		.["item_sprite"] = null
+		.["item_preview"] = null
 
 /obj/machinery/gear_painter/tgui_act(action, params, datum/tgui/ui)
 	. = ..()
@@ -173,7 +171,8 @@
 					activecolor = chosen_color
 				return TRUE
 			if("paint")
-				do_paint(ui.user)
+				if(!do_paint(ui.user))
+					return TRUE
 				temp = "Painted Successfully!"
 				return TRUE
 			if("drop")
@@ -214,7 +213,7 @@
 	switch(active_mode)
 		if(COLORMATE_TINT)
 			color_to_use = activecolor
-		if(COLORMATE_MATRIX)
+		if(COLORMATE_MATRIX, COLORMATE_MATRIX_AUTO)
 			color_to_use = rgb_construct_color_matrix(
 				text2num(color_matrix_last[1]),
 				text2num(color_matrix_last[2]),
@@ -233,7 +232,7 @@
 			color_to_use = color_matrix_hsv(build_hue, build_sat, build_val)
 			color_matrix_last = color_to_use
 	if(!color_to_use || !check_valid_color(color_to_use, user))
-		to_chat(user, span_notice("Invalid color."))
+		temp = "Invalid color!"
 		return FALSE
 	inserted.add_atom_colour(color_to_use, FIXED_COLOUR_PRIORITY)
 	playsound(src, 'sound/effects/spray3.ogg', 50, 1)
@@ -245,7 +244,7 @@
 	if(inserted) //sanity
 		var/list/cm
 		switch(active_mode)
-			if(COLORMATE_MATRIX)
+			if(COLORMATE_MATRIX, COLORMATE_MATRIX_AUTO)
 				cm = rgb_construct_color_matrix(
 					text2num(color_matrix_last[1]),
 					text2num(color_matrix_last[2]),

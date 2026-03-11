@@ -43,8 +43,8 @@
 	icon_state = "atmos_extinguisher0"
 	item_state = "atmos_extinguisher"
 	throwforce = 12
+	force = 12
 	w_class = ITEMSIZE_LARGE
-	force = 3.0
 	max_water = 600
 	spray_particles = 3
 	sprite_name = "atmos_extinguisher"
@@ -63,7 +63,10 @@
 	if(get_dist(user, src) == 0)
 		. += "[src] has [src.reagents.total_volume] units of foam left!"
 
-/obj/item/extinguisher/attack_self(mob/user as mob)
+/obj/item/extinguisher/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	safety = !safety
 	icon_state = "[sprite_name][!safety]"
 	desc = "The safety is [safety ? "on" : "off"]."

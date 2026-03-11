@@ -13,7 +13,7 @@
 	// Looping through the player list has the added bonus of working for mobs inside containers
 	var/sound/S = sound(get_sfx(soundin))
 	var/maxdistance = (world.view + extrarange) * 2  //VOREStation Edit - 3 to 2
-	var/list/listeners = player_list.Copy()
+	var/list/listeners = GLOB.player_list.Copy()
 	for(var/mob/M as anything in listeners)
 		if(!M || !M.client)
 			continue
@@ -119,7 +119,7 @@
 
 /proc/sound_to_playing_players(sound, volume = 100, vary)
 	sound = get_sfx(sound)
-	for(var/M in player_list)
+	for(var/M in GLOB.player_list)
 		if(ismob(M) && !isnewplayer(M))
 			var/mob/MO = M
 			MO.playsound_local(get_turf(MO), sound, volume, vary, pressure_affected = FALSE)
@@ -136,7 +136,7 @@
 	return rand(32000, 55000) //Frequency stuff only works with 45kbps oggs.
 
 /client/proc/playtitlemusic()
-	if(!ticker || !SSmedia_tracks.lobby_tracks.len || !media)	return
+	if(!SSticker || !SSmedia_tracks.lobby_tracks.len || !media)	return
 	if(prefs?.read_preference(/datum/preference/toggle/play_lobby_music))
 		var/datum/track/T = pick(SSmedia_tracks.lobby_tracks)
 		media.push_music(T.url, world.time, 0.35)
@@ -315,25 +315,11 @@ GLOBAL_LIST_INIT(bodyfall_sound, list('sound/effects/bodyfall1.ogg','sound/effec
 GLOBAL_LIST_INIT(teppi_sound, list('sound/voice/teppi/gyooh1.ogg', 'sound/voice/teppi/gyooh2.ogg', 'sound/voice/teppi/gyooh3.ogg',  'sound/voice/teppi/gyooh4.ogg', 'sound/voice/teppi/gyooh5.ogg', 'sound/voice/teppi/gyooh6.ogg', 'sound/voice/teppi/snoot1.ogg', 'sound/voice/teppi/snoot2.ogg'))
 GLOBAL_LIST_INIT(talk_sound, list('sound/talksounds/a.ogg','sound/talksounds/b.ogg','sound/talksounds/c.ogg','sound/talksounds/d.ogg','sound/talksounds/e.ogg','sound/talksounds/f.ogg','sound/talksounds/g.ogg','sound/talksounds/h.ogg'))
 GLOBAL_LIST_INIT(emote_sound, list('sound/talksounds/me_a.ogg','sound/talksounds/me_b.ogg','sound/talksounds/me_c.ogg','sound/talksounds/me_d.ogg','sound/talksounds/me_e.ogg','sound/talksounds/me_f.ogg'))
-GLOBAL_LIST_INIT(goon_speak_one_sound, list('sound/talksounds/goon/speak_1.ogg', 'sound/talksounds/goon/speak_1_ask.ogg', 'sound/talksounds/goon/speak_1_exclaim.ogg'))
-GLOBAL_LIST_INIT(goon_speak_two_sound, list('sound/talksounds/goon/speak_2.ogg', 'sound/talksounds/goon/speak_2_ask.ogg', 'sound/talksounds/goon/speak_2_exclaim.ogg'))
-GLOBAL_LIST_INIT(goon_speak_three_sound, list('sound/talksounds/goon/speak_3.ogg', 'sound/talksounds/goon/speak_3_ask.ogg', 'sound/talksounds/goon/speak_3_exclaim.ogg'))
-GLOBAL_LIST_INIT(goon_speak_four_sound, list('sound/talksounds/goon/speak_4.ogg', 'sound/talksounds/goon/speak_4_ask.ogg', 'sound/talksounds/goon/speak_4_exclaim.ogg'))
-GLOBAL_LIST_INIT(goon_speak_blub_sound, list('sound/talksounds/goon/blub.ogg', 'sound/talksounds/goon/blub_ask.ogg', 'sound/talksounds/goon/blub_exclaim.ogg'))
-GLOBAL_LIST_INIT(goon_speak_bottalk_sound, list('sound/talksounds/goon/bottalk_1.ogg', 'sound/talksounds/goon/bottalk_2.ogg', 'sound/talksounds/goon/bottalk_3.ogg', 'sound/talksounds/goon/bottalk_4.wav'))
-GLOBAL_LIST_INIT(goon_speak_buwoo_sound, list('sound/talksounds/goon/buwoo.ogg', 'sound/talksounds/goon/buwoo_ask.ogg', 'sound/talksounds/goon/buwoo_exclaim.ogg'))
-GLOBAL_LIST_INIT(goon_speak_cow_sound, list('sound/talksounds/goon/cow.ogg', 'sound/talksounds/goon/cow_ask.ogg', 'sound/talksounds/goon/cow_exclaim.ogg'))
-GLOBAL_LIST_INIT(goon_speak_lizard_sound, list('sound/talksounds/goon/lizard.ogg', 'sound/talksounds/goon/lizard_ask.ogg', 'sound/talksounds/goon/lizard_exclaim.ogg'))
-GLOBAL_LIST_INIT(goon_speak_pug_sound, list('sound/talksounds/goon/pug.ogg', 'sound/talksounds/goon/pug_ask.ogg', 'sound/talksounds/goon/pug_exclaim.ogg'))
-GLOBAL_LIST_INIT(goon_speak_pugg_sound, list('sound/talksounds/goon/pugg.ogg', 'sound/talksounds/goon/pugg_ask.ogg', 'sound/talksounds/goon/pugg_exclaim.ogg'))
-GLOBAL_LIST_INIT(goon_speak_roach_sound, list('sound/talksounds/goon/roach.ogg', 'sound/talksounds/goon/roach_ask.ogg', 'sound/talksounds/goon/roach_exclaim.ogg'))
-GLOBAL_LIST_INIT(goon_speak_skelly_sound, list('sound/talksounds/goon/skelly.ogg', 'sound/talksounds/goon/skelly_ask.ogg', 'sound/talksounds/goon/skelly_exclaim.ogg'))
 
 GLOBAL_LIST_INIT(wf_speak_lure_sound, list ('sound/talksounds/wf/lure_1.ogg', 'sound/talksounds/wf/lure_2.ogg', 'sound/talksounds/wf/lure_3.ogg', 'sound/talksounds/wf/lure_4.ogg', 'sound/talksounds/wf/lure_5.ogg'))
 GLOBAL_LIST_INIT(wf_speak_lyst_sound, list ('sound/talksounds/wf/lyst_1.ogg', 'sound/talksounds/wf/lyst_2.ogg', 'sound/talksounds/wf/lyst_3.ogg', 'sound/talksounds/wf/lyst_4.ogg', 'sound/talksounds/wf/lyst_5.ogg', 'sound/talksounds/wf/lyst_6.ogg'))
 GLOBAL_LIST_INIT(wf_speak_void_sound, list ('sound/talksounds/wf/void_1.ogg', 'sound/talksounds/wf/void_2.ogg', 'sound/talksounds/wf/void_3.ogg'))
 GLOBAL_LIST_INIT(wf_speak_vomva_sound, list ('sound/talksounds/wf/vomva_1.ogg', 'sound/talksounds/wf/vomva_2.ogg', 'sound/talksounds/wf/vomva_3.ogg', 'sound/talksounds/wf/vomva_4.ogg'))
-GLOBAL_LIST_INIT(xeno_speak_sound, list('sound/talksounds/xeno/xenotalk.ogg', 'sound/talksounds/xeno/xenotalk2.ogg', 'sound/talksounds/xeno/xenotalk3.ogg'))
 
 #define canine_sounds list("cough" = null, "sneeze" = null, "scream" = list('sound/voice/scream/canine/wolf_scream.ogg', 'sound/voice/scream/canine/wolf_scream2.ogg', 'sound/voice/scream/canine/wolf_scream3.ogg', 'sound/voice/scream/canine/wolf_scream4.ogg', 'sound/voice/scream/canine/wolf_scream5.ogg', 'sound/voice/scream/canine/wolf_scream6.ogg'), "pain" = list('sound/voice/pain/canine/wolf_pain.ogg', 'sound/voice/pain/canine/wolf_pain2.ogg', 'sound/voice/pain/canine/wolf_pain3.ogg', 'sound/voice/pain/canine/wolf_pain4.ogg'), "gasp" = list('sound/voice/gasp/canine/wolf_gasp.ogg'), "death" = list('sound/voice/death/canine/wolf_death1.ogg', 'sound/voice/death/canine/wolf_death2.ogg', 'sound/voice/death/canine/wolf_death3.ogg', 'sound/voice/death/canine/wolf_death4.ogg', 'sound/voice/death/canine/wolf_death5.ogg'))
 #define feline_sounds list("cough" = null, "sneeze" = null, "scream" = list('sound/voice/scream/feline/feline_scream.ogg'), "pain" = list('sound/voice/pain/feline/feline_pain.ogg'), "gasp" = list('sound/voice/gasp/feline/feline_gasp.ogg'), "death" = list('sound/voice/death/feline/feline_death.ogg'))
@@ -387,7 +373,7 @@ GLOBAL_LIST_INIT(xeno_speak_sound, list('sound/talksounds/xeno/xenotalk.ogg', 's
 // var/list/species_sounds = list()
 
 // Global list containing all of our sound options.
-var/list/species_sound_map = list(
+GLOBAL_LIST_INIT(species_sound_map, list(
 	"Canine" = canine_sounds,
 	"Cervine" = cervine_sounds,
 	"Feline" = feline_sounds,
@@ -406,14 +392,7 @@ var/list/species_sound_map = list(
 	"Xeno" = xeno_sounds,
 	"None" = no_sounds,
 	"Unset" = use_default
-)
-
-/* // Not sure we even really need this
-/hook/startup/proc/Init_species_sounds() // The entries we're checking over MUST have unique keys.
-	for(var/i in species_sound_map)
-		species_sounds |= species_sound_map[i]
-	return 1
-*/
+))
 
 /*
  * Call this for when you need a sound from an already-identified list - IE, "Canine". pick() cannot parse procs.
@@ -427,9 +406,9 @@ var/list/species_sound_map = list(
  * get_species_sound(H.species.species_sounds_male)["emote"] // If we're male, and want an emote sound gendered correctly.
 */
 /proc/get_species_sound(var/sounds)
-	if(!islist(species_sound_map[sounds])) // We check here if this list actually has anything in it, or if we're about to return a null index
+	if(!islist(GLOB.species_sound_map[sounds])) // We check here if this list actually has anything in it, or if we're about to return a null index
 		return null // Shitty failsafe but better than rewriting an entire litany of procs rn when I'm low on time - Rykka // list('sound/voice/silence.ogg')
-	return species_sound_map[sounds] // Otherwise, successfully return our sound
+	return GLOB.species_sound_map[sounds] // Otherwise, successfully return our sound
 
 /*
  * The following helper proc will select a species' default sounds - useful for if we're set to "Unset"
@@ -441,10 +420,11 @@ var/list/species_sound_map = list(
 	if(valid.selects_bodytype == (SELECTS_BODYTYPE_CUSTOM || SELECTS_BODYTYPE_SHAPESHIFTER)) // Custom species or xenochimera handling here
 		valid = coalesce(GLOB.all_species[pref.custom_base], GLOB.all_species[pref.species])
 	// Now we start getting our sounds.
+	var/id_gender = pref.read_preference(/datum/preference/choiced/gender/identifying)
 	if(valid.gender_specific_species_sounds) // Do we have gender-specific sounds?
-		if(pref.identifying_gender == FEMALE && valid.species_sounds_female)
+		if(id_gender == FEMALE && valid.species_sounds_female)
 			return valid.species_sounds_female
-		else if(pref.identifying_gender == MALE && valid.species_sounds_male)
+		else if(id_gender == MALE && valid.species_sounds_male)
 			return valid.species_sounds_male
 		else // Failsafe. Update if there's ever gendered sounds for HERM/Neuter/etc
 			return valid.species_sounds

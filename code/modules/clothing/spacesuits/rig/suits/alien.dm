@@ -9,20 +9,14 @@
 	desc = "A cheap NT knock-off of an Unathi battle-rig. Uses softer, but lighter, armour plating, producing a still-useful suit"
 	suit_type = "\improper NT breacher"
 	icon_state = "breacher_rig_cheap"
-	armor = list(melee = 60, bullet = 60, laser = 60, energy = 60, bomb = 70, bio = 100, rad = 50)
+	armor = list(melee = 60, bullet = 45, laser = 45, energy = 10, bomb = 50, bio = 100, rad = 20)
 	emp_protection = -20
 	slowdown = 3  //This is too much, reducing from 6 to 3.  May edit again in the future.
 	offline_slowdown = 5
 	vision_restriction = 0  //This is dumb as hell and should be 0 if we want the suit to be even vaguely useful.
 	offline_vision_restriction = 2 //This actually serves as a good weakness for them, making them vulnerable to Ion weapons.
 	siemens_coefficient = 0.75
-	allowed = list(
-		/obj/item/gun,
-		/obj/item/flashlight,
-		/obj/item/tank,
-		/obj/item/suit_cooling_unit,
-		/obj/item/storage
-		)
+	allowed = list(POCKET_GENERIC, POCKET_EMERGENCY, POCKET_ALL_TANKS, POCKET_SUIT_REGULATORS, POCKET_STORAGE) //CHOMPedit end
 	chest_type = /obj/item/clothing/suit/space/rig/breacher
 	helm_type = /obj/item/clothing/head/helmet/space/rig/breacher
 	boot_type = /obj/item/clothing/shoes/magboots/rig/breacher
@@ -32,7 +26,7 @@
 	desc = "An authentic Unathi breacher chassis. Huge, bulky and absurdly heavy. It must be like wearing a tank."
 	suit_type = "breacher chassis"
 	icon_state = "breacher_rig"
-	armor = list(melee = 90, bullet = 90, laser = 90, energy = 90, bomb = 90, bio = 100, rad = 80) //Takes TEN TIMES as much damage to stop someone in a breacher. In exchange, it's slow.
+	armor = list(melee = 85, bullet = 80, laser = 80, energy = 40, bomb = 80, bio = 100, rad = 60) //Still a tank just not indestructable
 	vision_restriction = 0
 	siemens_coefficient = 0.2
 	slowdown = 6
@@ -64,7 +58,7 @@
 	item_flags = THICKMATERIAL
 	siemens_coefficient = 0.2
 	offline_slowdown = 2.5
-	allowed = list(POCKET_GENERIC, POCKET_EXPLO, POCKET_SUIT_REGULATORS, POCKET_ALL_TANKS, POCKET_STORAGE)
+	allowed = list(POCKET_GENERIC, POCKET_EMERGENCY, POCKET_ALL_TANKS, POCKET_SUIT_REGULATORS, POCKET_EXPLO, POCKET_BAYSUIT)
 
 	air_type = /obj/item/tank/vox
 
@@ -101,7 +95,7 @@
 	armor = list(melee = 60, bullet = 50, laser = 40, energy = 15, bomb = 30, bio = 100, rad = 50)
 	emp_protection = 40 //change this to 30 if too high.
 
-	req_access = list(access_syndicate)
+	req_access = list(ACCESS_SYNDICATE)
 
 	cell_type =  /obj/item/cell/hyper
 
@@ -121,7 +115,7 @@
 	armor = list(melee = 40, bullet = 30, laser = 30, energy = 15, bomb = 30, bio = 100, rad = 50)
 	emp_protection = 40 //change this to 30 if too high.
 
-	req_access = list(access_syndicate)
+	req_access = list(ACCESS_SYNDICATE)
 
 	cell_type =  /obj/item/cell/hyper
 

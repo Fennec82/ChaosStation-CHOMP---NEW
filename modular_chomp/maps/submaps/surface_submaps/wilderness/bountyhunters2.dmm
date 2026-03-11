@@ -1,14 +1,20 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aa" = (
+/obj/effect/floor_decal/corner/grey/diagonal,
+/turf/simulated/floor/concrete/turfpack/sif,
+/area/submap/BountyHunters)
+"ab" = (
+/obj/structure/cable/green{
+	icon_state = "0-8"
+	},
+/obj/effect/floor_decal/corner/grey/diagonal,
+/turf/simulated/floor/concrete/turfpack/sif,
+/area/submap/BountyHunters)
 "aB" = (
 /obj/structure/table/steel,
 /obj/machinery/recharger,
 /obj/effect/floor_decal/corner/grey/diagonal,
 /obj/random/material/precious,
-/turf/simulated/floor/concrete,
-/area/submap/BountyHunters)
-"aF" = (
-/obj/effect/floor_decal/corner/grey/diagonal,
-/obj/effect/map_helper/no_phaseshift/area,
 /turf/simulated/floor/concrete,
 /area/submap/BountyHunters)
 "be" = (
@@ -24,7 +30,7 @@
 	dir = 8
 	},
 /obj/effect/floor_decal/corner/grey/diagonal,
-/turf/simulated/floor/concrete,
+/turf/simulated/floor/concrete/turfpack/sif,
 /area/submap/BountyHunters)
 "cI" = (
 /obj/machinery/light/small{
@@ -39,13 +45,13 @@
 	},
 /obj/machinery/power/port_gen/pacman,
 /obj/effect/floor_decal/corner/grey/diagonal,
-/turf/simulated/floor/concrete,
+/turf/simulated/floor/concrete/turfpack/sif,
 /area/submap/BountyHunters)
 "dI" = (
 /obj/effect/floor_decal/industrial/warning{
 	dir = 4
 	},
-/turf/simulated/floor/outdoors/dirt,
+/turf/simulated/floor/outdoors/dirt/turfpack/sif,
 /area/submap/BountyHunters)
 "eH" = (
 /obj/structure/table/steel,
@@ -195,7 +201,7 @@
 /obj/effect/floor_decal/industrial/warning{
 	dir = 6
 	},
-/turf/simulated/floor/outdoors/dirt,
+/turf/simulated/floor/outdoors/dirt/turfpack/sif,
 /area/submap/BountyHunters)
 "tE" = (
 /obj/effect/floor_decal/corner/grey/diagonal,
@@ -203,8 +209,8 @@
 /turf/simulated/floor/concrete,
 /area/submap/BountyHunters)
 "tM" = (
-/mob/living/simple_mob/humanoid/eclipse/solar/snipertesh,
 /obj/effect/floor_decal/corner/grey/diagonal,
+/mob/living/simple_mob/humanoid/astral_collective/ranged/zaddat,
 /turf/simulated/floor/concrete,
 /area/submap/BountyHunters)
 "uh" = (
@@ -237,7 +243,7 @@
 "xt" = (
 /obj/structure/railing,
 /obj/effect/floor_decal/corner/grey/diagonal,
-/turf/simulated/floor/concrete,
+/turf/simulated/floor/concrete/turfpack/sif,
 /area/submap/BountyHunters)
 "yz" = (
 /obj/structure/table/steel,
@@ -256,7 +262,7 @@
 	icon_state = "0-8"
 	},
 /obj/effect/floor_decal/corner/grey/diagonal,
-/turf/simulated/floor/concrete,
+/turf/simulated/floor/concrete/turfpack/sif,
 /area/submap/BountyHunters)
 "zM" = (
 /obj/machinery/button/remote/blast_door{
@@ -281,8 +287,8 @@
 /turf/simulated/floor/concrete,
 /area/submap/BountyHunters)
 "DA" = (
-/mob/living/simple_mob/humanoid/eclipse/lunar/bulletstorm,
 /obj/effect/floor_decal/corner/grey/diagonal,
+/mob/living/simple_mob/humanoid/astral_collective/purity,
 /turf/simulated/floor/concrete,
 /area/submap/BountyHunters)
 "Ej" = (
@@ -296,7 +302,7 @@
 /obj/effect/floor_decal/industrial/warning{
 	dir = 9
 	},
-/turf/simulated/floor/outdoors/dirt,
+/turf/simulated/floor/outdoors/dirt/turfpack/sif,
 /area/submap/BountyHunters)
 "Gz" = (
 /obj/structure/grille,
@@ -317,7 +323,7 @@
 /area/submap/BountyHunters)
 "Hj" = (
 /obj/effect/floor_decal/industrial/warning,
-/turf/simulated/floor/outdoors/dirt,
+/turf/simulated/floor/outdoors/dirt/turfpack/sif,
 /area/submap/BountyHunters)
 "HF" = (
 /obj/machinery/door/blast/regular{
@@ -332,7 +338,7 @@
 	icon_state = "1-8"
 	},
 /obj/effect/floor_decal/corner/grey/diagonal,
-/turf/simulated/floor/concrete,
+/turf/simulated/floor/concrete/turfpack/sif,
 /area/submap/BountyHunters)
 "IW" = (
 /obj/machinery/power/terminal{
@@ -343,7 +349,7 @@
 	icon_state = "0-4"
 	},
 /obj/effect/floor_decal/corner/grey/diagonal,
-/turf/simulated/floor/concrete,
+/turf/simulated/floor/concrete/turfpack/sif,
 /area/submap/BountyHunters)
 "Jn" = (
 /obj/structure/railing,
@@ -351,13 +357,13 @@
 	dir = 4
 	},
 /obj/effect/floor_decal/corner/grey/diagonal,
-/turf/simulated/floor/concrete,
+/turf/simulated/floor/concrete/turfpack/sif,
 /area/submap/BountyHunters)
 "Kq" = (
 /obj/effect/floor_decal/industrial/warning{
 	dir = 8
 	},
-/turf/simulated/floor/outdoors/dirt,
+/turf/simulated/floor/outdoors/dirt/turfpack/sif,
 /area/submap/BountyHunters)
 "Ly" = (
 /obj/structure/grille,
@@ -377,7 +383,7 @@
 /obj/effect/floor_decal/industrial/warning{
 	dir = 10
 	},
-/turf/simulated/floor/outdoors/dirt,
+/turf/simulated/floor/outdoors/dirt/turfpack/sif,
 /area/submap/BountyHunters)
 "Nt" = (
 /obj/machinery/light/small{
@@ -393,7 +399,7 @@
 /obj/effect/floor_decal/industrial/warning{
 	dir = 5
 	},
-/turf/simulated/floor/outdoors/dirt,
+/turf/simulated/floor/outdoors/dirt/turfpack/sif,
 /area/submap/BountyHunters)
 "Pr" = (
 /obj/structure/table/steel,
@@ -416,13 +422,13 @@
 	icon_state = "4-8"
 	},
 /obj/effect/floor_decal/corner/grey/diagonal,
-/turf/simulated/floor/concrete,
+/turf/simulated/floor/concrete/turfpack/sif,
 /area/submap/BountyHunters)
 "Re" = (
 /obj/effect/floor_decal/industrial/warning{
 	dir = 1
 	},
-/turf/simulated/floor/outdoors/dirt,
+/turf/simulated/floor/outdoors/dirt/turfpack/sif,
 /area/submap/BountyHunters)
 "SL" = (
 /obj/structure/table/sifwoodentable,
@@ -438,7 +444,7 @@
 /area/submap/BountyHunters)
 "Us" = (
 /obj/machinery/light/small,
-/turf/simulated/floor/outdoors/dirt,
+/turf/simulated/floor/outdoors/dirt/turfpack/sif,
 /area/submap/BountyHunters)
 "VQ" = (
 /obj/structure/grille,
@@ -458,7 +464,7 @@
 /turf/simulated/floor/concrete,
 /area/submap/BountyHunters)
 "Wj" = (
-/turf/simulated/floor/outdoors/dirt,
+/turf/simulated/floor/outdoors/dirt/turfpack/sif,
 /area/submap/BountyHunters)
 "WC" = (
 /obj/machinery/light/small,
@@ -474,7 +480,7 @@
 	name = "bounty sniper"
 	},
 /obj/effect/floor_decal/corner/grey/diagonal,
-/turf/simulated/floor/concrete,
+/turf/simulated/floor/concrete/turfpack/sif,
 /area/submap/BountyHunters)
 "Yz" = (
 /obj/item/bedsheet/purple,
@@ -620,9 +626,9 @@ mf
 Nt
 rC
 eY
-rC
-rC
-rC
+aa
+aa
+aa
 mf
 PK
 PK
@@ -647,9 +653,9 @@ fY
 rC
 rC
 mf
-rC
-rC
-rC
+aa
+aa
+aa
 bw
 PK
 PK
@@ -676,7 +682,7 @@ rC
 mf
 PN
 IW
-rC
+aa
 xt
 PK
 PK
@@ -701,9 +707,9 @@ VQ
 rC
 WC
 mf
-zu
+ab
 WF
-rC
+aa
 xt
 PK
 PK
@@ -730,7 +736,7 @@ rC
 mf
 db
 Ii
-rC
+aa
 Jn
 PK
 PK
@@ -833,7 +839,7 @@ rC
 rC
 rC
 be
-aF
+rC
 rC
 rC
 eY
@@ -946,7 +952,7 @@ rC
 mf
 PN
 IW
-rC
+aa
 bw
 PK
 PK
@@ -973,7 +979,7 @@ WC
 mf
 zu
 WF
-rC
+aa
 xt
 PK
 PK
@@ -1000,7 +1006,7 @@ rC
 mf
 db
 Ii
-rC
+aa
 xt
 PK
 PK
@@ -1025,9 +1031,9 @@ Gz
 rC
 rC
 mf
-rC
-rC
-rC
+aa
+aa
+aa
 Jn
 PK
 PK
@@ -1052,9 +1058,9 @@ mf
 cI
 tE
 eY
-rC
-rC
-rC
+aa
+aa
+aa
 mf
 PK
 PK

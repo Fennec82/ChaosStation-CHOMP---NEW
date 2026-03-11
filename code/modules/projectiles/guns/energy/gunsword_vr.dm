@@ -7,12 +7,12 @@
 
 	icon_override = 'icons/vore/custom_guns_vr.dmi'
 	item_state = "gbuster"
-	item_icons = list(slot_r_hand_str = 'icons/vore/custom_guns_vr.dmi', slot_l_hand_str = 'icons/vore/custom_guns_vr.dmi', "slot_belt" = 'icons/inventory/belt/mob_vr.dmi')
+	item_icons = list(slot_r_hand_str = 'icons/vore/custom_guns_vr.dmi', slot_l_hand_str = 'icons/vore/custom_guns_vr.dmi', "slot_belt" = 'icons/inventory/belt/mob.dmi')
 
 	w_class = ITEMSIZE_NORMAL
 	origin_tech = list(TECH_COMBAT = 8, TECH_MATERIAL = 4)
 	projectile_type = /obj/item/projectile/beam/stun
-	fire_sound = 'sound/weapons/Taser.ogg'
+	fire_sound = 'sound/weapons/taser.ogg'
 	charge_meter = 1
 
 	cell_type = /obj/item/cell/device/weapon/gunsword
@@ -20,7 +20,7 @@
 	modifystate = "gbuster"
 
 	firemodes = list(
-	list(mode_name="stun", charge_cost=240,projectile_type=/obj/item/projectile/beam/stun, modifystate="gbuster", fire_sound='sound/weapons/Taser.ogg'),
+	list(mode_name="stun", charge_cost=240,projectile_type=/obj/item/projectile/beam/stun, modifystate="gbuster", fire_sound='sound/weapons/taser.ogg'),
 	list(mode_name="lethal", charge_cost=480,projectile_type=/obj/item/projectile/beam/imperial, modifystate="gbuster", fire_sound='sound/weapons/mandalorian.ogg'),
 	)
 
@@ -95,11 +95,13 @@
 	attack_verb = null
 
 
-/obj/item/cell/device/weapon/gunsword/attack_self(mob/living/user as mob)
-	var/datum/gender/TU = GLOB.gender_datums[user.get_visible_gender()]
+/obj/item/cell/device/weapon/gunsword/attack_self(mob/living/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if (active)
-		if ((CLUMSY in user.mutations) && prob(50))
-			user.visible_message(span_danger("\The [user] accidentally cuts [TU.himself] with \the [src]."),\
+		if (CLUMSY_HARM_CHANCE(user))
+			user.visible_message(span_danger("\The [user] accidentally cuts [user.p_themselves()] with \the [src]."),\
 			span_danger("You accidentally cut yourself with \the [src]."))
 			user.take_organ_damage(5,5)
 		deactivate(user)

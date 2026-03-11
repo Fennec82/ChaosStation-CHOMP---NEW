@@ -1,3 +1,18 @@
+GLOBAL_LIST_INIT(succubus_safewords, list(
+	"pineapple",
+	"red",
+	"snuggletime",
+	"bad touch",
+	"hyperdodecahedron",
+	"sriracha",
+	"alright bingle",
+	"abracadabra",
+	"bicycle",
+	"submarine",
+	"avacado",
+	"safe word",
+))
+
 /mob/living/simple_mob/vore/succubus
 	name = "succubus"
 	desc = "She's giving you the 'come hither' look."
@@ -28,11 +43,13 @@
 		"succubusbobclothed",
 		"succubusgingerclothed"
 	)
+	var/safeword
 
 	faction = FACTION_SUCCUBUS
 
 /mob/living/simple_mob/vore/succubus/Initialize(mapload)
 	. = ..()
+	safeword = pick(GLOB.succubus_safewords)
 	if(random_skin)
 		icon_living = pick(skins)
 		icon_rest = "[icon_living]asleep"
@@ -55,17 +72,13 @@
 	emote_hear = list("makes a kissing sound","giggles","lets out a needy whine")
 	emote_see = list("gestures for you to come over","winks","smiles","stretches")
 
-/mob/living/simple_mob/vore/succubus/init_vore()
-	if(!voremob_loaded)
-		return
-	if(LAZYLEN(vore_organs))
-		return
+/mob/living/simple_mob/vore/succubus/load_default_bellies()
 	. = ..()
 	var/obj/belly/B = vore_selected
 	B.name = "stomach"
 	B.desc = "You find yourself tightly compressed into the stomach of the succubus, with immense pressure squeezing down on you from every direction. The wrinkled walls of the gut knead over you, like a swelteringly hot, wet massage. You can feel movement from the outside, as though the demoness is running her hands over your form with delight. The world around you groans and gurgles, but the fluids that ooze into this place don't seem harmful, yet. Instead, you feel your very energy being steadily depleted, much to the joy of the woman who's claiming it all for herself."
 	B.mode_flags = DM_FLAG_THICKBELLY
-	B.belly_fullscreen = "yet_another_tumby"
+	B.belly_fullscreen = "VBO_fleshs"
 	B.digest_brute = 2
 	B.digest_burn = 2
 	B.digest_oxy = 1
@@ -83,7 +96,7 @@
 	curves.desc = "Your entire being is cast adrift, no longer tight as it was in the succubus's gut but still inexorably bound, a sensation of warmth surrounding your entire being - it's pleasantly comfortable, relaxing even, as though lulling you, tempting you into simply allowing yourself to drift off. It's difficult to focus on yourself at all, any sense of your own position having abandoned you - instead, you can simply feel an odd, gentle sensation of being occasionally rubbed, stroked, squeezed, your captor eager to enjoy her prize. Even trying to move seems to elicit a satisfied chuckle, almost as though she knows that, at least on some level, some part of you wanted to give yourself to her - and she seemingly has little intention of giving you back."
 	curves.digest_mode = DM_HOLD // like, shes got you already, doesn't need to get you more
 	curves.mode_flags = DM_FLAG_FORCEPSAY
-	curves.escapable = TRUE // good luck
+	curves.escapable = B_ESCAPABLE_DEFAULT // good luck
 	curves.escapechance = 40 // high chance of STARTING a successful escape attempt
 	curves.escapechance_absorbed = 5 // m i n e
 	curves.vore_verb = "soak"
@@ -120,3 +133,31 @@
 		"Try as you might, you barely make an impression before %pred simply clenches with the most minimal effort, binding you back into her %belly.",
 		"Unfortunately, %pred seems to have absolutely no intention of letting you go, and your futile effort goes nowhere.",
 		"Strain as you might, you can't keep up the effort long enough before you sink back into %pred's %belly.")
+
+/mob/living/simple_mob/vore/succubus/hear_say(list/message_pieces, verb, italics, mob/speaker, sound/speech_sound, sound_vol)
+	. = ..()
+
+	// Don't do this if we have a player
+	if(!has_AI())
+		return
+
+	// Ignore ourselves
+	if(speaker == src)
+		return
+
+	// Only allow people inside us~ish to safeword
+	if(get_turf(speaker) != get_turf(src))
+		return
+
+	var/string = multilingual_to_message(message_pieces)
+
+	if(findtext(lowertext(string), safeword))
+		vore_selected?.digest_mode = DM_DRAIN
+		release_vore_contents()
+		SetStunned(10)
+		say("I'm sorry sweetie, are you okay?")
+
+/mob/living/simple_mob/vore/succubus/animal_nom()
+	. = ..()
+	if(has_AI())
+		whisper("Remember cutie, the safeword is \"[safeword]\"~")

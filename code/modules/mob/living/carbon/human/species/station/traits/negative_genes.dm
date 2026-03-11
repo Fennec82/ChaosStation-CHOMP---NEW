@@ -24,9 +24,10 @@
 	is_genetrait = TRUE
 	hidden = FALSE
 
-	disability=EPILEPSY
 	activation_message="You get a headache."
 	primitive_expression_messages=list("shudders and twitches.")
+	added_component_path = /datum/component/epilepsy_disability
+
 
 /datum/trait/negative/disability_cough
 	name = "Coughing Fits"
@@ -37,8 +38,8 @@
 	is_genetrait = TRUE
 	hidden = FALSE
 
-	disability=COUGHING
 	activation_message="You start coughing."
+	added_component_path = /datum/component/coughing_disability
 
 /datum/trait/negative/disability_clumsy
 	name = "Clumsy"
@@ -49,12 +50,12 @@
 	is_genetrait = TRUE
 	hidden = FALSE
 
-	mutation=CLUMSY
 	activation_message="You feel lightheaded."
 	primitive_expression_messages=list("trips.")
+	mutation = CLUMSY
 
-/datum/trait/negative/disability_tourettes
-	name = "Tourettes Syndrome"
+/datum/trait/negative/disability_coprolalia
+	name = "Coprolalia"
 	desc = "You have periodic motor seizures, and cannot stop yourself from yelling profanity."
 	cost = -2
 	custom_only = FALSE
@@ -62,9 +63,9 @@
 	is_genetrait = TRUE 	//VOREStation Note: TRAITGENETICS - Disabled on VS //CHOMPStation Edit - Enable
 	hidden = FALSE			//VOREStation Note: TRAITGENETICS - Disabled on VS //CHOMPStation Edit - Enable
 
-	disability=TOURETTES
 	activation_message="You twitch."
 	primitive_expression_messages=list("twitches and chitters.")
+	added_component_path = /datum/component/coprolalia_disability
 
 /* Replaced by /datum/trait/negative/blindness
 /datum/trait/negative/disability_blind
@@ -91,6 +92,7 @@
 
 	is_genetrait = TRUE
 	hidden = FALSE
+	excludes = list(/datum/trait/negative/disability_wingdings)
 
 	sdisability=MUTE
 	activation_message="Your throat feels strange..."
@@ -151,6 +153,7 @@
 
 	is_genetrait = TRUE
 	hidden = FALSE
+	excludes = list(/datum/trait/negative/disability_mute)
 
 	disability=WINGDINGS
 	activation_message="You feel a little... Ga-hoo!"
@@ -165,9 +168,12 @@
 	is_genetrait = TRUE	//VOREStation Note: TRAITGENETICS - Disabled on VS //CHOMPStation Edit - Enable
 	hidden = FALSE			//VOREStation Note: TRAITGENETICS - Disabled on VS //CHOMPStation Edit - Enable
 
-	disability=DETERIORATE
 	activation_message="You feel sore..."
 	primitive_expression_messages=list("shudders.","gasps.","chokes.")
+	added_component_path = /datum/component/rotting_disability
+	excludes = list(/datum/trait/positive/stable_genetics)
+	banned_species	= list(/datum/species/protean, /datum/species/shapeshifter/promethean)
+
 
 /datum/trait/negative/disability_gibbing
 	name = "Gibbingtons"
@@ -178,9 +184,10 @@
 	is_genetrait = TRUE
 	hidden = TRUE
 
-	disability=GIBBING
 	activation_message="You feel bloated..."
 	primitive_expression_messages=list("shudders.","gasps.","chokes.")
+	added_component_path = /datum/component/gibbing_disability
+
 
 /datum/trait/negative/disability_damagedspine
 	name = "Lumbar Impairment"
@@ -195,3 +202,16 @@
 
 	sdisability=SPINE
 	activation_message="Your legs shake..."
+
+/datum/trait/negative/ambulant_blood
+	name = "Ambulant Blood"
+	desc = "Your blood reacts to hostile stimulation such as burning when seperated from your body, as if it was its own creature. You WILL be mistaken for a changeling, you may want to document this in your medical records."
+	var_changes = list("ambulant_blood" = TRUE)
+	cost = -1 //CHOMPEdit - Keep original value
+	can_take = ORGANICS
+
+	is_genetrait = FALSE
+	hidden = FALSE
+	activity_bounds = DNA_HARDER_BOUNDS // Shouldn't be easy for genetics to find this
+
+	activation_message="You feel like there are spiders in your veins..."

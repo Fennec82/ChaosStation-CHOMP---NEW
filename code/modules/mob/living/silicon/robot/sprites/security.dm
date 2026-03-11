@@ -164,6 +164,7 @@
 /datum/robot_sprite/dogborg/security/drake
 	name = "Drake"
 	sprite_icon_state = "drake"
+	has_vore_belly_resting_sprites = TRUE
 	sprite_flags = ROBOT_HAS_TASER_SPRITE | ROBOT_HAS_LASER_SPRITE
 
 // Tall sprites
@@ -245,8 +246,8 @@
 	has_rest_lights_sprites = TRUE
 	has_rest_eyes_sprites = TRUE
 	sprite_decals = list("breastplate")
-	icon_x = 32
-	pixel_x = 0
+	icon_x = 64
+	pixel_x = -16
 
 /datum/robot_sprite/dogborg/tall/security/dullahanv3
 	name = "Dullahan security v3"
@@ -255,6 +256,8 @@
 	has_eye_light_sprites = TRUE
 	has_rest_sprites = TRUE
 	has_vore_belly_sprites = TRUE
+	has_vore_belly_resting_sprites = TRUE
+	belly_capacity_list = list("sleeper" = 3)
 	sprite_decals = list("decals")
 	rest_sprite_options = list("Default", "Sit")
 	icon_x = 64
@@ -278,10 +281,15 @@
 	has_dead_sprite_overlay = FALSE
 
 /datum/robot_sprite/dogborg/security/smolraptor
-	sprite_icon = 'icons/mob/robot/smallraptors/smolraptor_pk.dmi'
+	sprite_icon = 'icons/mob/robot/smallraptors/smolraptor_sec.dmi'
 	name = "Small Raptor"
 	sprite_icon_state = "smolraptor"
-	has_dead_sprite_overlay = FALSE
 	has_eye_light_sprites = TRUE
 	has_vore_belly_sprites = TRUE
-	rest_sprite_options = list("Default", "Sit")
+	has_dead_sprite_overlay = FALSE
+	rest_sprite_options = list("Default", "Sit", "Bellyup")
+
+/datum/robot_sprite/dogborg/security/smolraptor/alt
+	name = "Small Raptor Alt"
+
+	sprite_icon_state = "smolraptor_alt"

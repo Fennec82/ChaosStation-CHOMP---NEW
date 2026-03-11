@@ -60,7 +60,7 @@
 		span_notice("You hear glass shattering"))
 	log_and_message_admins("Created a new shuttle [S.name]. [ADMIN_JMP(comp_turf)]", user)
 	spawn(1 SECOND)
-		playsound(comp_turf, 'sound/voice/Serithi/Shuttlehere.ogg', 75, 0)
+		playsound(comp_turf, 'sound/voice/Serithi/shuttlehere.ogg', 75, 0)
 	qdel(src)
 
 	return TRUE
@@ -89,7 +89,7 @@
 	var/obj/effect/overmap/visitable/ship/landable/champagne/newship = new(start_loc, shuttle_name, shuttle_name)
 	// It automatically registers itself with SSshuttles
 
-	log_debug("Created new ship [newship] for shuttle [shuttle] at landmark [starting_landmark]")
+	log_world("Created new ship [newship] for shuttle [shuttle] at landmark [starting_landmark]")
 	return shuttle
 
 //

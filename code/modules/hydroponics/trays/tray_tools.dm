@@ -30,12 +30,16 @@
 	var/list/last_reagents
 	pickup_sound = 'sound/items/pickup/device.ogg'
 	drop_sound = 'sound/items/drop/device.ogg'
+	special_handling = TRUE
 
 /obj/item/analyzer/plant_analyzer/Destroy()
 	. = ..()
 	QDEL_NULL(last_seed)
 
 /obj/item/analyzer/plant_analyzer/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	tgui_interact(user)
 
 /obj/item/analyzer/plant_analyzer/tgui_interact(mob/user, datum/tgui/ui)
@@ -297,7 +301,7 @@
 				amount = "large amounts of "
 			else if (exude_gasses[gas] < 5)
 				amount = "small amounts of "
-			data["trait_info"] += "It will release [amount][gas_data.name[gas]] into the environment."
+			data["trait_info"] += "It will release [amount][GLOB.gas_data.name[gas]] into the environment."
 
 	if(consume_gasses && consume_gasses.len)
 		for(var/gas in consume_gasses)
@@ -306,6 +310,6 @@
 				amount = "large amounts of "
 			else if (consume_gasses[gas] < 5)
 				amount = "small amounts of "
-			data["trait_info"] += "It will consume [amount][gas_data.name[gas]] from the environment."
+			data["trait_info"] += "It will consume [amount][GLOB.gas_data.name[gas]] from the environment."
 
 	return data

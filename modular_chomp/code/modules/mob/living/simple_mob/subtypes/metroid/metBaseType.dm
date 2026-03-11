@@ -58,7 +58,7 @@
 	var/evo_point = 0
 	var/evo_limit = 0
 	var/next
-	meat_type = /obj/item/toy/figure/bounty_hunter
+	meat_type = /obj/item/reagent_containers/food/snacks/metroidmeat
 
 	can_be_drop_prey = FALSE //CHOMP Add
 
@@ -87,12 +87,8 @@
 	stand_down_sound = 'sound/metroid/metroiddetach.ogg'
 
 
-/mob/living/simple_mob/metroid/init_vore()
-	if(!voremob_loaded)
-		return
-	if(LAZYLEN(vore_organs))
-		return
-	.=..()
+/mob/living/simple_mob/metroid/load_default_bellies()
+	. = ..()
 	var/obj/belly/B = vore_selected
 	B.digest_brute = 1
 	B.digest_burn = 1

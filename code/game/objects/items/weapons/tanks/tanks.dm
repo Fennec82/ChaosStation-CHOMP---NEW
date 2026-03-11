@@ -1,6 +1,6 @@
 #define TANK_IDEAL_PRESSURE 1015 //Arbitrary.
 
-var/list/global/tank_gauge_cache = list()
+GLOBAL_LIST_EMPTY(tank_gauge_cache)
 
 /obj/item/tank
 	name = "tank"
@@ -134,7 +134,7 @@ var/list/global/tank_gauge_cache = list()
 		if(wired && src.proxyassembly.assembly)
 
 			to_chat(user, span_notice("You carefully begin clipping the wires that attach to the tank."))
-			if(do_after(user, 100,src))
+			if(do_after(user, 10 SECONDS, target = src))
 				wired = 0
 				cut_overlay("bomb_assembly")
 				to_chat(user, span_notice("You cut the wire and remove the device."))
@@ -161,7 +161,7 @@ var/list/global/tank_gauge_cache = list()
 					src.proxyassembly.receive_signal()
 
 		else if(wired)
-			if(do_after(user, 10, src))
+			if(do_after(user, 1 SECOND, target = src))
 				to_chat(user, span_notice("You quickly clip the wire from the tank."))
 				wired = 0
 				cut_overlay("bomb_assembly")
@@ -174,7 +174,7 @@ var/list/global/tank_gauge_cache = list()
 	if(istype(W, /obj/item/assembly_holder))
 		if(wired)
 			to_chat(user, span_notice("You begin attaching the assembly to \the [src]."))
-			if(do_after(user, 50, src))
+			if(do_after(user, 5 SECONDS, target = src))
 				to_chat(user, span_notice("You finish attaching the assembly to \the [src]."))
 				GLOB.bombers += "[key_name(user)] attached an assembly to a wired [src]. Temp: [src.air_contents.temperature-T0C]"
 				message_admins("[key_name_admin(user)] attached an assembly to a wired [src]. Temp: [src.air_contents.temperature-T0C]")
@@ -190,7 +190,7 @@ var/list/global/tank_gauge_cache = list()
 		if(WT.remove_fuel(1,user))
 			if(!valve_welded)
 				to_chat(user, span_notice("You begin welding the \the [src] emergency pressure relief valve."))
-				if(do_after(user, 40,src))
+				if(do_after(user, 4 SECONDS, target = src))
 					to_chat(user, span_notice("You carefully weld \the [src] emergency pressure relief valve shut.") + " " + span_warning("\The [src] may now rupture under pressure!"))
 					src.valve_welded = 1
 					src.leaking = 0
@@ -209,7 +209,10 @@ var/list/global/tank_gauge_cache = list()
 
 
 
-/obj/item/tank/attack_self(mob/user as mob)
+/obj/item/tank/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return
 	add_fingerprint(user)
 	if (!(src.air_contents))
 		return
@@ -374,9 +377,9 @@ var/list/global/tank_gauge_cache = list()
 	cut_overlays()
 	add_bomb_overlay()
 	var/indicator = "[gauge_icon][(gauge_pressure == -1) ? "overload" : gauge_pressure]"
-	if(!tank_gauge_cache[indicator])
-		tank_gauge_cache[indicator] = image(icon, indicator)
-	add_overlay(tank_gauge_cache[indicator])
+	if(!GLOB.tank_gauge_cache[indicator])
+		GLOB.tank_gauge_cache[indicator] = image(icon, indicator)
+	add_overlay(GLOB.tank_gauge_cache[indicator])
 
 
 
@@ -395,8 +398,8 @@ var/list/global/tank_gauge_cache = list()
 	if(pressure > TANK_FRAGMENT_PRESSURE)
 		if(integrity <= 7)
 			if(!istype(src.loc,/obj/item/transfer_valve))
-				message_admins("Explosive tank rupture! last key to touch the tank was [src.fingerprintslast].")
-				log_game("Explosive tank rupture! last key to touch the tank was [src.fingerprintslast].")
+				message_admins("Explosive tank rupture! last key to touch the tank was [forensic_data?.get_lastprint()].")
+				log_game("Explosive tank rupture! last key to touch the tank was [forensic_data?.get_lastprint()].")
 
 			//Give the gas a chance to build up more pressure through reacting
 			air_contents.react()
@@ -444,7 +447,7 @@ var/list/global/tank_gauge_cache = list()
 
 	else if(pressure > TANK_RUPTURE_PRESSURE)
 		#ifdef FIREDBG
-		log_debug(span_warning("[x],[y] tank is rupturing: [pressure] kPa, integrity [integrity]"))
+		log_world(span_warning("[x],[y] tank is rupturing: [pressure] kPa, integrity [integrity]"))
 		#endif
 
 		air_contents.react()
@@ -454,7 +457,7 @@ var/list/global/tank_gauge_cache = list()
 			if(!T)
 				return
 			T.assume_air(air_contents)
-			playsound(src, 'sound/weapons/Gunshot_shotgun.ogg', 20, 1)
+			playsound(src, 'sound/weapons/gunshot_shotgun.ogg', 20, 1)
 			visible_message("[icon2html(src,viewers(src))] " + span_danger("\The [src] flies apart!"), span_warning("You hear a bang!"))
 			T.hotspot_expose(air_contents.temperature, 70, 1)
 
@@ -504,7 +507,7 @@ var/list/global/tank_gauge_cache = list()
 				playsound(src, 'sound/effects/spray.ogg', 10, 1, -3)
 				leaking = 1
 				#ifdef FIREDBG
-				log_debug(span_warning("[x],[y] tank is leaking: [pressure] kPa, integrity [integrity]"))
+				log_world(span_warning("[x],[y] tank is leaking: [pressure] kPa, integrity [integrity]"))
 				#endif
 
 
@@ -658,12 +661,11 @@ var/list/global/tank_gauge_cache = list()
 		tank.cut_overlay("bomb_assembly")
 
 /obj/item/tankassemblyproxy/HasProximity(turf/T, datum/weakref/WF, old_loc)
-	SIGNAL_HANDLER
 	if(isnull(WF))
 		return
 	var/atom/movable/AM = WF.resolve()
 	if(isnull(AM))
-		log_debug("DEBUG: HasProximity called without reference on [src].")
+		log_runtime("DEBUG: HasProximity called without reference on [src].")
 		return
 	assembly?.HasProximity(T, WF, old_loc)
 

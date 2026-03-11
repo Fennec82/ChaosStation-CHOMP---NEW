@@ -6,15 +6,14 @@
 	on_expired_text = span_notice("The surge subsides.")
 	stacks = MODIFIER_STACK_EXTEND
 	evasion = 20
-	accuracy = -30
 	attack_speed_percent = 0.75
 	siemens_coefficient = 3
 
 /datum/modifier/healingtide //carp
 	name = "Healing Tide"
-	desc = "You are filled with an overwhelming energy."
+	desc = "Your body is more receptive to chemicals."
 
-	on_created_text = span_critical("Your body begins to focus on recovering!")
+	on_created_text = span_critical("Your body is more receptive to chemicals!")
 	on_expired_text = span_notice("The healing subsides.")
 	stacks = MODIFIER_STACK_EXTEND
 
@@ -23,7 +22,7 @@
 
 /datum/modifier/radiationhide //deathclaw
 	name = "Radiation Hide"
-	desc = "Your body defensivly warps."
+	desc = "Your body is adorn with scales."
 
 	on_created_text = span_critical("Your body strangly mutates!")
 	on_expired_text = span_notice("Your body returns to normal.")
@@ -55,7 +54,7 @@
 
 /datum/modifier/protectivenumbing //spider
 	name = "Protective Numbing"
-	desc = "Your senses feel everything."
+	desc = "Your senses dull."
 
 	on_created_text = span_critical("Your body becomes numb!")
 	on_expired_text = span_notice("Sensation returns to your body.")
@@ -64,3 +63,55 @@
 	heat_protection = 1
 	cold_protection = 1
 	attack_speed_percent = 1.25
+
+/datum/modifier/juggernog
+	name = "Juggernog"
+	desc = "Your body is prepared for conflict."
+
+	on_created_text = span_critical("Your body becomes tougher!")
+	on_expired_text = span_notice("Your body returns to normal.")
+	stacks = MODIFIER_STACK_EXTEND
+
+	max_health_percent = 1.3
+	disable_duration_percent = 0.2
+
+/datum/modifier/life_cloak
+	name = "Life Cloak"
+	desc = "Your body is protected from death."
+
+	on_created_text = span_critical("You feel protected!")
+	on_expired_text = span_notice("Your body returns to normal.")
+	stacks = MODIFIER_STACK_EXTEND
+
+/datum/modifier/life_cloak/can_apply(var/mob/living/L, var/suppress_failure = FALSE)
+	if(L.has_modifier_of_type(/datum/modifier/life_cloak_exhaustion))
+		return FALSE
+	return ..()
+
+/datum/modifier/life_cloak/tick()
+	if(holder.stat != DEAD)
+		holder.add_modifier(/datum/modifier/life_cloak_exhaustion, 360 SECONDS)
+		holder.adjustBruteLoss(-150)
+		holder.adjustFireLoss(-150)
+		holder.adjustOxyLoss(-200)
+		GLOB.dead_mob_list.Remove(holder)
+		if((holder in GLOB.living_mob_list) || (holder in GLOB.dead_mob_list))
+			WARNING("Mob [holder] was defibbed but already in the living or dead list still!")
+		GLOB.living_mob_list += holder
+		holder.timeofdeath = 0
+		holder.set_stat(CONSCIOUS)
+		holder.failed_last_breath = 0
+		holder.reload_fullscreen()
+		holder.updatehealth()
+		expire()
+
+/datum/modifier/life_cloak_exhaustion
+	name = "Life Cloak Recovery"
+	desc = "Your body is recovering."
+
+	on_created_text = span_critical("Something feels wrong!")
+	on_expired_text = span_notice("Your body returns to normal.")
+	stacks = MODIFIER_STACK_EXTEND
+
+	disable_duration_percent = 2
+	incoming_damage_percent = 1.5

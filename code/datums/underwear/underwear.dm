@@ -53,7 +53,7 @@
 
 /datum/category_item/underwear/New()
 	if(has_color)
-		tweaks += gear_tweak_free_color_choice
+		tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/category_item/underwear/dd_SortValue()
 	if(always_last)
@@ -63,7 +63,7 @@
 /datum/category_item/underwear/proc/is_default(var/gender)
 	return is_default
 
-/datum/category_item/underwear/proc/generate_image(var/list/metadata, var/layer = FLOAT_LAYER, var/digitigrade = FALSE) //CHOMPEdit
+/datum/category_item/underwear/proc/generate_image(var/list/metadata, var/layer = FLOAT_LAYER, var/digitigrade = FALSE)
 	if(!icon_state)
 		return
 

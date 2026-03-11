@@ -318,6 +318,7 @@
 /obj/item/cell/device/weapon,
 /obj/item/ammo_magazine/ammo_box/b12g/pellet,
 /obj/item/ammo_magazine/ammo_box/b12g/pellet,
+/obj/item/prop/deconstructable/gigacell,
 /turf/simulated/floor/tiled/techfloor,
 /area/submap/Rockybase)
 "bi" = (
@@ -597,7 +598,6 @@
 /obj/machinery/light{
 	dir = 1
 	},
-/obj/effect/map_helper/no_phaseshift/area,
 /turf/simulated/floor/tiled,
 /area/submap/Rockybase)
 "cf" = (
@@ -797,11 +797,11 @@
 /turf/simulated/floor/tiled,
 /area/submap/Rockybase)
 "cN" = (
-/obj/machinery/mecha_part_fabricator,
+/obj/machinery/mecha_part_fabricator_tg,
 /turf/simulated/floor/tiled,
 /area/submap/Rockybase)
 "cO" = (
-/obj/machinery/mecha_part_fabricator/pros,
+/obj/machinery/mecha_part_fabricator_tg/prosthetics,
 /turf/simulated/floor/tiled,
 /area/submap/Rockybase)
 "cP" = (

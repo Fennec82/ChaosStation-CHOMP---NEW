@@ -153,23 +153,27 @@
 	set category = "Object"
 	set src = usr
 
+	if(ismecha(loc))
+		return
+
+	if(INCAPACITATED_IGNORING(src, INCAPABLE_GRAB))
+		return
+
+	if(stat || paralysis || stunned)
+		return
+
+	if(restrained())
+		return
+
 	if(!checkClickCooldown())
 		return
 
 	setClickCooldown(1)
 
-	if(istype(loc,/obj/mecha)) return
-
-	if(hand)
-		var/obj/item/W = l_hand
-		if (W)
-			W.attack_self(src)
-			update_inv_l_hand()
-	else
-		var/obj/item/W = r_hand
-		if (W)
-			W.attack_self(src)
-			update_inv_r_hand()
+	var/obj/item/inhand = get_active_hand()
+	if(inhand)
+		inhand.attack_self(src)
+		update_inv_active_hand()
 	return
 
 /mob/living/abiotic(var/full_body = 0)
@@ -311,6 +315,11 @@
 			return TRUE
 
 
+/datum/inventory_panel/human/ui_assets(mob/user)
+	return list(
+		get_asset_datum(/datum/asset/simple/inventory)
+	)
+
 /datum/inventory_panel/human/tgui_data(mob/user, datum/tgui/ui, datum/tgui_state/state)
 	var/list/data = list() // We don't inherit TGUI data because humans are soooo different.
 
@@ -320,36 +329,37 @@
 	if(istype(H.w_uniform, /obj/item/clothing/under))
 		suit = H.w_uniform
 
-
 	var/list/slots = list()
 	for(var/entry in H.species.hud.gear)
 		var/list/slot_ref = H.species.hud.gear[entry]
 		if((slot_ref["slot"] in list(slot_l_store, slot_r_store)))
 			continue
 		var/obj/item/thing_in_slot = H.get_equipped_item(slot_ref["slot"])
-		slots.Add(list(list(
+		UNTYPED_LIST_ADD(slots, list(
 			"name" = slot_ref["name"],
 			"item" = thing_in_slot,
+			"icon" = thing_in_slot ? icon2base64(icon(thing_in_slot.icon, thing_in_slot.icon_state, frame = 1)) : null,
 			"act" = "targetSlot",
 			"params" = list("slot" = slot_ref["slot"]),
-		)))
+		))
 	data["slots"] = slots
-
 
 	var/list/specialSlots = list()
 	if(H.species.hud.has_hands)
-		specialSlots.Add(list(list(
+		UNTYPED_LIST_ADD(specialSlots, list(
 			"name" = "Left Hand",
 			"item" = H.l_hand,
+			"icon" = H.l_hand ? icon2base64(icon(H.l_hand.icon, H.l_hand.icon_state, frame = 1)) : null,
 			"act" = "targetSlot",
 			"params" = list("slot" = slot_l_hand),
-		)))
-		specialSlots.Add(list(list(
+		))
+		UNTYPED_LIST_ADD(specialSlots, list(
 			"name" = "Right Hand",
 			"item" = H.r_hand,
+			"icon" = H.r_hand ? icon2base64(icon(H.r_hand.icon, H.r_hand.icon_state, frame = 1)) : null,
 			"act" = "targetSlot",
 			"params" = list("slot" = slot_r_hand),
-		)))
+		))
 	data["specialSlots"] = specialSlots
 
 	data["internals"] = H.internals

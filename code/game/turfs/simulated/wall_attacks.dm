@@ -87,7 +87,7 @@
 	if(!can_open)
 		if(!material.wall_touch_special(src, user))
 			to_chat(user, span_notice("You push the wall, but nothing happens."))
-			playsound(src, 'sound/weapons/Genhit.ogg', 25, 1)
+			playsound(src, 'sound/weapons/genhit.ogg', 25, 1)
 	else
 		toggle_open(user)
 	return 0
@@ -174,7 +174,7 @@
 				if(R.use(1)) // Cost of roofing tiles is 1:1 with cost to place lattice and plating
 					T.ReplaceWithLattice()
 					T.ChangeTurf(/turf/simulated/floor, preserve_outdoors = TRUE)
-					playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)
+					playsound(src, 'sound/weapons/genhit.ogg', 50, 1)
 					user.visible_message(span_notice("[user] patches a hole in the ceiling."), span_notice("You patch a hole in the ceiling."))
 					expended_tile = TRUE
 			else
@@ -186,7 +186,7 @@
 			if(expended_tile || R.use(1)) // Don't need to check adjacent turfs for a wall, we're building on one
 				make_indoors()
 				if(!expended_tile) // Would've already played a sound
-					playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)
+					playsound(src, 'sound/weapons/genhit.ogg', 50, 1)
 				user.visible_message(span_notice("[user] roofs \the [src], shielding it from the elements."), span_notice("You roof \the [src] tile, shielding it from the elements."))
 		return
 
@@ -240,7 +240,7 @@
 		if(WT.remove_fuel(0,user))
 			to_chat(user, span_notice("You start repairing the damage to [src]."))
 			playsound(src, WT.usesound, 100, 1)
-			if(do_after(user, max(5, damage / 5) * WT.toolspeed) && WT && WT.isOn())
+			if(do_after(user, max(5, damage / 5) * WT.toolspeed, target = src) && WT && WT.isOn())
 				to_chat(user, span_notice("You finish repairing the damage to [src]."))
 				take_damage(-damage)
 		else
@@ -287,7 +287,7 @@
 			if(cut_delay < 0)
 				cut_delay = 0
 
-			if(!do_after(user,cut_delay * W.toolspeed))
+			if(!do_after(user, cut_delay * W.toolspeed, target = src))
 				return
 
 			to_chat(user, span_notice("You remove the outer plating."))
@@ -310,7 +310,7 @@
 				if (W.has_tool_quality(TOOL_SCREWDRIVER))
 					to_chat(user, span_notice("You begin removing the support lines."))
 					playsound(src, W.usesound, 100, 1)
-					if(!do_after(user,40 * W.toolspeed) || !istype(src, /turf/simulated/wall) || construction_stage != 5)
+					if(!do_after(user, 4 SECONDS * W.toolspeed, target = src) || !istype(src, /turf/simulated/wall) || construction_stage != 5)
 						return
 					construction_stage = 4
 					user.update_examine_panel(src)
@@ -340,7 +340,7 @@
 				if(cut_cover)
 					to_chat(user, span_notice("You begin slicing through the metal cover."))
 					playsound(src, W.usesound, 100, 1)
-					if(!do_after(user, 60 * W.toolspeed) || !istype(src, /turf/simulated/wall) || construction_stage != 4)
+					if(!do_after(user, 6 SECONDS * W.toolspeed, target = src) || !istype(src, /turf/simulated/wall) || construction_stage != 4)
 						return
 					construction_stage = 3
 					user.update_examine_panel(src)
@@ -350,7 +350,7 @@
 				else if (W.has_tool_quality(TOOL_SCREWDRIVER))
 					to_chat(user, span_notice("You begin screwing down the support lines."))
 					playsound(src, W.usesound, 100, 1)
-					if(!do_after(user,40 * W.toolspeed) || !istype(src, /turf/simulated/wall) || construction_stage != 4)
+					if(!do_after(user, 4 SECONDS * W.toolspeed, target = src) || !istype(src, /turf/simulated/wall) || construction_stage != 4)
 						return
 					construction_stage = 5
 					user.update_examine_panel(src)
@@ -361,7 +361,7 @@
 				if (W.has_tool_quality(TOOL_CROWBAR))
 					to_chat(user, span_notice("You struggle to pry off the cover."))
 					playsound(src, W.usesound, 100, 1)
-					if(!do_after(user,100 * W.toolspeed) || !istype(src, /turf/simulated/wall) || construction_stage != 3)
+					if(!do_after(user, 10 SECONDS * W.toolspeed, target = src) || !istype(src, /turf/simulated/wall) || construction_stage != 3)
 						return
 					construction_stage = 2
 					user.update_examine_panel(src)
@@ -372,7 +372,7 @@
 				if (W.has_tool_quality(TOOL_WRENCH))
 					to_chat(user, span_notice("You start loosening the anchoring bolts which secure the support rods to their frame."))
 					playsound(src, W.usesound, 100, 1)
-					if(!do_after(user,40 * W.toolspeed) || !istype(src, /turf/simulated/wall) || construction_stage != 2)
+					if(!do_after(user, 4 SECONDS * W.toolspeed, target = src) || !istype(src, /turf/simulated/wall) || construction_stage != 2)
 						return
 					construction_stage = 1
 					user.update_examine_panel(src)
@@ -393,7 +393,7 @@
 				if(cut_cover)
 					to_chat(user, span_notice("You begin slicing through the support rods."))
 					playsound(src, W.usesound, 100, 1)
-					if(!do_after(user,70 * W.toolspeed) || !istype(src, /turf/simulated/wall) || construction_stage != 1)
+					if(!do_after(user, 7 SECONDS * W.toolspeed, target = src) || !istype(src, /turf/simulated/wall) || construction_stage != 1)
 						return
 					construction_stage = 0
 					user.update_examine_panel(src)
@@ -404,7 +404,7 @@
 				if(W.has_tool_quality(TOOL_CROWBAR))
 					to_chat(user, span_notice("You struggle to pry off the outer sheath."))
 					playsound(src, W.usesound, 100, 1)
-					if(!do_after(user,100 * W.toolspeed) || !istype(src, /turf/simulated/wall) || !user || !W || !T )
+					if(!do_after(user, 10 SECONDS * W.toolspeed, target = src) || !istype(src, /turf/simulated/wall) || !user || !W || !T )
 						return
 					if(user.loc == T && user.get_active_hand() == W )
 						to_chat(user, span_notice("You pry off the outer sheath."))

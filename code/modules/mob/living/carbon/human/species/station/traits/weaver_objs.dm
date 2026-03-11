@@ -59,11 +59,10 @@
 	icon_state = pick(possible_icon_states)
 
 /obj/effect/weaversilk/wall/CanPass(atom/movable/mover, turf/target)
-	if(ishuman(mover))
-		var/mob/living/carbon/human/H = mover
-		if(H.species.is_weaver)
-			return TRUE
-	..()
+	var/datum/component/weaver/comp = mover.GetComponent(/datum/component/weaver) //only spooders can move on by
+	if(comp)
+		return TRUE
+	return FALSE
 
 /obj/structure/bed/double/weaversilk_nest
 	name = "weaversilk nest"
@@ -96,10 +95,9 @@
 /obj/effect/weaversilk/trap/Crossed(atom/movable/AM as mob|obj)
 	if(AM.is_incorporeal())
 		return
-	if(ishuman(AM))
-		var/mob/living/carbon/human/H = AM
-		if(H.species.is_weaver)
-			return
+	var/datum/component/weaver/comp = AM.GetComponent(/datum/component/weaver)
+	if(comp)
+		return
 	if(isliving(AM) && trap_active)
 		var/mob/living/L = AM
 		if(L.m_intent == I_RUN)
@@ -131,7 +129,6 @@
 	name = "weaversilk bindings"
 	desc = "A webbed cocoon that completely restrains the wearer."
 	icon_state = "web_bindings"
-	item_state = "web_bindings_mob"
 	body_parts_covered = CHEST|LEGS|FEET|ARMS|HANDS
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT|HIDETAIL
 	//CHOMPedit - Teshari sprite, this was originally a YW edit of the old web bindings

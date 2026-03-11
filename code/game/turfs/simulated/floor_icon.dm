@@ -1,14 +1,8 @@
-var/list/flooring_cache = list()
-
-var/image/no_ceiling_image = null
-
-/hook/startup/proc/setup_no_ceiling_image()
-	cache_no_ceiling_image()
-	return TRUE
+GLOBAL_DATUM_INIT(no_ceiling_image, /image, new)
 
 /proc/cache_no_ceiling_image()
-	no_ceiling_image = image(icon = 'icons/turf/open_space.dmi', icon_state = "no_ceiling")
-	no_ceiling_image.plane = PLANE_MESONS
+	GLOB.no_ceiling_image = image(icon = 'icons/turf/open_space.dmi', icon_state = "no_ceiling")
+	GLOB.no_ceiling_image.plane = PLANE_MESONS
 
 /turf/simulated/floor/update_icon(var/update_neighbors)
 	cut_overlays()
@@ -94,7 +88,7 @@ var/image/no_ceiling_image = null
 	// Show 'ceilingless' overlay.
 	var/turf/above = GetAbove(src)
 	if(!is_outdoors() && above && isopenspace(above)) // This won't apply to outdoor turfs since its assumed they don't have a ceiling anyways.
-		add_overlay(no_ceiling_image)
+		add_overlay(GLOB.no_ceiling_image)
 
 	// Update our 'them-to-us' edges, aka edges from external turfs we feel should spill onto us
 	if(edge_blending_priority && !forbid_turf_edge())
@@ -133,7 +127,7 @@ var/image/no_ceiling_image = null
 
 //Tests whether this flooring will smooth with the specified turf
 //You can override this if you want a flooring to have super special snowflake smoothing behaviour
-/decl/flooring/proc/test_link(var/turf/origin, var/turf/T, var/countercheck = FALSE)
+/datum/decl/flooring/proc/test_link(var/turf/origin, var/turf/T, var/countercheck = FALSE)
 
 	var/is_linked = FALSE
 	if (countercheck)
@@ -182,7 +176,7 @@ var/image/no_ceiling_image = null
 							break
 				else if(floor_smooth == SMOOTH_BLACKLIST)
 					is_linked = TRUE //Default to true for the blacklist, then make it false if a match comes up
-					for (var/v in flooring_whitelist)
+					for (var/v in flooring_blacklist)
 						if (istype(t.flooring, v))
 							//Found a match on the list
 							is_linked = FALSE
@@ -278,10 +272,3 @@ var/image/no_ceiling_image = null
 							is_linked = FALSE
 
 	return is_linked
-
-/turf/simulated/floor/proc/get_flooring_overlay(var/cache_key, var/icon_base, var/icon_dir = 0)
-	if(!flooring_cache[cache_key])
-		var/image/I = image(icon = flooring.icon, icon_state = icon_base, dir = icon_dir)
-		I.layer = layer
-		flooring_cache[cache_key] = I
-	return flooring_cache[cache_key]

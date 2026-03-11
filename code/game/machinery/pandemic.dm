@@ -16,8 +16,12 @@
 
 // PanDEMIC Vial
 /obj/item/reagent_containers/glass/beaker/vial/vaccine
-	possible_transfer_amounts = (list(5, 10, 15))
+	max_transfer_amount = 15
 	volume = 15
+
+/obj/item/reagent_containers/glass/beaker/vial/vaccine/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/sellable/vaccine)
 
 /obj/machinery/computer/pandemic/Initialize(mapload)
 	. = ..()
@@ -222,17 +226,17 @@
 		traits["name"] = disease.name
 		if(istype(disease, /datum/disease/advance))
 			var/datum/disease/advance/adv_disease = disease
-			traits["can_rename"] = (adv_disease.name == "Unknown")
+			traits["can_rename"] = TRUE // Allow for all diseases to change currently. Mutable trait maybe?
 			traits["name"] = disease.name
 			traits["is_adv"] = TRUE
 			traits["symptoms"] = list()
-			for(var/datum/symptom/symptom as() in adv_disease.symptoms)
+			for(var/datum/symptom/symptom as anything in adv_disease.symptoms)
 				traits["symptoms"] += list(symptom.get_symptom_data())
 			traits["resistance"] = adv_disease.resistance
 			traits["stealth"] = adv_disease.stealth
 			traits["stage_speed"] = adv_disease.stage_rate
 			traits["transmission"] = adv_disease.transmission
-			traits["symptom_severity"] = adv_disease.severity
+			traits["severity"] = adv_disease.severity
 
 		traits["index"] = index++
 		traits["agent"] = disease.agent
@@ -275,7 +279,7 @@
 	use_power(active_power_usage)
 	var/id = index
 	var/datum/disease/disease = GLOB.archive_diseases[id]
-	var/obj/item/reagent_containers/glass/beaker/vial/bottle = new(drop_location())
+	var/obj/item/reagent_containers/glass/beaker/vial/vaccine/bottle = new(drop_location())
 	bottle.name = "[disease.name] vaccine"
 	bottle.reagents.add_reagent(REAGENT_ID_VACCINE, 15, list(get_by_index("resistances", id)))
 	beaker.reagents.remove_reagent(REAGENT_ID_BLOOD, 5)
@@ -286,7 +290,6 @@
 /obj/machinery/computer/pandemic/proc/create_culture_bottle(index)
 	var/id = get_virus_id_by_index(text2num(index))
 	var/datum/disease/advance/adv_disease = GLOB.archive_diseases[id]
-	var/old_name = adv_disease.name
 
 	if(!istype(adv_disease))
 		to_chat(usr, span_warning("ERROR: Cannot replicate virus strain."))
@@ -294,7 +297,9 @@
 
 	if(!beaker.reagents.has_reagent(REAGENT_ID_BLOOD, 10))
 		to_chat(usr, span_warning("ERROR: Not enough blood in the sample."))
-		return FALSE
+		return
+
+	var/old_name = adv_disease.name
 
 	use_power(active_power_usage)
 	adv_disease = adv_disease.Copy()

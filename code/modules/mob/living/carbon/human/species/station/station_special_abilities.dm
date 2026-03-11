@@ -1,89 +1,4 @@
-/mob/living/carbon/human/proc/reconstitute_form() //Scree's race ability.in exchange for: No cloning.
-	set name = "Reconstitute Form"
-	set category = "Abilities.General"
 
-	// Sanity is mostly handled in chimera_regenerate()
-	if(stat == DEAD)
-		var/confirm = tgui_alert(src, "Are you sure you want to regenerate your corpse? This process can take up to thirty minutes.", "Confirm Regeneration", list("Yes", "No"))
-		if(confirm == "Yes")
-			chimera_regenerate()
-	else if (quickcheckuninjured())
-		var/confirm = tgui_alert(src, "Are you sure you want to regenerate? As you are uninjured this will only take 30 seconds and match your appearance to your character slot.", "Confirm Regeneration", list("Yes", "No"))
-		if(confirm == "Yes")
-			chimera_regenerate()
-	else
-		var/confirm = tgui_alert(src, "Are you sure you want to completely reconstruct your form? This process can take up to fifteen minutes, depending on how hungry you are, and you will be unable to move.", "Confirm Regeneration", list("Yes", "No"))
-		if(confirm == "Yes")
-			chimera_regenerate()
-
-/mob/living/carbon/human/proc/chimera_regenerate()
-	//If they're already regenerating
-	switch(revive_ready)
-		if(REVIVING_NOW)
-			to_chat(src, "You are already reconstructing, just wait for the reconstruction to finish!")
-			return
-		if(REVIVING_DONE)
-			to_chat(src, "Your reconstruction is done, but you need to hatch now.")
-			return
-	if(revive_ready > world.time)
-		to_chat(src, "You can't use that ability again so soon!")
-		return
-
-	var/time = min(900, (120+780/(1 + nutrition/100))) //capped at 15 mins, roughly 6 minutes at 250 (yellow) nutrition, 4.1 minutes at 500 (grey), cannot be below 2 mins
-	if (quickcheckuninjured()) //if you're completely uninjured, then you get a speedymode - check health first for quickness
-		time = 30
-
-	//Clicked regen while dead.
-	if(stat == DEAD)
-
-		//reviving from dead takes extra nutriment to be provided from outside OR takes twice as long and consumes extra at the end
-		if(!hasnutriment())
-			time = time*2
-
-		to_chat(src, "You begin to reconstruct your form. You will not be able to move during this time. It should take aproximately [round(time)] seconds.")
-
-		//Scary spawnerization.
-		revive_ready = REVIVING_NOW
-		revive_finished = (world.time + time SECONDS) // When do we finish reviving? Allows us to find out when we're done, called by the alert currently.
-		throw_alert("regen", /obj/screen/alert/xenochimera/reconstitution)
-		spawn(time SECONDS)
-			// check to see if they've been fixed by outside forces in the meantime such as defibbing
-			if(stat != DEAD)
-				to_chat(src, span_notice("Your body has recovered from its ordeal, ready to regenerate itself again."))
-				revive_ready = REVIVING_READY //reset their cooldown
-				clear_alert("regen")
-				throw_alert("hatch", /obj/screen/alert/xenochimera/readytohatch)
-
-			// Was dead, still dead.
-			else
-				to_chat(src, span_notice("Consciousness begins to stir as your new body awakens, ready to hatch."))
-				add_verb(src, /mob/living/carbon/human/proc/hatch)
-				revive_ready = REVIVING_DONE
-				src << sound('sound/effects/mob_effects/xenochimera/hatch_notification.ogg',0,0,0,30)
-				clear_alert("regen")
-				throw_alert("hatch", /obj/screen/alert/xenochimera/readytohatch)
-
-
-	//Clicked regen while NOT dead
-	else
-		to_chat(src, "You begin to reconstruct your form. You will not be able to move during this time. It should take aproximately [round(time)] seconds.")
-
-		//Waiting for regen after being alive
-		revive_ready = REVIVING_NOW
-		revive_finished = (world.time + time SECONDS) // When do we finish reviving? Allows us to find out when we're done, called by the alert currently.
-		throw_alert("regen", /obj/screen/alert/xenochimera/reconstitution)
-		spawn(time SECONDS)
-
-			//Slightly different flavour messages
-			if(stat != DEAD || hasnutriment())
-				to_chat(src, span_notice("Consciousness begins to stir as your new body awakens, ready to hatch.."))
-			else
-				to_chat(src, span_warning("Consciousness begins to stir as your battered body struggles to recover from its ordeal.."))
-			add_verb(src, /mob/living/carbon/human/proc/hatch)
-			revive_ready = REVIVING_DONE
-			src << sound('sound/effects/mob_effects/xenochimera/hatch_notification.ogg',0,0,0,30)
-			clear_alert("regen")
-			throw_alert("hatch", /obj/screen/alert/xenochimera/readytohatch)
 
 
 /mob/living/carbon/human/proc/hasnutriment()
@@ -104,286 +19,11 @@
 			return FALSE
 	return TRUE
 
-/mob/living/carbon/human/proc/hatch()
-	set name = "Hatch"
-	set category = "Abilities.General"
-
-	if(revive_ready != REVIVING_DONE)
-		//Hwhat?
-		remove_verb(src, /mob/living/carbon/human/proc/hatch)
-		return
-
-	var/confirm = tgui_alert(src, "Are you sure you want to hatch right now? This will be very obvious to anyone in view.", "Confirm Regeneration", list("Yes", "No"))
-	if(confirm == "Yes")
-
-		//Dead when hatching
-		if(stat == DEAD)
-			// var/sickness_duration = 10 MINUTES //CHOMPedit
-			//Reviving from ded takes extra nutrition - if it isn't provided from outside sources, it comes from you
-			if(!hasnutriment())
-				nutrition=nutrition * 0.75
-				// sickness_duration = 20 MINUTES //CHOMPedit
-			chimera_hatch()
-			// add_modifier(/datum/modifier/resleeving_sickness/chimera, sickness_duration) //CHOMPedit
-			adjustBrainLoss(5) // if they're reviving from dead, they come back with 5 brainloss on top of whatever's unhealed.
-			visible_message(span_warning("<p>" + span_huge("The former corpse staggers to its feet, all its former wounds having vanished...") + "</p>")) //Bloody hell...
-			clear_alert("hatch")
-			return
-
-		//Alive when hatching
-		else
-			chimera_hatch()
-
-			visible_message(span_warning("<p>" + span_huge("[src] rises to \his feet.") + "</p>")) //Bloody hell...
-			clear_alert("hatch")
-
-/mob/living/carbon/human/proc/chimera_hatch()
-	remove_verb(src, /mob/living/carbon/human/proc/hatch)
-	to_chat(src, span_notice("Your new body awakens, bursting free from your old skin."))
-	//Modify and record values (half nutrition and braindamage)
-	var/old_nutrition = nutrition
-	var/braindamage = min(5, max(0, (brainloss-1) * 0.5)) //brainloss is tricky to heal and might take a couple of goes to get rid of completely.
-	var/uninjured=quickcheckuninjured()
-	//I did have special snowflake code, but this is easier.
-	revive()
-	mutations.Remove(HUSK)
-	setBrainLoss(braindamage)
-	species.update_vore_belly_def_variant()
-
-	if(!uninjured)
-		nutrition = old_nutrition * 0.5
-		//Drop everything
-		for(var/obj/item/W in src)
-			drop_from_inventory(W)
-		//Visual effects
-		var/T = get_turf(src)
-		var/blood_color = species.blood_color
-		var/flesh_color = species.flesh_color
-		new /obj/effect/gibspawner/human/xenochimera(T, null, flesh_color, blood_color)
-		visible_message(span_danger("<p>" + span_huge("The lifeless husk of [src] bursts open, revealing a new, intact copy in the pool of viscera.") + "</p>")) //Bloody hell...
-		playsound(T, 'sound/effects/mob_effects/xenochimera/hatch.ogg', 50)
-	else //lower cost for doing a quick cosmetic revive
-		nutrition = old_nutrition * 0.9
-
-	//Unfreeze some things
-	does_not_breathe = FALSE
-	update_canmove()
-	stunned = 2 // CHOMPEdit - Whoops, crawling is a thing now.
-
-	revive_ready = world.time + 10 MINUTES //set the cooldown, Reduced this to 10 minutes, you're playing with fire if you're reviving that often.
-
-/datum/modifier/resleeving_sickness/chimera //near identical to the regular version, just with different flavortexts
-	name = "imperfect regeneration"
-	desc = "You feel rather weak and unfocused, having just regrown your body not so long ago."
-
-	on_created_text = span_warning(span_large("You feel weak and unsteady, that regeneration having been rougher than most."))
-	on_expired_text = span_notice(span_large("You feel your strength and focus return to you."))
-
-/mob/living/carbon/human/proc/revivingreset() // keep this as a debug proc or potential future use
-		revive_ready = REVIVING_READY
-
-/obj/effect/gibspawner/human/xenochimera
-	fleshcolor = "#14AD8B"
-	bloodcolor = "#14AD8B"
-
 /mob/living/carbon/human/proc/getlightlevel() //easier than having the same code in like three places
 	if(isturf(src.loc)) //else, there's considered to be no light
 		var/turf/T = src.loc
 		return T.get_lumcount() * 5
 	else return 0
-
-/mob/living/carbon/human/proc/handle_feral()
-	if(handling_hal) return
-	handling_hal = 1
-
-	if(client && feral >= 10) // largely a copy of handle_hallucinations() without the fake attackers. Unlike hallucinations, only fires once - if they're still feral they'll get hit again anyway.
-		spawn(rand(200,500)/(feral/10))
-			if(!feral) return //just to avoid fuckery in the event that they un-feral in the time it takes for the spawn to proc
-			var/halpick = rand(1,100)
-			switch(halpick)
-				if(0 to 15) //15% chance
-					//Screwy HUD
-					//to_chat(src, "Screwy HUD")
-					hal_screwyhud = pick(1,2,3,3,4,4)
-					spawn(rand(100,250))
-						hal_screwyhud = 0
-				if(16 to 25) //10% chance
-					//Strange items
-					//to_chat(src, "Traitor Items")
-					if(!halitem)
-						halitem = new
-						var/list/slots_free = list(ui_lhand,ui_rhand)
-						if(l_hand) slots_free -= ui_lhand
-						if(r_hand) slots_free -= ui_rhand
-						if(ishuman(src))
-							var/mob/living/carbon/human/H = src
-							if(!H.belt) slots_free += ui_belt
-							if(!H.l_store) slots_free += ui_storage1
-							if(!H.r_store) slots_free += ui_storage2
-						if(slots_free.len)
-							halitem.screen_loc = pick(slots_free)
-							halitem.layer = 50
-							switch(rand(1,6))
-								if(1) //revolver
-									halitem.icon = 'icons/obj/gun.dmi'
-									halitem.icon_state = "revolver"
-									halitem.name = "Revolver"
-								if(2) //c4
-									halitem.icon = 'icons/obj/assemblies.dmi'
-									halitem.icon_state = "plastic-explosive0"
-									halitem.name = "Mysterious Package"
-									if(prob(25))
-										halitem.icon_state = "c4small_1"
-								if(3) //sword
-									halitem.icon = 'icons/obj/weapons.dmi'
-									halitem.icon_state = "sword1"
-									halitem.name = "Sword"
-								if(4) //stun baton
-									halitem.icon = 'icons/obj/weapons.dmi'
-									halitem.icon_state = "stunbaton"
-									halitem.name = "Stun Baton"
-								if(5) //emag
-									halitem.icon = 'icons/obj/card.dmi'
-									halitem.icon_state = "emag"
-									halitem.name = "Cryptographic Sequencer"
-								if(6) //flashbang
-									halitem.icon = 'icons/obj/grenade.dmi'
-									halitem.icon_state = "flashbang1"
-									halitem.name = "Flashbang"
-							if(client) client.screen += halitem
-							spawn(rand(100,250))
-								if(client)
-									client.screen -= halitem
-								halitem = null
-				if(26 to 35) //10% chance
-					//Flashes of danger
-					//to_chat(src, "Danger Flash")
-					if(!halimage)
-						var/list/possible_points = list()
-						for(var/turf/simulated/floor/F in view(src,world.view))
-							possible_points += F
-						if(possible_points.len)
-							var/turf/simulated/floor/target = pick(possible_points)
-
-							switch(rand(1,3))
-								if(1)
-									//to_chat(src, "Space")
-									halimage = image('icons/turf/space.dmi',target,"[rand(1,25)]",TURF_LAYER)
-								if(2)
-									//to_chat(src, "Fire")
-									halimage = image('icons/effects/fire.dmi',target,"1",TURF_LAYER)
-								if(3)
-									//to_chat(src, "C4")
-									halimage = image('icons/obj/assemblies.dmi',target,"plastic-explosive2",OBJ_LAYER+0.01)
-
-
-							if(client) client.images += halimage
-							spawn(rand(10,50)) //Only seen for a brief moment.
-								if(client) client.images -= halimage
-								halimage = null
-
-				if(36 to 55) //20% chance
-					//Strange audio
-					//to_chat(src, "Strange Audio")
-					switch(rand(1,12))
-						if(1) src << 'sound/machines/door/old_airlock.ogg'
-						if(2)
-							if(prob(50))src << 'sound/effects/Explosion1.ogg'
-							else src << 'sound/effects/Explosion2.ogg'
-						if(3) src << 'sound/effects/explosionfar.ogg'
-						if(4) src << 'sound/effects/Glassbr1.ogg'
-						if(5) src << 'sound/effects/Glassbr2.ogg'
-						if(6) src << 'sound/effects/Glassbr3.ogg'
-						if(7) src << 'sound/machines/twobeep.ogg'
-						if(8) src << 'sound/machines/door/windowdoor.ogg'
-						if(9)
-							//To make it more realistic, I added two gunshots (enough to kill)
-							src << 'sound/weapons/Gunshot1.ogg'
-							spawn(rand(10,30))
-								src << 'sound/weapons/Gunshot2.ogg'
-						if(10) src << 'sound/weapons/smash.ogg'
-						if(11)
-							//Same as above, but with tasers.
-							src << 'sound/weapons/Taser.ogg'
-							spawn(rand(10,30))
-								src << 'sound/weapons/Taser.ogg'
-					//Rare audio
-						if(12)
-	//These sounds are (mostly) taken from Hidden: Source
-							var/list/creepyasssounds = list('sound/effects/ghost.ogg', 'sound/effects/ghost2.ogg', 'sound/effects/Heart Beat.ogg', 'sound/effects/screech.ogg',\
-								'sound/hallucinations/behind_you1.ogg', 'sound/hallucinations/behind_you2.ogg', 'sound/hallucinations/far_noise.ogg', 'sound/hallucinations/growl1.ogg', 'sound/hallucinations/growl2.ogg',\
-								'sound/hallucinations/growl3.ogg', 'sound/hallucinations/im_here1.ogg', 'sound/hallucinations/im_here2.ogg', 'sound/hallucinations/i_see_you1.ogg', 'sound/hallucinations/i_see_you2.ogg',\
-								'sound/hallucinations/look_up1.ogg', 'sound/hallucinations/look_up2.ogg', 'sound/hallucinations/over_here1.ogg', 'sound/hallucinations/over_here2.ogg', 'sound/hallucinations/over_here3.ogg',\
-								'sound/hallucinations/turn_around1.ogg', 'sound/hallucinations/turn_around2.ogg', 'sound/hallucinations/veryfar_noise.ogg', 'sound/hallucinations/wail.ogg')
-							src << pick(creepyasssounds)
-				if(56 to 60) //5% chance
-					//Flashes of danger
-					//to_chat(src, "Danger Flash")
-					if(!halbody)
-						var/list/possible_points = list()
-						for(var/turf/simulated/floor/F in view(src,world.view))
-							possible_points += F
-						if(possible_points.len)
-							var/turf/simulated/floor/target = pick(possible_points)
-							switch(rand(1,4))
-								if(1)
-									halbody = image('icons/mob/human.dmi',target,"husk_l",TURF_LAYER)
-								if(2,3)
-									halbody = image('icons/mob/human.dmi',target,"husk_s",TURF_LAYER)
-								if(4)
-									halbody = image('icons/mob/alien.dmi',target,"alienother",TURF_LAYER)
-		//						if(5)
-		//							halbody = image('xcomalien.dmi',target,"chryssalid",TURF_LAYER)
-
-							if(client) client.images += halbody
-							spawn(rand(50,80)) //Only seen for a brief moment.
-								if(client) client.images -= halbody
-								halbody = null
-				if(61 to 85) //25% chance
-					//food
-					if(!halbody)
-						var/list/possible_points = list()
-						for(var/turf/simulated/floor/F in view(src,world.view))
-							possible_points += F
-						if(possible_points.len)
-							var/turf/simulated/floor/target = pick(possible_points)
-							switch(rand(1,10))
-								if(1)
-									halbody = image('icons/mob/animal.dmi',target,"cow",TURF_LAYER)
-								if(2)
-									halbody = image('icons/mob/animal.dmi',target,"chicken",TURF_LAYER)
-								if(3)
-									halbody = image('icons/obj/food.dmi',target,"bigbiteburger",TURF_LAYER)
-								if(4)
-									halbody = image('icons/obj/food.dmi',target,"meatbreadslice",TURF_LAYER)
-								if(5)
-									halbody = image('icons/obj/food.dmi',target,"sausage",TURF_LAYER)
-								if(6)
-									halbody = image('icons/obj/food.dmi',target,"bearmeat",TURF_LAYER)
-								if(7)
-									halbody = image('icons/obj/food.dmi',target,"fishfillet",TURF_LAYER)
-								if(8)
-									halbody = image('icons/obj/food.dmi',target,"meat",TURF_LAYER)
-								if(9)
-									halbody = image('icons/obj/food.dmi',target,"meatstake",TURF_LAYER)
-								if(10)
-									halbody = image('icons/obj/food.dmi',target,"monkeysdelight",TURF_LAYER)
-
-							if(client) client.images += halbody
-							spawn(rand(50,80)) //Only seen for a brief moment.
-								if(client) client.images -= halbody
-								halbody = null
-				if(86 to 100) //15% chance
-					//hear voices. Could make the voice pick from nearby creatures, but nearby creatures make feral hallucinations rare so don't bother.
-					var/list/hiddenspeakers = list("Someone distant", "A voice nearby","A familiar voice", "An echoing voice", "A cautious voice", "A scared voice", "Someone around the corner", "Someone", "Something", "Something scary", "An urgent voice", "An angry voice")
-					var/list/speakerverbs = list("calls out", "yells", "screams", "exclaims", "shrieks", "shouts", "hisses", "snarls")
-					var/list/spookyphrases = list("It's over here!","Stop it!", "Hunt it down!", "Get it!", "Quick, over here!", "Anyone there?", "Who's there?", "Catch that thing!", "Stop it! Kill it!", "Anyone there?", "Where is it?", "Find it!", "There it is!")
-					to_chat(src, span_game(span_say(span_name(pick(hiddenspeakers)) + " [pick(speakerverbs)], \"[pick(spookyphrases)]\"")))
-
-
-	handling_hal = 0
-	return
-
 
 /mob/living/carbon/human/proc/bloodsuck()
 	set name = "Partially Drain prey of blood"
@@ -477,14 +117,14 @@
 		to_chat(src, span_warning("This is going to cause [B] to keep bleeding!"))
 		to_chat(B, span_danger("You are going to keep bleeding from this bite!"))
 
-	if(do_after(src, 300, B)) //Thrirty seconds.
+	if(do_after(src, 30 SECONDS, target = B))
 		if(!Adjacent(B)) return
 		if(noise)
 			src.visible_message(span_infoplain(span_red(span_bold("[src] suddenly extends their fangs and plunges them down into [B]'s neck!"))))
 		else
 			src.visible_message(span_infoplain(span_red(span_italics("[src] suddenly extends their fangs and plunges them down into [B]'s neck!"))), range = 1)
 		if(bleed)
-			B.apply_damage(10, BRUTE, BP_HEAD, blocked = 0, soaked = 0, sharp = TRUE, edge = FALSE)
+			B.apply_damage(10, BRUTE, BP_HEAD, blocked = 0, sharp = TRUE, edge = FALSE)
 			var/obj/item/organ/external/E = B.get_organ(BP_HEAD)
 			if(!(E.status & ORGAN_BLEEDING))
 				E.status |= ORGAN_BLEEDING //If 10 points of piercing didn't make the organ bleed, we are making it bleed.
@@ -557,17 +197,17 @@
 			if(100)
 				C.nutrition = (C.nutrition + T.nutrition)
 				T.nutrition = 0 //Completely drained of everything.
-				var/damage_to_be_applied = T.species.total_health //Get their max health.
+				var/damage_to_be_applied = T.getMaxHealth() //Get their max health.
 				T.apply_damage(damage_to_be_applied, HALLOSS) //Knock em out.
-				C.absorbing_prey = 0
+				C.absorbing_prey = FALSE
 				to_chat(C, span_notice("You have completely drained [T], causing them to pass out."))
 				to_chat(T, span_danger("You feel weak, as if you have no control over your body whatsoever as [C] finishes draining you.!"))
 				add_attack_logs(C,T,"Succubus drained")
 				return
 
-		if(!do_mob(src, T, 50) || G.state != GRAB_NECK) //One drain tick every 5 seconds.
+		if(!do_after(src, 5 SECONDS, T) || G.state != GRAB_NECK) //One drain tick every 5 seconds.
 			to_chat(src, span_warning("Your draining of [T] has been interrupted!"))
-			C.absorbing_prey = 0
+			C.absorbing_prey = FALSE
 			return
 
 /mob/living/carbon/human/proc/succubus_drain_lethal()
@@ -627,7 +267,7 @@
 					to_chat(T, span_danger("You feel completely drained as [src] finishes draining you and begins to move onto draining you lethally, but you are too strong for them to do so!"))
 					nutrition = (nutrition + T.nutrition)
 					T.nutrition = 0 //Completely drained of everything.
-					var/damage_to_be_applied = T.species.total_health //Get their max health.
+					var/damage_to_be_applied = T.getMaxHealth() //Get their max health.
 					T.apply_damage(damage_to_be_applied, HALLOSS) //Knock em out.
 					absorbing_prey = 0 //Clean this up before we return
 					return
@@ -654,16 +294,16 @@
 				if(soulgem?.flag_check(SOULGEM_ACTIVE | SOULGEM_CATCHING_DRAIN, TRUE))
 					soulgem.catch_mob(T)
 				T.apply_damage(500, OXY) //Kill them.
-				absorbing_prey = 0
+				absorbing_prey = FALSE
 				to_chat(src, span_notice("You have completely drained [T], killing them in the process."))
 				to_chat(T, span_danger(span_massive("You... Feel... So... Weak...")))
 				visible_message(span_danger("[src] seems to finish whatever they were doing to [T]."))
 				add_attack_logs(src,T,"Succubus drained (lethal)")
 				return
 
-		if(!do_mob(src, T, 50) || G.state != GRAB_NECK) //One drain tick every 5 seconds.
+		if(!do_after(src, 5 SECONDS, T) || G.state != GRAB_NECK) //One drain tick every 5 seconds.
 			to_chat(src, span_warning("Your draining of [T] has been interrupted!"))
-			absorbing_prey = 0
+			absorbing_prey = FALSE
 			return
 
 /mob/living/carbon/human/proc/slime_feed()
@@ -715,16 +355,16 @@
 			if(100)
 				T.nutrition = (T.nutrition + C.nutrition)
 				C.nutrition = 0 //Completely drained of everything.
-				C.absorbing_prey = 0
+				C.absorbing_prey = FALSE
 				to_chat(C, span_danger("You have completely fed [T] every part of your body!"))
 				to_chat(T, span_notice("You feel quite strong and well fed, as [C] finishes feeding \himself to you!"))
 				add_attack_logs(C,T,"Slime fed")
 				C.feed_grabbed_to_self_falling_nom(T,C) //Reused this proc instead of making a new one to cut down on code usage.
 				return
 
-		if(!do_mob(src, T, 50) || !G.state) //One drain tick every 5 seconds.
+		if(!do_after(src, 5 SECONDS, T) || !G.state) //One drain tick every 5 seconds.
 			to_chat(src, span_warning("Your feeding of [T] has been interrupted!"))
-			C.absorbing_prey = 0
+			C.absorbing_prey = FALSE
 			return
 
 /mob/living/carbon/human/proc/succubus_drain_finalize()
@@ -853,7 +493,7 @@
 	last_special = world.time + vore_shred_time
 	visible_message(span_danger("[src] appears to be preparing to do something to [T]!")) //Let everyone know that bad times are ahead
 
-	if(do_after(src, vore_shred_time, T)) //Ten seconds. You have to be in a neckgrab for this, so you're already in a bad position.
+	if(do_after(src, vore_shred_time, target = T)) //Ten seconds. You have to be in a neckgrab for this, so you're already in a bad position.
 		if(can_shred(T) != T)
 			to_chat(src,span_warning("Looks like you lost your chance..."))
 			return
@@ -975,151 +615,6 @@
 	pass_flags ^= PASSTABLE //I dunno what this fancy ^= is but Aronai gave it to me.
 	to_chat(src, "You [pass_flags&PASSTABLE ? "will" : "will NOT"] move over tables/railings/trays!")
 
-/mob/living/carbon/human/proc/check_silk_amount()
-	set name = "Check Silk Amount"
-	set category = "Abilities.Weaver"
-
-	if(species.is_weaver)
-		to_chat(src, "Your silk reserves are at [species.silk_reserve]/[species.silk_max_reserve].")
-	else
-		to_chat(src, span_warning("You are not a weaver! How are you doing this? Tell a developer!"))
-
-/mob/living/carbon/human/proc/toggle_silk_production()
-	set name = "Toggle Silk Production"
-	set category = "Abilities.Weaver"
-
-	if(species.is_weaver)
-		species.silk_production = !(species.silk_production)
-		to_chat(src, "You are [species.silk_production ? "now" : "no longer"] producing silk.")
-	else
-		to_chat(src, span_warning("You are not a weaver! How are you doing this? Tell a developer!"))
-
-/mob/living/carbon/human/proc/weave_structure()
-	set name = "Weave Structure"
-	set category = "Abilities.Weaver"
-
-	if(!(species.is_weaver))
-		to_chat(src, span_warning("You are not a weaver! How are you doing this? Tell a developer!"))
-		return
-
-	var/choice
-	var/datum/weaver_recipe/structure/desired_result
-	var/finalized = "No"
-
-	while(finalized == "No" && src.client)
-		choice = tgui_input_list(src,"What would you like to weave?", "Weave Choice", GLOB.weavable_structures)
-		desired_result  = GLOB.weavable_structures[choice]
-		if(!desired_result || !istype(desired_result))
-			return
-
-		if(choice)
-			finalized = tgui_alert(src, "Are you sure you want to weave [desired_result.title]? It will cost you [desired_result.cost] silk.","Confirmation",list("Yes","No"))
-
-	if(!desired_result || !istype(desired_result))
-		return
-
-	if(desired_result.cost > species.silk_reserve)
-		to_chat(src, span_warning("You don't have enough silk to weave that!"))
-		return
-
-	if(stat)
-		to_chat(src, span_warning("You can't do that in your current state!"))
-		return
-
-	if(locate(desired_result.result_type) in src.loc)
-		to_chat(src, span_warning("You can't create another weaversilk [desired_result.title] here!"))
-		return
-
-	if(!isturf(src.loc))
-		to_chat(src, span_warning("You can't weave here!"))
-		return
-
-	if(do_after(src, desired_result.time, exclusive = TASK_USER_EXCLUSIVE))
-		if(desired_result.cost > species.silk_reserve)
-			to_chat(src, span_warning("You don't have enough silk to weave that!"))
-			return
-
-		if(locate(desired_result.result_type) in src.loc)
-			to_chat(src, span_warning("You can't create another weaversilk [desired_result.title] here!"))
-			return
-
-		if(!isturf(src.loc))
-			to_chat(src, span_warning("You can't weave here!"))
-			return
-
-		species.silk_reserve = max(species.silk_reserve - desired_result.cost, 0)
-
-		//new desired_result.result_type(src.loc)
-		var/atom/O = new desired_result.result_type(src.loc)
-		O.color = species.silk_color
-
-
-/mob/living/carbon/human/proc/weave_item()
-	set name = "Weave Item"
-	set category = "Abilities.Weaver"
-
-	if(!(species.is_weaver))
-		return
-
-	var/choice
-	var/datum/weaver_recipe/item/desired_result
-	var/finalized = "No"
-
-	while(finalized == "No" && src.client)
-		choice = tgui_input_list(src,"What would you like to weave?", "Weave Choice", GLOB.weavable_items)
-		desired_result  = GLOB.weavable_items[choice]
-		if(!desired_result || !istype(desired_result))
-			return
-
-		if(choice)
-			finalized = tgui_alert(src, "Are you sure you want to weave [desired_result.title]? It will cost you [desired_result.cost] silk.","Confirmation",list("Yes","No"))
-
-	if(!desired_result || !istype(desired_result))
-		return
-
-	if(!(species.is_weaver))
-		to_chat(src, span_warning("You are not a weaver! How are you doing this? Tell a developer!"))
-		return
-
-	if(desired_result.cost > species.silk_reserve)
-		to_chat(src, span_warning("You don't have enough silk to weave that!"))
-		return
-
-	if(stat)
-		to_chat(src, span_warning("You can't do that in your current state!"))
-		return
-
-	if(!isturf(src.loc))
-		to_chat(src, span_warning("You can't weave here!"))
-		return
-
-	if(do_after(src, desired_result.time, exclusive = TASK_USER_EXCLUSIVE))
-		if(desired_result.cost > species.silk_reserve)
-			to_chat(src, span_warning("You don't have enough silk to weave that!"))
-			return
-
-		if(!isturf(src.loc))
-			to_chat(src, span_warning("You can't weave here!"))
-			return
-
-		species.silk_reserve = max(species.silk_reserve - desired_result.cost, 0)
-
-		//new desired_result.result_type(src.loc)
-		var/atom/O = new desired_result.result_type(src.loc)
-		O.color = species.silk_color
-
-/mob/living/carbon/human/proc/set_silk_color()
-	set name = "Set Silk Color"
-	set category = "Abilities.Weaver"
-
-	if(!(species.is_weaver))
-		to_chat(src, span_warning("You are not a weaver! How are you doing this? Tell a developer!"))
-		return
-
-	var/new_silk_color = tgui_color_picker(src, "Pick a color for your woven products:","Silk Color", species.silk_color)
-	if(new_silk_color)
-		species.silk_color = new_silk_color
-
 /mob/living/carbon/human/proc/toggle_eye_glow()
 	set name = "Toggle Eye Glowing"
 	set category = "Abilities.General"
@@ -1127,8 +622,6 @@
 	species.has_glowing_eyes = !species.has_glowing_eyes
 	update_eyes()
 	to_chat(src, "Your eyes [species.has_glowing_eyes ? "are now" : "are no longer"] glowing.")
-
-
 
 /mob/living/carbon/human/proc/enter_cocoon()
 	set name = "Spin Cocoon"
@@ -1141,7 +634,7 @@
 		to_chat(src, span_warning("You can't do that in your current state."))
 		return
 
-	if(do_after(src, 25, exclusive = TASK_USER_EXCLUSIVE))
+	if(do_after(src, 25, target = src))
 		var/obj/item/storage/vore_egg/bugcocoon/C = new(loc)
 		forceMove(C)
 
@@ -1233,7 +726,7 @@
 	to_chat(target, span_critical("Something begins to circle around you in the water!")) //Dun dun...
 	var/starting_loc = target.loc
 
-	if(do_after(src, 50))
+	if(do_after(src, 5 SECONDS, target))
 		if(target.loc != starting_loc)
 			to_chat(target, span_warning("You got away from whatever that was..."))
 			to_chat(src, span_notice("They got away."))
@@ -1241,9 +734,9 @@
 		if(target.buckled) //how are you buckled in the water?!
 			target.buckled.unbuckle_mob()
 		target.visible_message(span_vwarning("\The [target] suddenly disappears, being dragged into the water!"),\
-			span_vdanger("You are dragged below the water and feel yourself slipping directly into \the [src]'s [lowertext(vore_selected)]!"))
-		to_chat(src, span_vnotice("You successfully drag \the [target] into the water, slipping them into your [lowertext(vore_selected)]."))
-		target.forceMove(src.vore_selected)
+			span_vdanger("You are dragged below the water and feel yourself slipping directly into \the [src]'s [vore_selected.get_belly_name()]!"))
+		to_chat(src, span_vnotice("You successfully drag \the [target] into the water, slipping them into your [vore_selected.get_belly_name()]."))
+		vore_selected.nom_atom(target)
 
 /mob/living/carbon/human/proc/toggle_pain_module()
 	set name = "Toggle pain simulation."
@@ -1590,7 +1083,7 @@
 		to_chat(src, span_notice("You will [trait_injection_verb] your targets."))
 		return
 	if(choice == "Chemical Refresher")
-		var/output = {""} + span_bold("Chemical Refresher!") + {"<HR>
+		var/output = {"<HR>
 					"} + span_bold("Options for venoms") + {"<BR>
 					<BR>
 					"} + span_bold("Size Chemicals") + {"<BR>
@@ -1619,7 +1112,10 @@
 					You can also bite synthetics, but due to how synths work, they won't have anything injected into them.
 					<br>
 					"}
-		src << browse("<html>[output]</html>","window=chemicalrefresher")
+
+		var/datum/browser/popup = new(src, "chemicalrefresher", "Chemical Refresher")
+		popup.set_content(output)
+		popup.open()
 		return
 	else
 		var/list/targets = list() //IF IT IS NOT BROKEN. DO NOT FIX IT. AND KEEP COPYPASTING IT  (Pointing Rick Dalton: "That's my code!" ~CL)
@@ -1663,7 +1159,7 @@
 
 
 		visible_message(span_warning("[src] is preparing to [trait_injection_verb] [target]!"))
-		if(do_after(src, 50, target)) //A decent enough timer.
+		if(do_after(src, 5 SECONDS, target)) //A decent enough timer.
 			add_attack_logs(src,target,"Injection trait ([trait_injection_selected], [trait_injection_amount])")
 			if(target.reagents && (trait_injection_amount > 0) && !synth)
 				target.reagents.add_reagent(trait_injection_selected, trait_injection_amount)
@@ -1688,3 +1184,226 @@
 				if("eyes")
 					ourmsg += "on the eyes!"
 			visible_message(span_warning(ourmsg))
+
+//succuby bite is back baby
+/mob/living/proc/succubus_bite()
+	set name = "Inject Prey"
+	set desc = "Bite prey and inject them with various toxins."
+	set category = "Abilities.Succubus"
+
+	if(last_special > world.time)
+		return
+
+	if(!ishuman(src))
+		return //If you're not a human you don't have permission to do this.
+
+	var/mob/living/carbon/human/C = src
+
+	var/obj/item/grab/G = src.get_active_hand()
+
+	if(!istype(G))
+		to_chat(C, span_warning("You must be grabbing a creature in your active hand to bite them."))
+		return
+
+	var/mob/living/carbon/human/T = G.affecting
+
+	if(!istype(T) || T.isSynthetic())
+		to_chat(src, span_warning("\The [T] is not able to be bitten."))
+		return
+
+	if(G.state != GRAB_NECK)
+		to_chat(C, span_warning("You must have a tighter grip to bite this creature."))
+		return
+
+	var/choice = tgui_input_list(src, "What do you wish to inject?", "Reagent", list(REAGENT_APHRODISIAC, "Numbing", "Paralyzing"))
+
+	last_special = world.time + 600
+
+	if(!choice)
+		return
+
+	src.visible_message(span_bolddanger("[src] moves their head next to [T]'s neck, seemingly looking for something!"))
+
+	if(do_after(src, 30 SECONDS, target = T)) //Thrirty seconds.
+		if(choice == REAGENT_APHRODISIAC)
+			src.show_message(span_warning("You sink your fangs into [T] and inject your aphrodisiac!"))
+			src.visible_message(span_red("[src] sinks their fangs into [T]!"))
+			T.bloodstr.add_reagent(REAGENT_ID_APHRODIAC_FLUID,100)
+			return 0
+		else if(choice == "Numbing")
+			src.show_message(span_warning("You sink your fangs into [T] and inject your poison!"))
+			src.visible_message(span_red("[src] sinks their fangs into [T]!"))
+			T.bloodstr.add_reagent(REAGENT_ID_NUMBING_FLUID,20) //Poisons should work when more units are injected
+		else if(choice == "Paralyzing")
+			src.show_message(span_warning("You sink your fangs into [T] and inject your poison!"))
+			src.visible_message(span_red("[src] sinks their fangs into [T]!"))
+			T.bloodstr.add_reagent(REAGENT_ID_PARALYZE_FLUID,20) //Poisons should work when more units are injected
+		else
+			return //Should never happen
+
+/datum/reagent/succubi_aphrodisiac
+	name = REAGENT_APHRODISIAC
+	id = REAGENT_ID_APHRODIAC_FLUID
+	description = "A unknown liquid, it smells sweet"
+	metabolism = REM * 0.8
+	color = "#8A0829"
+	scannable = SCANNABLE_ADVANCED
+	wiki_flag = WIKI_SPOILER
+	supply_conversion_value = REFINERYEXPORT_VALUE_PROCESSED
+	industrial_use = REFINERYEXPORT_REASON_MATSCI
+
+/datum/reagent/succubi_aphrodisiac/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	if(prob(3))
+		M.show_message(span_warning("You feel funny, and fall in love with the person in front of you"))
+		M.say(pick("!blushes", "!moans", "!giggles", "!turns visibly red")) //using mob say so we dont have to define this dumb one time use emote that equates to just blushing -shark
+		//M.charmed() //TODO
+	return
+
+/datum/reagent/succubi_numbing //Using numbing_enzyme instead.
+	name = REAGENT_NUMBING_FLUID
+	id = REAGENT_ID_NUMBING_FLUID
+	description = "A unknown liquid, it doesn't smell"
+	metabolism = REM * 0.5
+	color = "#41029B"
+	scannable = SCANNABLE_ADVANCED
+	supply_conversion_value = REFINERYEXPORT_VALUE_PROCESSED
+	industrial_use = REFINERYEXPORT_REASON_MATSCI
+
+/datum/reagent/succubi_numbing/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+
+
+	M.eye_blurry = max(M.eye_blurry, 10)
+	M.Weaken(2)
+	M.drowsyness = max(M.drowsyness, 20)
+	if(prob(7))
+		M.show_message(span_warning("You start to feel weakened, your body seems heavy."))
+	return
+
+/datum/reagent/succubi_paralize
+	name = REAGENT_PARALYZE_FLUID
+	id = REAGENT_ID_PARALYZE_FLUID
+	description = "A unknown liquid, it doesn't smell"
+	metabolism= REM * 0.5
+	color = "#41029B"
+	scannable = SCANNABLE_ADVANCED
+	supply_conversion_value = REFINERYEXPORT_VALUE_PROCESSED
+	industrial_use = REFINERYEXPORT_REASON_MATSCI
+
+/datum/reagent/succubi_paralize/affect_blood(var/mob/living/carbon/M, var/alien, var/removed) //will first keep it like that.  lets see what it changes. if nothing, than I will rework the effect again
+
+	M.Weaken(20)
+	M.eye_blurry = max(M.eye_blurry, 10)
+	if(prob(10))
+		M.show_message(span_warning("You lose sensation of your body."))
+	return
+
+/mob/living/proc/mobegglaying()
+	set name = "Egg laying"
+	set desc = "you can lay Eggs"
+	set category = "Abilities.General"
+
+	var/mob/living/carbon/human/C = src
+
+	if(last_special > world.time)
+		return
+
+	var/choice = tgui_input_list(src, "What do you want to do?", "Egg Option", list("Make a Egg", "lay your Eggs"))
+	last_special = world.time + 600
+
+	if(!choice)
+		return
+
+	if(do_after(src, 30 SECONDS, target = src)) //Thrirty seconds.
+		if(choice == "Make a Egg")
+			src.show_message(span_warning("You feel your belly bulging a bit, you made an egg!"))
+			C.nutrition -=150
+			eggs += 1
+			return 0
+		else if(choice == "Make a Egg" && eggs > 5)
+			src.show_message(span_warning("Your Belly is full of Eggs you cant have more!!"))
+			return 0
+		else if(choice == "lay your Eggs" && eggs > 0)
+			src.visible_message(span_infoplain(span_white("[src] freezes and vissibly tries to squat down")))
+
+			while(eggs > 0)
+				src.show_message(span_warning("You lay a egg!"))
+				eggs--
+				var/obj/item/reagent_containers/food/snacks/egg/E = new(get_turf(src))
+				E.pixel_x = rand(-6,6)
+				E.pixel_y = rand(-6,6)
+			return
+		else
+			src.visible_message(span_warning("you dont have any eggs!"))
+			return //Should never happen
+
+/mob/living/proc/insect_sting()
+	set name = "Insect Sting"
+	set desc = "Sting a target and inject a small amount of toxin"
+	set category = "Abilities.General"
+
+	if(last_special > world.time)
+		return
+
+	var/list/victims = list()
+	for(var/mob/living/carbon/C in oview(1))
+		victims += C
+	var/mob/living/carbon/T = tgui_input_list(src, "Who will we sting?", "Target", victims)
+
+	if(!T)
+		return
+	if(T.isSynthetic())
+		to_chat(src, span_notice("We are unable to pierce the outer shell of [T]."))
+		return
+
+	to_chat(src, span_notice("You jab your stinger into [T]."))
+	to_chat(T, span_danger("You feel a stabbing pain as you are stung!"))
+	src.visible_message(span_infoplain(span_red("[src] sinks their stinger into [T]!")))
+	T.bloodstr.add_reagent(REAGENT_ID_CONDENSEDCAPSAICINV,3)
+	last_special = world.time + (5 SECONDS) // Many little jabs instead of one big one
+
+/mob/living/proc/absorb_devour()
+	if(!absorbed || !isbelly(loc))
+		return
+	if(!isliving(loc.loc))
+		return
+	var/mob/living/pred = loc.loc
+	var/obj/belly/belly = loc
+	var/list/targets = list()
+	for(var/mob/living/potentialtarget in range(1, pred))
+		if(!isliving(potentialtarget)) //Don't eat anything that isn't mob/living. Failsafe.
+			continue
+		if(potentialtarget == pred)
+			continue
+		if(potentialtarget.devourable)
+			targets += potentialtarget
+	if(!(targets.len))
+		to_chat(src, span_notice("No eligible targets found."))
+		return
+	var/mob/living/target = tgui_input_list(src, "Please select a target.", "Victim", targets)
+	if(!absorbed || !isbelly(loc))
+		return
+	if(!isliving(loc.loc))
+		return
+	if(!target)
+		return
+	if(!isliving(target)) //Safety.
+		to_chat(src, span_warning("You need to select a living target!"))
+		return
+	if (get_dist(src,target) >= 2)
+		to_chat(src, span_warning("You need to be closer to do that."))
+		return
+	target.visible_message(span_vnotice("\The [pred]'s [belly] seems interested in \the [target]."),\
+			span_vwarning("\The [pred]'s [belly] threatens to [lowertext(belly.vore_verb)] you!"))
+	to_chat(pred, span_vnotice("Your [belly] tries to [lowertext(belly.vore_verb)] \the [target].")) //people who want this will often be unaware pred players, so I'm making the warning a bit smaller text for them
+	to_chat(pred, span_vwarning("You look for a chance to [lowertext(belly.vore_verb)] \the [target]."))
+	var/starting_loc = target.loc
+	if(do_after(src, 5 SECONDS, target))
+		if(target.loc != starting_loc)
+			to_chat(src, span_notice("\The [target] is no longer within reach."))
+			return
+		if(target.buckled)
+			target.buckled.unbuckle_mob()
+		to_chat(src, span_vwarning("You manage to [lowertext(belly.vore_verb)] \the [target]!"))
+		to_chat(pred, span_vnotice("Your [belly] manages to [lowertext(belly.vore_verb)] \the [target]."))
+		to_chat(target, span_vwarning("You are [lowertext(belly.vore_verb)]ed by \The [pred]'s [belly]!"))
+		return pred.begin_instant_nom(src, target, pred, belly, FALSE)

@@ -1,5 +1,6 @@
-use meowtonin::{value::ByondValue, ByondError, ByondResult};
-use rand::{distributions::Bernoulli, prelude::Distribution};
+use meowtonin::{ByondError, ByondResult, value::ByondValue};
+use rand_distr::{Bernoulli, Distribution};
+use rayon::iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator};
 
 const CELL_THRESHOLD: usize = 5;
 
@@ -18,7 +19,7 @@ pub fn generate_automata(
     let mut map = seed_map(limit_x, limit_y, initial_wall_cell)?;
     for _ in 1..iterations {
         map = map
-            .iter()
+            .par_iter()
             .enumerate()
             .map(|(i, _)| {
                 let mut count = 0;
@@ -63,10 +64,7 @@ fn seed_map(limit_x: usize, limit_y: usize, percent_chance: usize) -> ByondResul
 
     let d = Bernoulli::new(percent_chance as f64 / 100.0).map_err(ByondError::boxed)?;
 
-    map = map
-        .iter()
-        .map(|_| d.sample(&mut rand::thread_rng()))
-        .collect();
+    map = map.iter().map(|_| d.sample(&mut rand::rng())).collect();
 
     Ok(map)
 }

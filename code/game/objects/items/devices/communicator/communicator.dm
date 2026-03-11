@@ -2,8 +2,6 @@
 //
 // Allows ghosts to roleplay with crewmembers without having to commit to joining the round, and also allows communications between two communicators.
 
-var/global/list/obj/item/communicator/all_communicators = list() //Don't change this to GLOBAL_LIST_EMPTY_TYPED(all_communicators, /obj/item/communicator) for now. Sortatoms goes berserk.
-
 // List of core tabs the communicator can switch to
 #define HOMETAB 1
 #define PHONTAB 2
@@ -79,17 +77,6 @@ var/global/list/obj/item/communicator/all_communicators = list() //Don't change 
 
 	// Ringtones! (Based on the PDA ones)
 	var/ttone = "beep" //The ringtone!
-	var/list/ttone_sound = list("beep" = 'sound/machines/twobeep.ogg',
-								"boom" = 'sound/effects/explosionfar.ogg',
-								"slip" = 'sound/misc/slip.ogg',
-								"honk" = 'sound/items/bikehorn.ogg',
-								"SKREE" = 'sound/voice/shriek1.ogg',
-								// "holy" = 'sound/items/PDA/ambicha4-short.ogg',
-								"xeno" = 'sound/voice/hiss1.ogg',
-								"dust" = 'sound/effects/supermatter.ogg',
-								"spark" = 'sound/effects/sparks4.ogg',
-								"rad" = 'sound/items/geiger/high1.ogg',
-								"servo" = 'sound/machines/rig/rigservo.ogg')
 	pickup_sound = 'sound/items/pickup/device.ogg'
 	drop_sound = 'sound/items/drop/device.ogg'
 
@@ -100,7 +87,7 @@ var/global/list/obj/item/communicator/all_communicators = list() //Don't change 
 /obj/item/communicator/Initialize(mapload)
 	. = ..()
 	all_communicators += src
-	all_communicators = sortAtom(all_communicators)
+	all_communicators = sort_names(all_communicators)
 	node = get_exonet_node()
 	START_PROCESSING(SSobj, src)
 	camera = new(src)
@@ -121,7 +108,7 @@ var/global/list/obj/item/communicator/all_communicators = list() //Don't change 
 // Description: Checks if the user is made of silicon and returns if they are. If the user is not made of silicon and can use the communicator,
 //              removes the ID from the communicator if it has one, or sends a chat message indicating that the communicator does not have an ID.
 
-/obj/item/communicator/AltClick()
+/obj/item/communicator/click_alt()
 	if(issilicon(usr))
 		return
 
@@ -245,10 +232,10 @@ var/global/list/obj/item/communicator/all_communicators = list() //Don't change 
 		else
 			. += span_notice("The device doesn't appear to be transmitting any data.")
 
-// Proc: emp_act()
+// Proc: emp_act(severity, recursive)
 // Parameters: None
 // Description: Drops all calls when EMPed, so the holder can then get murdered by the antagonist.
-/obj/item/communicator/emp_act()
+/obj/item/communicator/emp_act(severity, recursive)
 	close_connection(reason = "Hardware error de%#_^@%-BZZZZZZZT")
 
 // Proc: add_to_EPv2()
@@ -276,7 +263,7 @@ var/global/list/obj/item/communicator/all_communicators = list() //Don't change 
 		if(!comm || !comm.exonet || !comm.exonet.address || comm.exonet.address == src.exonet.address) //Don't add addressless devices, and don't add ourselves.
 			continue
 		src.known_devices |= comm
-	for(var/mob/observer/dead/O in dead_mob_list)
+	for(var/mob/observer/dead/O in GLOB.dead_mob_list)
 		if(!O.client || O.client.prefs.communicator_visibility == 0)
 			continue
 		src.known_devices |= O
@@ -320,7 +307,6 @@ var/global/list/obj/item/communicator/all_communicators = list() //Don't change 
 			if(id_check(user, 2))
 				to_chat(user, span_notice("You put the ID into \the [src]'s slot."))
 				add_overlay("pda-id")
-				updateSelfDialog()//Update self dialog on success.
 				return	//Return in case of failed check or when successful.
 		//CHOMPADDITION END
 	return
@@ -330,6 +316,9 @@ var/global/list/obj/item/communicator/all_communicators = list() //Don't change 
 // Description: Makes an exonet datum if one does not exist, allocates an address for it, maintains the lists of all devies, clears the alert icon, and
 //				finally makes NanoUI appear.
 /obj/item/communicator/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	initialize_exonet(user)
 	alert_called = 0
 	update_icon()
@@ -341,7 +330,7 @@ var/global/list/obj/item/communicator/all_communicators = list() //Don't change 
 	var/mob/M = usr
 	if (!(src.loc == usr) || (src.loc && src.loc.loc == usr))
 		return
-	if(!istype(over_object, /obj/screen))
+	if(!istype(over_object, /atom/movable/screen))
 		return attack_self(M)
 	return
 
@@ -364,7 +353,7 @@ var/global/list/obj/item/communicator/all_communicators = list() //Don't change 
 	. = ..()
 	exonet = new(src)
 	if(client)
-		exonet.make_address("communicator-[src.client]-[src.client.prefs.real_name]")
+		exonet.make_address("communicator-[src.client]-[src.client.prefs.read_preference(/datum/preference/name/real_name)]")
 	else
 		exonet.make_address("communicator-[key]-[src.real_name]")
 
@@ -374,7 +363,7 @@ var/global/list/obj/item/communicator/all_communicators = list() //Don't change 
 /mob/observer/dead/Destroy()
 	if(exonet)
 		exonet.remove_address()
-		qdel_null(exonet)
+		QDEL_NULL(exonet)
 	. = ..()
 
 // Proc: register_device()
@@ -416,14 +405,14 @@ var/global/list/obj/item/communicator/all_communicators = list() //Don't change 
 	//Clean up references that might point at us
 	all_communicators -= src
 	STOP_PROCESSING(SSobj, src)
-	listening_objects.Remove(src)
+	GLOB.listening_objects.Remove(src)
 	QDEL_NULL(camera)
 	QDEL_NULL(exonet)
 
 	last_camera_turf = null
-	qdel(cam_screen)
+	QDEL_NULL(cam_screen)
 	QDEL_LIST(cam_plane_masters)
-	qdel(cam_background)
+	QDEL_NULL(cam_background)
 
 	return ..()
 
@@ -451,8 +440,8 @@ var/global/list/obj/item/communicator/all_communicators = list() //Don't change 
 
 /obj/machinery/camera/communicator/Initialize(mapload)
 	. = ..()
-	client_huds |= GLOB.global_hud.whitense
-	client_huds |= GLOB.global_hud.darkMask
+	LAZYOR(client_huds, GLOB.global_hud.whitense)
+	LAZYOR(client_huds, GLOB.global_hud.darkMask)
 
 //It's the 26th century. We should have smart watches by now.
 /obj/item/communicator/watch

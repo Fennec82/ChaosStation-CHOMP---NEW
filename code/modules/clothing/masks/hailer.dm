@@ -56,7 +56,7 @@
 /obj/item/clothing/mask/gas/sechailer/ui_action_click(mob/user, actiontype)
 	halt()
 
-/obj/item/clothing/mask/gas/sechailer/AltClick(mob/user)
+/obj/item/clothing/mask/gas/sechailer/click_alt(mob/user)
 	selectphrase()
 
 /obj/item/clothing/mask/gas/sechailer/verb/selectphrase()
@@ -132,10 +132,9 @@
 		else
 			var/obj/N = new /obj/item/clothing/mask/gas/half(src.loc)
 			playsound(src, 'sound/items/Screwdriver.ogg', 50, 1)
-			N.fingerprints = src.fingerprints
-			N.fingerprintshidden = src.fingerprintshidden
-			N.fingerprintslast = src.fingerprintslast
-			N.suit_fibers = src.suit_fibers
+			transfer_blooddna_to(N)
+			transfer_fingerprints_to(N)
+			transfer_fibres_to(N)
 			if(!isturf(N.loc))
 				user.put_in_hands(hailer)
 				user.put_in_hands(N)

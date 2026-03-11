@@ -35,7 +35,9 @@
 		new CB.build_path(loc, CB)
 		return INITIALIZE_HINT_QDEL
 
-/obj/machinery/computer/arcade/proc/prizevend()
+/obj/machinery/computer/arcade/proc/prizevend(mob/user)
+	SEND_SIGNAL(src, COMSIG_ARCADE_PRIZEVEND, user)
+
 	if(LAZYLEN(special_prizes)) // Downstream wanted the 'win things inside contents sans circuitboard' feature kept.
 		var/atom/movable/AM = pick_n_take(special_prizes)
 		AM.forceMove(get_turf(src))
@@ -59,9 +61,9 @@
 	return attack_hand(user)
 
 
-/obj/machinery/computer/arcade/emp_act(severity)
+/obj/machinery/computer/arcade/emp_act(severity, recursive)
 	if(stat & (NOPOWER|BROKEN))
-		..(severity)
+		..(severity, recursive)
 		return
 	var/empprize = null
 	var/num_of_prizes = 0
@@ -78,7 +80,7 @@
 		empprize = pickweight(prizes)
 		new empprize(src.loc)
 
-	..(severity)
+	..(severity, recursive)
 
 ///////////////////
 //  BATTLE HERE  //
@@ -122,7 +124,6 @@
 /obj/machinery/computer/arcade/battle/attack_hand(mob/user as mob)
 	if(..())
 		return
-	user.set_machine(src)
 	tgui_interact(user)
 
 /obj/machinery/computer/arcade/battle/tgui_interact(mob/user, datum/tgui/ui)
@@ -221,11 +222,11 @@
 				emagged = 0
 			else if(!contents.len)
 				feedback_inc("arcade_win_normal")
-				prizevend()
+				prizevend(user)
 
 			else
 				feedback_inc("arcade_win_normal")
-				prizevend()
+				prizevend(user)
 
 	else if (emagged && (turtle >= 4))
 		var/boomamt = rand(5,10)
@@ -399,7 +400,7 @@
 	user.set_machine(src)
 	var/dat = ""
 	if(gameStatus == ORION_STATUS_GAMEOVER)
-		playsound(src, 'sound/arcade/Ori_fail.ogg', 50, 1, extrarange = -3, falloff = 0.1, ignore_walls = FALSE)
+		playsound(src, 'sound/arcade/ori_fail.ogg', 50, 1, extrarange = -3, falloff = 0.1, ignore_walls = FALSE)
 		dat = "<center><h1>Game Over</h1></center>"
 		dat += "Like many before you, your crew never made it to Orion, lost to space... <br><b>forever</b>."
 		if(settlers.len == 0)
@@ -415,7 +416,7 @@
 				if(emagged)
 					var/mob/living/M = user
 					M.adjust_fire_stacks(5)
-					M.IgniteMob() //flew into a star, so you're on fire
+					M.ignite_mob() //flew into a star, so you're on fire
 					to_chat(user,span_danger(span_large("You feel an immense wave of heat emanate from \the [src]. Your skin bursts into flames.")))
 		dat += "<br><P ALIGN=Right><a href='byond://?src=\ref[src];menu=1'>OK...</a></P>"
 
@@ -534,7 +535,7 @@
 
 	else if(href_list["newgame"]) //Reset everything
 		if(gameStatus == ORION_STATUS_START)
-			playsound(src, 'sound/arcade/Ori_begin.ogg', 50, 1, extrarange = -3, falloff = 0.1, ignore_walls = FALSE)
+			playsound(src, 'sound/arcade/ori_begin.ogg', 50, 1, extrarange = -3, falloff = 0.1, ignore_walls = FALSE)
 			newgame(usr)
 	else if(href_list["menu"]) //back to the main menu
 		if(gameStatus == ORION_STATUS_GAMEOVER)
@@ -980,9 +981,9 @@
 		newcrew = specific
 	else
 		if(prob(50))
-			newcrew = pick(first_names_male)
+			newcrew = pick(GLOB.first_names_male)
 		else
-			newcrew = pick(first_names_female)
+			newcrew = pick(GLOB.first_names_female)
 	if(newcrew)
 		settlers += newcrew
 		alive++
@@ -1009,13 +1010,13 @@
 /obj/machinery/computer/arcade/orion_trail/proc/win(var/mob/user)
 	gameStatus = ORION_STATUS_START
 	src.visible_message("\The [src] plays a triumpant tune, stating 'CONGRATULATIONS, YOU HAVE MADE IT TO ORION.'")
-	playsound(src, 'sound/arcade/Ori_win.ogg', 50, 1, extrarange = -3, falloff = 0.1, ignore_walls = FALSE)
+	playsound(src, 'sound/arcade/ori_win.ogg', 50, 1, extrarange = -3, falloff = 0.1, ignore_walls = FALSE)
 	if(emagged)
 		new /obj/item/orion_ship(src.loc)
 		message_admins("[key_name_admin(user)] made it to Orion on an emagged machine and got an explosive toy ship.")
 		log_game("[key_name(user)] made it to Orion on an emagged machine and got an explosive toy ship.")
 	else
-		prizevend()
+		prizevend(user)
 	emagged = 0
 	name = "The Orion Trail"
 	desc = "Learn how our ancestors got to Orion, and have fun in the process!"
@@ -1046,6 +1047,9 @@
 			. += span_notice("There's a little switch on the bottom. It's flipped up.")
 
 /obj/item/orion_ship/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(active)
 		return
 
@@ -1292,7 +1296,7 @@
 
 	if(prob(winprob)) /// YEAH.
 		if(!emagged)
-			prizevend()
+			prizevend(user)
 			winscreen = "You won!"
 		else if(emagged)
 			gameprice = 1
@@ -1302,11 +1306,11 @@
 			G.activate()
 			G.throw_at(get_turf(user),10,10) /// Play stupid games, win stupid prizes.
 
-		playsound(src, 'sound/arcade/Ori_win.ogg', 50, 1, extrarange = -3, falloff = 0.1, ignore_walls = FALSE)
+		playsound(src, 'sound/arcade/ori_win.ogg', 50, 1, extrarange = -3, falloff = 0.1, ignore_walls = FALSE)
 		winprob = 0
 
 	else
-		playsound(src, 'sound/arcade/Ori_fail.ogg', 50, 1, extrarange = -3, falloff = 0.1, ignore_walls = FALSE)
+		playsound(src, 'sound/arcade/ori_fail.ogg', 50, 1, extrarange = -3, falloff = 0.1, ignore_walls = FALSE)
 		winscreen = "Aw, shucks. Try again!"
 	wintick = 0
 	gamepaid = 0

@@ -4,11 +4,17 @@
 	cycle_sloshed = FALSE
 
 	if(loc != owner)
-		if(istype(owner))
-			loc = owner
+		if(isAI(owner))
+			var/mob/living/silicon/ai/AI = owner
+			if(AI.holo && AI.holo.masters[AI])
+				if(loc != AI.holo.masters[AI])
+					loc = owner
 		else
-			qdel(src)
-			return
+			if(istype(owner))
+				loc = owner
+			else
+				qdel(src)
+				return
 
 	HandleBellyReagents()	// reagent belly stuff, here to jam it into subsystems and avoid too much cpu usage
 	update_belly_surrounding() // Updates belly_surrounding list for indirect vore usage
@@ -21,20 +27,27 @@
 	// Autotransfer count moved here.
 	if(autotransfer_enabled)
 		var/list/autotransferables = list()
-		for(var/atom/movable/M in contents)
-			if(!M || !M.autotransferable) continue
-			// If the prey can't pass the filter of at least one transfer location, skip it
-			if(ismob(M) && !(autotransfer_filter(M, autotransfer_secondary_whitelist, autotransfer_secondary_blacklist) || autotransfer_filter(M, autotransfer_whitelist, autotransfer_blacklist))) continue
-			if(isitem(M) && !(autotransfer_filter(M, autotransfer_secondary_whitelist_items, autotransfer_secondary_blacklist_items) || autotransfer_filter(M, autotransfer_whitelist_items, autotransfer_blacklist_items))) continue
-			M.belly_cycles++
-			if(M.belly_cycles < autotransferwait / 60) continue
-			autotransferables += M
-		if(LAZYLEN(autotransferables) >= autotransfer_min_amount)
-			var/tally = 0
-			for(var/atom/movable/M in autotransferables)
-				if(check_autotransfer(M))
-					tally++
-				if(autotransfer_max_amount > 0 && tally >= autotransfer_max_amount) break
+		var/list/transfer_bellies = compile_autotransfer_bellies()
+		if(transfer_bellies)
+			for(var/atom/movable/M in contents)
+				if(!M || !M.autotransferable)
+					continue
+				// If the prey can't pass the filter of at least one transfer location, skip it
+				if(ismob(M) && !(autotransfer_filter(M, autotransfer_secondary_whitelist, autotransfer_secondary_blacklist) || autotransfer_filter(M, autotransfer_whitelist, autotransfer_blacklist))) continue
+				if(isitem(M) && !(autotransfer_filter(M, autotransfer_secondary_whitelist_items, autotransfer_secondary_blacklist_items) || autotransfer_filter(M, autotransfer_whitelist_items, autotransfer_blacklist_items))) continue
+				M.belly_cycles++
+				if(M.belly_cycles < autotransferwait / 60)
+					continue
+				autotransferables += M
+			if(LAZYLEN(autotransferables) >= autotransfer_min_amount)
+				var/tally = 0
+				for(var/atom/movable/M in autotransferables)
+					if(check_autotransfer(M, transfer_bellies))
+						tally++
+					if(autotransfer_max_amount > 0 && tally >= autotransfer_max_amount)
+						break
+				for(var/obj/belly/transfer_belly in (transfer_bellies["primary"] + transfer_bellies["secondary"]))
+					transfer_belly.handle_visual_update()
 
 	var/play_sound //Potential sound to play at the end to avoid code duplication.
 	var/to_update = FALSE //Did anything update worthy happen?
@@ -46,7 +59,7 @@
 		touchable_atoms -= G
 	var/datum/digest_mode/DM = GLOB.digest_modes["[digest_mode]"]
 	if(!DM)
-		log_debug("Digest mode [digest_mode] didn't exist in the digest_modes list!!")
+		log_runtime("Digest mode [digest_mode] didn't exist in the digest_modes list!!")
 		return FALSE
 	if(digest_mode == DM_EGG)
 		prey_loop() //Apparently on Egg mode the sound loop never played before? Just slapping this here to fix that
@@ -180,6 +193,24 @@
 			if(L.absorbed && !issilicon(L))
 				L.Weaken(5)
 
+			//Thickbelly flag
+			if((mode_flags & DM_FLAG_THICKBELLY) && !L.muffled)
+				L.muffled = TRUE
+			//Fix muffled sometimes being sticky.
+			else if(!(mode_flags & DM_FLAG_THICKBELLY) && L.muffled)
+				L.muffled = FALSE
+
+			//Force psay
+			if((mode_flags & DM_FLAG_FORCEPSAY) && !L.forced_psay && L.absorbed)
+				L.forced_psay = TRUE
+			//Fix forcepsay sometimes being sticky.
+			else if(!(mode_flags & DM_FLAG_FORCEPSAY) && L.forced_psay)
+				L.forced_psay = FALSE
+
+			// Wet flag
+			if(mode_flags & DM_FLAG_WETTENS)
+				L.set_wet_stacks(20)
+
 			//Handle 'human'
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L
@@ -189,22 +220,8 @@
 					if(H.bloodstr.get_reagent_amount(REAGENT_ID_NUMBENZYME) < 2)
 						H.bloodstr.add_reagent(REAGENT_ID_NUMBENZYME,4)
 
-				//Thickbelly flag
-				if((mode_flags & DM_FLAG_THICKBELLY) && !H.muffled)
-					H.muffled = TRUE
-				//Fix muffled sometimes being sticky.
-				else if(!(mode_flags & DM_FLAG_THICKBELLY) && H.muffled)
-					H.muffled = FALSE
-
-				//Force psay
-				if((mode_flags & DM_FLAG_FORCEPSAY) && !H.forced_psay && H.absorbed)
-					H.forced_psay = TRUE
-				//Fix forcepsay sometimes being sticky.
-				else if(!(mode_flags & DM_FLAG_FORCEPSAY) && H.forced_psay)
-					H.forced_psay = FALSE
-
 				//Worn items flag
-				if(mode_flags & DM_FLAG_AFFECTWORN)
+				if((mode_flags & DM_FLAG_AFFECTWORN) && H.contaminate_pref)
 					for(var/slot in slots)
 						var/obj/item/I = H.get_equipped_item(slot = slot)
 						if(I && I.canremove)
@@ -214,7 +231,9 @@
 				if((mode_flags & DM_FLAG_STRIPPING) && H.strip_pref) //Stripping pref check
 					for(var/slot in slots)
 						var/obj/item/I = H.get_equipped_item(slot = slot)
-						if(I && H.unEquip(I, force = FALSE))
+						if(!I || I.flags & NOSTRIP)
+							continue
+						if(H.unEquip(I, force = FALSE))
 							handle_digesting_item(I)
 							digestion_noise_chance = 25
 							to_update = TRUE
@@ -289,9 +308,9 @@
 			M.digestion_in_progress = TRUE
 			if(M.health > -36 || (ishuman(M) && M.health > -136))
 				to_chat(M, span_vnotice("(Your predator has enabled gradual body digestion. Stick around for a second round of churning to reach the true finisher.)"))
-		if(M.health < M.maxHealth * -1) //Siplemobs etc
+		if(M.health < M.getMaxHealth() * -1) //Siplemobs etc
 			if(ishuman(M))
-				if(M.health < (M.maxHealth * -1) -100) //Spacemans can go much deeper. Jank but maxHealth*-2 doesn't work with flat standard -100hp death threshold.
+				if(M.health < (M.getMaxHealth() * -1) -100) //Spacemans can go much deeper. Jank but maxHealth*-2 doesn't work with flat standard -100hp death threshold.
 					if(slow_brutal)
 						var/mob/living/carbon/human/P = M
 						var/vitals_only = TRUE
@@ -315,7 +334,7 @@
 			return
 	var/digest_alert_owner = span_vnotice(belly_format_string(digest_messages_owner, M))
 	var/digest_alert_prey = span_vnotice(belly_format_string(digest_messages_prey, M))
-	var/compensation = M.maxHealth / 5 //Dead body bonus.
+	var/compensation = M.getMaxHealth() / 5 //Dead body bonus.
 	if(ishuman(M))
 		compensation += M.getOxyLoss() //How much of the prey's damage was caused by passive crit oxyloss to compensate the lost nutrition.
 

@@ -90,6 +90,13 @@
 			/obj/item/toy/plushie/otter,
 			/obj/item/toy/plushie/vox,
 			/obj/item/toy/plushie/shark,
+			/obj/item/toy/plushie/dragon,
+			/obj/item/toy/plushie/dragon/green,
+			/obj/item/toy/plushie/dragon/purple,
+			/obj/item/toy/plushie/dragon/red_east,
+			/obj/item/toy/plushie/dragon/green_east,
+			/obj/item/toy/plushie/dragon/white_east,
+			/obj/item/toy/plushie/dragon/gold_east,
 			//VOREStation Add End
 			//YawnWider Add Start
 			/obj/item/toy/plushie/teshari/_yw,
@@ -98,12 +105,6 @@
 			/obj/item/toy/plushie/teshari/y_yw,
 			//YawnWider Add End
 			//CHOMPStation Add Start
-			/obj/item/toy/plushie/dragon,
-			/obj/item/toy/plushie/dragon/green,
-			/obj/item/toy/plushie/dragon/purple,
-			/obj/item/toy/plushie/dragon/white_east,
-			/obj/item/toy/plushie/dragon/red_east,
-			/obj/item/toy/plushie/dragon/green_east,
 			/obj/item/toy/plushie/teppi,
 			/obj/item/toy/plushie/teppi/alt
 			//CHOMPStation Add End
@@ -247,8 +248,8 @@
 	cost = 60
 	containertype = /obj/structure/closet/crate/secure/gear
 	containername = "Belt-miner gear crate"
-	access = list(access_mining,
-				  access_xenoarch)
+	access = list(ACCESS_MINING,
+				  ACCESS_XENOARCH)
 	one_access = TRUE
 
 /datum/supply_pack/misc/jetpack
@@ -260,16 +261,16 @@
 	cost = 75
 	containertype = /obj/structure/closet/crate/secure/gear
 	containername = "jetpack crate"
-	access = list(access_mining,
-				  access_xenoarch,
-				  access_eva,
-				  access_explorer, //CHOMP explo keep
-				  access_pilot)
+	access = list(ACCESS_MINING,
+				  ACCESS_XENOARCH,
+				  ACCESS_EVA,
+				  ACCESS_EXPLORER, // CHOMP explo keep
+				  ACCESS_PILOT)
 	one_access = TRUE
 
 /datum/supply_pack/randomised/misc/explorer_shield
 	name = JOB_EXPLORER + " shield"
-	desc = "Two Physical and Two PSG shields for use by away teams. Requires EVA or Pilot's access."
+	desc = "Contains two random shields. These can be Physical or PSG shields for use by away teams. Requires EVA or Pilot's access."
 	num_contained = 2
 	contains = list(
 			/obj/item/shield/riot/explorer,
@@ -280,9 +281,9 @@
 	cost = 75
 	containertype = /obj/structure/closet/crate/secure/gear
 	containername = "exploration shield crate"
-	access = list(access_explorer, //CHOMP explo keep
-				  access_eva,
-				  access_pilot)
+	access = list(ACCESS_EXPLORER, // CHOMP explo keep
+				  ACCESS_EVA,
+				  ACCESS_PILOT)
 	one_access = TRUE
 
 /datum/supply_pack/misc/music_players
@@ -315,9 +316,9 @@
 	containertype = /obj/structure/closet/crate/secure/gear
 	containername = "exploration radio headsets crate"
 	access = list(
-		access_explorer, //CHOMP explo keep
-		access_eva,
-		access_pilot
+		ACCESS_EXPLORER,
+		ACCESS_EVA,
+		ACCESS_PILOT
 	)
 	one_access = TRUE
 

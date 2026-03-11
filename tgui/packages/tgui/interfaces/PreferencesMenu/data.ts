@@ -1,4 +1,6 @@
-import type { sendAct } from '../../backend';
+import type { sendAct } from 'tgui/events/act';
+
+import type { LegacyConstant } from './bay_prefs/data';
 
 export enum GamePreferencesSelectedPage {
   Settings,
@@ -32,5 +34,6 @@ export type PreferencesMenuData = {
 };
 
 export type ServerData = {
+  legacy: LegacyConstant;
   [otheyKey: string]: unknown;
 };

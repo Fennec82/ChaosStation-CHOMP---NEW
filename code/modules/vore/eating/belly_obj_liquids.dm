@@ -5,16 +5,19 @@
 		if(isrobot(owner))
 			var/mob/living/silicon/robot/R = owner
 			if(R.cell && R.cell.charge >= gen_cost*10 && gen_interval >= gen_time)
-				GenerateBellyReagents()
+				if(R.cell.percent() >= reagent_gen_cost_limit)
+					GenerateBellyReagents()
 				gen_interval = 0
-			else
-				gen_interval++
-		else
-			if(owner.nutrition >= gen_cost && gen_interval >= gen_time)
+				return
+			gen_interval++
+			return
+
+		if(owner.nutrition >= gen_cost && gen_interval >= gen_time)
+			if(owner.nutrition_percent() >= reagent_gen_cost_limit)
 				GenerateBellyReagents()
-				gen_interval = 0
-			else
-				gen_interval++
+			gen_interval = 0
+			return
+		gen_interval++
 
 /obj/belly/proc/HandleBellyReagentEffects(var/list/touchable_atoms)
 	if(LAZYLEN(contents))
@@ -24,26 +27,26 @@
 				affecting_amt = 5
 			if(affecting_amt >= 1)
 				for(var/mob/living/L in touchable_atoms)
-					if(!L.apply_reagents)
+					if(!L.apply_reagents || L.absorbed)
 						continue
 					if((L.digestable && digest_mode == DM_DIGEST))
 						if(!L.permit_healbelly && is_beneficial) // Healing reagents turned off in preferences!
 							continue
 						if(reagents.total_volume)
-							reagents.trans_to(L, affecting_amt, 1, FALSE)
+							reagents.splash_mob(L, affecting_amt, FALSE)
 					if(L.permit_healbelly && digest_mode == DM_HEAL)
 						if(is_beneficial && reagents.total_volume)
-							reagents.trans_to(L, affecting_amt, 1, FALSE)
+							reagents.splash_mob(L, affecting_amt, FALSE)
 				for(var/obj/item/I in touchable_atoms)
-					if(is_type_in_list(I, item_digestion_blacklist))
+					if(is_type_in_list(I, GLOB.item_digestion_blacklist))
 						continue
 					if(reagents.total_volume)
 						reagents.trans_to(I, affecting_amt, 1, FALSE)
-		SEND_SIGNAL(src, COMSIG_BELLY_UPDATE_VORE_FX, FALSE, reagents.total_volume) // Signals vore_fx() reagents updates.
+		SEND_SIGNAL(src, COMSIG_BELLY_UPDATE_VORE_FX, reagents.total_volume) // Signals vore_fx() reagents updates.
 		for(var/mob/living/L in contents)
-			vore_fx(L, FALSE, reagents.total_volume)
+			vore_fx(L, reagents.total_volume)
 	if(owner.previewing_belly == src)
-		vore_fx(owner, FALSE, reagents.total_volume)
+		vore_fx(owner, reagents.total_volume)
 
 /obj/belly/proc/GenerateBellyReagents()
 	if(isrobot(owner))
@@ -51,13 +54,13 @@
 		if(!R.use_direct_power(gen_cost*10, 200))
 			return
 	else
-		owner.nutrition -= gen_cost
+		owner.adjust_nutrition(-gen_cost)
 	for(var/reagent in generated_reagents)
 		reagents.add_reagent(reagent, generated_reagents[reagent], was_from_belly = TRUE)
 	if(count_liquid_for_sprite)
 		owner.handle_belly_update() //This is run whenever a belly's contents are changed.
 	if(LAZYLEN(belly_surrounding))
-		SEND_SIGNAL(src, COMSIG_BELLY_UPDATE_VORE_FX, FALSE, reagents.total_volume) // Signals vore_fx() reagents updates.
+		SEND_SIGNAL(src, COMSIG_BELLY_UPDATE_VORE_FX, reagents.total_volume) // Signals vore_fx() reagents updates.
 
 //////////////////////////// REAGENT_DIGEST ////////////////////////
 
@@ -206,6 +209,14 @@
 			reagentid = REAGENT_ID_TRICORDRAZINE
 			reagentcolor = "#8040FF"
 			is_beneficial = TRUE
+		if(REAGENT_ETHANOL)
+			generated_reagents = list(REAGENT_ID_ETHANOL = 1)
+			if(reagent_name in our_reagents)
+				reagent_name = lowertext(REAGENT_ETHANOL)
+			gen_amount = 1
+			gen_cost = 5
+			reagentid = REAGENT_ID_ETHANOL
+			reagentcolor = "#bfbfbf"
 
 
 /////////////////////// FULLNESS MESSAGES //////////////////////
@@ -214,113 +225,59 @@
 // Returns a string which shoul be appended to the Examine output.
 // Yes I know it doesnt look great with 5 almost identical procs in a row, I didnt have a better idea at the time - Jack
 /obj/belly/proc/get_reagent_examine_msg1()
-	if(fullness1_messages.len)
-		var/formatted_message
-		var/raw_message = pick(fullness1_messages)
+	if(!fullness1_messages.len)
+		return ""
+	var/formatted_message
+	var/raw_message = pick(fullness1_messages)
 
-		formatted_message = replacetext(raw_message,"%belly",lowertext(name))
-		formatted_message = replacetext(formatted_message,"%pred",owner)
+	formatted_message = replacetext(raw_message,"%belly", get_belly_name())
+	formatted_message = replacetext(formatted_message, "%pred", owner)
 
-		return(span_red("[formatted_message]<BR>"))
+	return(span_red("[formatted_message]<BR>"))
 
 /obj/belly/proc/get_reagent_examine_msg2()
-	if(fullness1_messages.len)
-		var/formatted_message
-		var/raw_message = pick(fullness2_messages)
+	if(!fullness1_messages.len)
+		return ""
+	var/formatted_message
+	var/raw_message = pick(fullness2_messages)
 
-		formatted_message = replacetext(raw_message,"%belly",lowertext(name))
-		formatted_message = replacetext(formatted_message,"%pred",owner)
+	formatted_message = replacetext(raw_message,"%belly", get_belly_name())
+	formatted_message = replacetext(formatted_message, "%pred", owner)
 
-		return(span_red("[formatted_message]<BR>"))
+	return(span_red("[formatted_message]<BR>"))
 
 /obj/belly/proc/get_reagent_examine_msg3()
-	if(fullness1_messages.len)
-		var/formatted_message
-		var/raw_message = pick(fullness3_messages)
+	if(!fullness1_messages.len)
+		return ""
+	var/formatted_message
+	var/raw_message = pick(fullness3_messages)
 
-		formatted_message = replacetext(raw_message,"%belly",lowertext(name))
-		formatted_message = replacetext(formatted_message,"%pred",owner)
+	formatted_message = replacetext(raw_message,"%belly", get_belly_name())
+	formatted_message = replacetext(formatted_message, "%pred", owner)
 
-		return(span_red("[formatted_message]<BR>"))
+	return(span_red("[formatted_message]<BR>"))
 
 /obj/belly/proc/get_reagent_examine_msg4()
-	if(fullness1_messages.len)
-		var/formatted_message
-		var/raw_message = pick(fullness4_messages)
+	if(!fullness1_messages.len)
+		return ""
+	var/formatted_message
+	var/raw_message = pick(fullness4_messages)
 
-		formatted_message = replacetext(raw_message,"%belly",lowertext(name))
-		formatted_message = replacetext(formatted_message,"%pred",owner)
+	formatted_message = replacetext(raw_message,"%belly", get_belly_name())
+	formatted_message = replacetext(formatted_message, "%pred", owner)
 
-		return(span_red("[formatted_message]<BR>"))
+	return(span_red("[formatted_message]<BR>"))
 
 /obj/belly/proc/get_reagent_examine_msg5()
-	if(fullness1_messages.len)
-		var/formatted_message
-		var/raw_message = pick(fullness5_messages)
+	if(!fullness1_messages.len)
+		return ""
+	var/formatted_message
+	var/raw_message = pick(fullness5_messages)
 
-		formatted_message = replacetext(raw_message,"%belly",lowertext(name))
-		formatted_message = replacetext(formatted_message,"%pred",owner)
+	formatted_message = replacetext(raw_message,"%belly", get_belly_name())
+	formatted_message = replacetext(formatted_message, "%pred", owner)
 
-		return(span_red("[formatted_message]<BR>"))
-
-
-// The next function gets the messages set on the belly, in human-readable format.
-// This is useful in customization boxes and such. The delimiter right now is \n\n so
-// in message boxes, this looks nice and is easily delimited.
-/obj/belly/proc/get_reagent_messages(var/type, var/delim = "\n\n")
-	ASSERT(type == "full1" || type == "full2" || type == "full3" || type == "full4" || type == "full5")
-	var/list/raw_messages
-
-	switch(type)
-		if("full1")
-			raw_messages = fullness1_messages
-		if("full2")
-			raw_messages = fullness2_messages
-		if("full3")
-			raw_messages = fullness3_messages
-		if("full4")
-			raw_messages = fullness4_messages
-		if("full5")
-			raw_messages = fullness5_messages
-
-	var/messages = raw_messages.Join(delim)
-	return messages
-
-// The next function sets the messages on the belly, from human-readable var
-// replacement strings and linebreaks as delimiters (two \n\n by default).
-// They also sanitize the messages.
-/obj/belly/proc/set_reagent_messages(var/raw_text, var/type, var/delim = "\n\n")
-	ASSERT(type == "full1" || type == "full2" || type == "full3" || type == "full4" || type == "full5")
-
-	var/list/raw_list = splittext(html_encode(raw_text),delim)
-	if(raw_list.len > 10)
-		raw_list.Cut(11)
-		log_debug("[owner] tried to set [lowertext(name)] with 11+ messages")
-
-	for(var/i = 1, i <= raw_list.len, i++)
-		if(length(raw_list[i]) > 160 || length(raw_list[i]) < 10) //160 is fudged value due to htmlencoding increasing the size
-			raw_list.Cut(i,i)
-			log_debug("[owner] tried to set [lowertext(name)] with >121 or <10 char message")
-		else
-			raw_list[i] = readd_quotes(raw_list[i])
-			//Also fix % sign for var replacement
-			raw_list[i] = replacetext(raw_list[i],"&#37;","%")
-
-	ASSERT(raw_list.len <= 10) //Sanity
-
-	switch(type)
-		if("full1")
-			fullness1_messages = raw_list
-		if("full2")
-			fullness2_messages = raw_list
-		if("full3")
-			fullness3_messages = raw_list
-		if("full4")
-			fullness4_messages = raw_list
-		if("full5")
-			fullness5_messages = raw_list
-
-	return
+	return(span_red("[formatted_message]<BR>"))
 
 /////////////////////////// Process Cycle Lite /////////////////////////// CHOMP PCL
 /obj/belly/proc/quick_cycle() //For manual belly cycling without straining the bellies subsystem.
@@ -338,7 +295,7 @@
 
 	var/datum/digest_mode/DM = GLOB.digest_modes["[digest_mode]"]
 	if(!DM)
-		log_debug("Digest mode [digest_mode] didn't exist in the digest_modes list!!")
+		log_runtime("Digest mode [digest_mode] didn't exist in the digest_modes list!!")
 		return FALSE
 	if(DM.handle_atoms(src, touchable_atoms))
 		updateVRPanels()
@@ -371,15 +328,15 @@
 
 /obj/belly/proc/update_internal_overlay()
 	if(LAZYLEN(belly_surrounding))
-		SEND_SIGNAL(src, COMSIG_BELLY_UPDATE_VORE_FX, TRUE) // Signals vore_fx() to listening atoms. Atoms must handle appropriate isliving() checks.
+		SEND_SIGNAL(src, COMSIG_BELLY_UPDATE_VORE_FX) // Signals vore_fx() to listening atoms. Atoms must handle appropriate isliving() checks.
 	for(var/A in belly_surrounding)
 		if(isliving(A))
-			vore_fx(A,1)
+			vore_fx(A)
 	if(owner.previewing_belly == src)
 		if(isbelly(owner.loc))
 			owner.previewing_belly = null
 			return
-		vore_fx(owner,1)
+		vore_fx(owner)
 
 /obj/belly/deserialize(var/list/data)
 	..()

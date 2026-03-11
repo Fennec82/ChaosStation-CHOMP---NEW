@@ -13,9 +13,10 @@
 	the Tajaran homeworld due to their excellent build quality, precision, and \
 	stopping power. Thier bolt-action rifles and brushguns are a staple amongst \
 	the rural communities that dot this infinite frontier."
+	icon = 'icons/obj/gun.dmi'
 	icon_state = "boltaction"
 	item_state = "boltaction"
-	fire_sound = 'sound/weapons/Gunshot_generic_rifle.ogg'
+	fire_sound = 'sound/weapons/gunshot_generic_rifle.ogg'
 	max_shells = 5
 	caliber = "7.62mm"
 	origin_tech = list(TECH_COMBAT = 1)// Old as shit rifle doesn't have very good tech.
@@ -78,7 +79,7 @@
 			playsound(src, fire_sound, 50, 1)
 			user.visible_message(span_danger("[src] goes off!"), span_danger("The rifle goes off in your face!"))
 			return
-		if(do_after(user, 30))
+		if(do_after(user, 3 SECONDS, target = src))
 			if(sawn_off)
 				return
 			icon_state = "sawn_rifle"
@@ -105,7 +106,7 @@
 	as any modern interpretation. Uses 7.62mm rounds."
 	icon_state = "surplus"
 	item_state = "rifle"
-	fire_sound = 'sound/weapons/Gunshot_generic_rifle.ogg'
+	fire_sound = 'sound/weapons/gunshot_generic_rifle.ogg'
 	max_shells = 4
 	slot_flags = null
 	caliber = "7.62mm"
@@ -132,7 +133,7 @@
 	the rural communities that dot this infinite frontier."
 	icon_state = "scoped-boltaction"
 	item_state = "boltaction_scoped"
-	fire_sound = 'sound/weapons/Gunshot_generic_rifle.ogg'
+	fire_sound = 'sound/weapons/gunshot_generic_rifle.ogg'
 	max_shells = 5
 	caliber = "7.62mm"
 	origin_tech = list(TECH_COMBAT = 2)// Old as shit rifle doesn't have very good tech, but it does have a scope.

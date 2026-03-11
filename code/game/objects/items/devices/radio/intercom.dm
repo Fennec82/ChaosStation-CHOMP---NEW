@@ -2,7 +2,7 @@
 	listening = 0 //CHOMP Edit: Temporary bandaid fix for comms lag.
 	name = "station intercom (General)"
 	desc = "Talk through this."
-	icon = 'icons/obj/radio_vr.dmi'
+	icon = 'icons/obj/radio.dmi'
 	icon_state = "intercom"
 	layer = ABOVE_WINDOW_LAYER
 	anchored = TRUE
@@ -21,7 +21,11 @@
 	. = ..()
 	var/area/A = get_area(src)
 	if(A)
-		RegisterSignal(A, COMSIG_OBSERVER_APC, /atom/proc/update_icon)
+		RegisterSignal(A, COMSIG_OBSERVER_APC, PROC_REF(on_observer_apc))
+	update_icon()
+
+/obj/item/radio/intercom/proc/on_observer_apc()
+	SIGNAL_HANDLER
 	update_icon()
 
 /obj/item/radio/intercom/Destroy()
@@ -81,7 +85,7 @@
 /obj/item/radio/intercom/omni
 	name = "global announcer"
 /obj/item/radio/intercom/omni/Initialize(mapload)
-	channels = radiochannels.Copy()
+	channels = GLOB.radiochannels.Copy()
 	return ..()
 
 /obj/item/radio/intercom/Initialize(mapload)
@@ -90,13 +94,13 @@
 
 /obj/item/radio/intercom/department/medbay/Initialize(mapload)
 	. = ..()
-	internal_channels = default_medbay_channels.Copy()
+	internal_channels = GLOB.default_medbay_channels.Copy()
 
 /obj/item/radio/intercom/department/security/Initialize(mapload)
 	. = ..()
 	internal_channels = list(
 		num2text(PUB_FREQ) = list(),
-		num2text(SEC_I_FREQ) = list(access_security)
+		num2text(SEC_I_FREQ) = list(ACCESS_SECURITY)
 	)
 
 /obj/item/radio/intercom/entertainment/Initialize(mapload)
@@ -115,7 +119,7 @@
 
 /obj/item/radio/intercom/syndicate/Initialize(mapload)
 	. = ..()
-	internal_channels[num2text(SYND_FREQ)] = list(access_syndicate)
+	internal_channels[num2text(SYND_FREQ)] = list(ACCESS_SYNDICATE)
 
 /obj/item/radio/intercom/raider
 	name = "illicit intercom"
@@ -126,7 +130,7 @@
 
 /obj/item/radio/intercom/raider/Initialize(mapload)
 	. = ..()
-	internal_channels[num2text(RAID_FREQ)] = list(access_syndicate)
+	internal_channels[num2text(RAID_FREQ)] = list(ACCESS_SYNDICATE)
 
 /obj/item/radio/intercom/attack_ai(mob/user as mob)
 	src.add_fingerprint(user)
@@ -173,7 +177,7 @@
 			return -1
 	if (!src.listening)
 		return -1
-	if(freq in ANTAG_FREQS)
+	if(freq in GLOB.antag_frequencies)
 		if(!(src.syndie))
 			return -1//Prevents broadcast of messages over devices lacking the encryption
 
@@ -205,7 +209,7 @@
 			set_light_on(TRUE)
 
 //VOREStation Add Start
-/obj/item/radio/intercom/AICtrlClick(var/mob/user)
+/obj/item/radio/intercom/ctrl_click_ai(var/mob/user)
 	ToggleBroadcast()
 	to_chat(user, span_notice("\The [src]'s microphone is now <b>[broadcasting ? "enabled" : "disabled"]</b>."))
 
@@ -235,4 +239,9 @@
 
 /obj/item/radio/intercom/locked/confessional
 	name = "confessional intercom"
-	frequency = 1480
+	frequency = LOCKED_COM_FREQ
+
+/obj/item/radio/intercom/locked/entertainment
+	name = "entertainment PA"
+	frequency = ENT_FREQ
+	broadcasting = TRUE

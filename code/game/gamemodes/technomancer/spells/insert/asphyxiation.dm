@@ -50,7 +50,7 @@
 /obj/item/inserted_spell/asphyxiation/on_expire()
 	..()
 
-// if((getOxyLoss() > (species.total_health/2)) || (health <= config.health_threshold_crit))
+// if((getOxyLoss() > (species.total_health/2)) || (health <= get_crit_point())
 
 /obj/item/inserted_spell/asphyxiation/proc/predict_crit(var/pulses_remaining, var/mob/living/carbon/human/victim, var/previous_damage = 0)
 	if(pulses_remaining <= 0) // Infinite loop protection
@@ -75,7 +75,7 @@
 		to fade to black...")))
 		//to_world("Predicted hardcrit.")
 		return 1
-	else if(predicted_damage >= victim.species.total_health / 2) // Or perhaps we're gonna go into 'oxy crit'.
+	else if(predicted_damage >= victim.getMaxHealth() / 2) // Or perhaps we're gonna go into 'oxy crit'.
 		to_chat(victim, span_danger("You feel really light-headed, and everything seems to be fading..."))
 		//to_world("Predicted oxycrit.")
 		return 1

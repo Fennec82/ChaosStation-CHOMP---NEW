@@ -17,7 +17,7 @@
 
 	origin_tech = list(TECH_COMBAT = 7, TECH_MATERIAL = 6, TECH_MAGNET = 4)
 
-	fire_sound = 'sound/weapons/Taser.ogg'
+	fire_sound = 'sound/weapons/taser.ogg'
 
 	load_method = MAGAZINE //Nyeh heh hehhh.
 	magazine_type = null
@@ -27,6 +27,9 @@
 	var/charge_left = 0
 	var/max_charge = 0
 	charge_sections = 5
+
+	special_handling = TRUE
+	special_weapon_handling = TRUE
 
 /obj/item/gun/projectile/cell_loaded/consume_next_projectile()
 	if(chambered && ammo_magazine)
@@ -71,6 +74,9 @@
 		M?.hud_used.update_ammo_hud(M, src)
 
 /obj/item/gun/projectile/cell_loaded/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(!chambered)
 		return
 

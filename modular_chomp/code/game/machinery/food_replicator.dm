@@ -129,7 +129,7 @@
 		return
 	if(istype(O, /obj/item/reagent_containers/food))
 		balloon_alert(user, "scanning...")
-		if(!do_after(user, 10))
+		if(!do_after(user, 10, src))
 			return
 		foodcheck(O)
 		return
@@ -223,8 +223,8 @@
 	visible_message(span_warning("Whirrs and spouts, starting to heat up!"))
 	playsound(src, pick('sound/effects/Glassbr1.ogg', 'sound/effects/Glassbr2.ogg', 'sound/effects/Glassbr3.ogg'), 50, 1)
 
-	message_admins("[src] attempted to create an EX donk pocket at [x], [y], [z], last touched by [fingerprintslast]")
-	log_game("[src] attempted to create an EX donk pocket at [x], [y], [z], last touched by [fingerprintslast]. (<A href='byond://?_src_=holder;[HrefToken()];adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)", 1)
+	message_admins("[src] attempted to create an EX donk pocket at [x], [y], [z], last touched by [forensic_data?.get_lastprint()]")
+	log_game("[src] attempted to create an EX donk pocket at [x], [y], [z], last touched by [forensic_data?.get_lastprint()]. (<A href='byond://?_src_=holder;[HrefToken()];adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)", 1)
 
 	sleep(6 SECONDS) // GET OUT, GET OUT
 	stat = BROKEN

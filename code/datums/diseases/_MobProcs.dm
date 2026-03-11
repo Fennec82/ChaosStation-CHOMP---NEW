@@ -5,17 +5,26 @@
 			return TRUE
 	return FALSE
 
+/mob/proc/addDisease(datum/disease/D)
+	LAZYADD(viruses, D)
+	return TRUE
+
 /mob/proc/RemoveDisease(datum/disease/D)
-	viruses -= D
+	LAZYREMOVE(viruses, D)
 	return TRUE
 
 /mob/proc/HasResistance(resistance)
-	if(resistances.Find(resistance))
+	if(LAZYFIND(resistances, resistance))
 		return TRUE
 	return FALSE
 
 /mob/proc/IsInfected()
 	if(isemptylist(GetViruses()))
+		return FALSE
+	return TRUE
+
+/mob/proc/isInfective()
+	if(isemptylist(GetSpreadableViruses()))
 		return FALSE
 	return TRUE
 
@@ -27,9 +36,6 @@
 		return FALSE
 
 	if(HasDisease(D))
-		return FALSE
-
-	if(istype(D, /datum/disease/advance) && count_by_type(GetViruses(), /datum/disease/advance) > 0)
 		return FALSE
 
 	var/compatible_type = FALSE
@@ -49,34 +55,15 @@
 
 /mob/proc/ContractDisease(datum/disease/D, var/target_zone)
 	if(!CanContractDisease(D))
-		return 0
-	AddDisease(D)
+		return FALSE
+	D.try_infect(src)
 	return TRUE
-
-/mob/proc/AddDisease(datum/disease/D, respect_carrier = FALSE)
-	var/datum/disease/DD = new D.type(1, D, 0)
-	DD.start_cure_timer()
-	viruses += DD
-	DD.affected_mob = src
-	GLOB.active_diseases += DD
-
-	var/list/skipped = list("affected_mob", "holder", "carrier", "stage", "type", "parent_type", "vars", "transformed", "_active_timers")
-	if(respect_carrier)
-		skipped -= "carrier"
-	for(var/V in DD.vars)
-		if(V in skipped)
-			continue
-		if(istype(DD.vars[V],/list))
-			var/list/L = D.vars[V]
-			if(islist(L))
-				DD.vars[V] = L.Copy()
-		else
-			DD.vars[V] = D.vars[V]
-
-	log_admin("[key_name(src)] has contracted the virus \"[DD]\"")
 
 /mob/living/carbon/human/ContractDisease(datum/disease/D, target_zone)
 	if(!CanContractDisease(D))
+		return FALSE
+
+	if(species.virus_immune && !global_flag_check(D.virus_modifiers, BYPASSES_IMMUNITY))
 		return FALSE
 
 	var/obj/item/clothing/Cl = null
@@ -90,8 +77,10 @@
 	if(prob(15/D.permeability_mod))
 		return
 
+/* We have stupid high nutrition values - Something to see about in the future
 	if(nutrition > 300 && prob(nutrition/50))
 		return
+*/
 
 	if(!target_zone)
 		target_zone = pick(list(
@@ -141,10 +130,10 @@
 					passed = prob((Cl.permeability_coefficient*100) - 1)
 
 	if(passed)
-		AddDisease(D)
+		D.try_infect(src)
 
 /mob/living/proc/AirborneContractDisease(datum/disease/D, force_spread)
-	if(((D.spread_flags & DISEASE_SPREAD_AIRBORNE) || force_spread) && prob(50*D.spreading_modifier) - 1)
+	if(((D.spread_flags & DISEASE_SPREAD_AIRBORNE) || force_spread) && prob(50*D.permeability_mod) - 1)
 		ForceContractDisease(D)
 
 /mob/living/carbon/AirborneContractDisease(datum/disease/D, force_spread)
@@ -158,7 +147,7 @@
 	if(!CanContractDisease(D))
 		return FALSE
 
-	AddDisease(D, respect_carrier)
+	D.infect(src, respect_carrier)
 	return TRUE
 
 /mob/living/carbon/human/CanContractDisease(datum/disease/D)
@@ -189,6 +178,11 @@
 	LAZYINITLIST(viruses)
 	return viruses
 
+/mob/proc/GetActiveViruses()
+	var/list/viruses_to_return = GetViruses()
+	viruses_to_return.Remove(GetDormantDiseases())
+	return viruses_to_return
+
 /mob/proc/GetSpreadableViruses()
 	LAZYINITLIST(viruses)
 	var/list/viruses_to_return = list()
@@ -196,6 +190,14 @@
 		if(D.spread_flags & (DISEASE_SPREAD_SPECIAL | DISEASE_SPREAD_NON_CONTAGIOUS))
 			continue
 		viruses_to_return += D
+	return viruses_to_return
+
+/mob/proc/GetDormantDiseases()
+	LAZYINITLIST(viruses)
+	var/list/viruses_to_return = list()
+	for(var/datum/disease/D in viruses)
+		if(D.virus_modifiers & DORMANT)
+			viruses_to_return += D
 	return viruses_to_return
 
 /mob/proc/GetResistances()
@@ -206,6 +208,17 @@
 	LAZYINITLIST(resistances)
 	resistances |= resistance
 	return TRUE
+
+/mob/proc/check_virus()
+	var/threat
+	var/danger
+	for(var/thing in viruses)
+		var/datum/disease/disease = thing
+		if(!(disease.visibility_flags & HIDDEN_SCANNER))
+			if(!threat || get_disease_danger_value(disease.danger) > threat)
+				threat = get_disease_danger_value(disease.danger)
+				danger = disease.danger
+	return danger
 
 /client/proc/ReleaseVirus()
 	set category = "Fun.Event Kit"
@@ -220,7 +233,7 @@
 	if(isnull(disease))
 		return FALSE
 
-	var/mob/living/carbon/human/H = tgui_input_list(usr, "Choose infectee", "Characters", human_mob_list)
+	var/mob/living/carbon/human/H = tgui_input_list(usr, "Choose infectee", "Characters", GLOB.human_mob_list)
 
 	if(isnull(H))
 		return FALSE

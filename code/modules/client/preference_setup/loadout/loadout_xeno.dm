@@ -80,7 +80,7 @@
 
 /datum/gear/ears/skrell/colored/band/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/ears/skrell/colored/chain
 	display_name = "Colored chain (Skrell)"
@@ -90,7 +90,7 @@
 
 /datum/gear/ears/skrell/colored/chain/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/uniform/smock
 	display_name = "smock selection (Teshari)"
@@ -147,7 +147,7 @@
 
 /datum/gear/shoes/footwraps/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/uniform/cohesionsuits
 	display_name = "cohesion suit selection (Promethean)"
@@ -277,7 +277,7 @@
 
 /datum/gear/suit/dept/cloak/cap
 	display_name = "site manager cloak (Teshari)"
-	path = /obj/item/clothing/suit/storage/teshari/cloak/jobs
+	path = /obj/item/clothing/suit/storage/teshari/cloak/jobs/cap
 	allowed_roles = list(JOB_SITE_MANAGER)
 
 /datum/gear/suit/dept/cloak/hop
@@ -303,7 +303,7 @@
 		cloaks[initial(cloak_type.name)] = cloak_type
 	gear_tweaks += new/datum/gear_tweak/path(sortAssoc(cloaks))
 
-/datum/gear/suit/cloak/dept/ce
+/datum/gear/suit/dept/cloak/ce
 	display_name = "chief engineer cloak (Teshari)"
 	path = /obj/item/clothing/suit/storage/teshari/cloak/jobs/ce
 	allowed_roles = list(JOB_CHIEF_ENGINEER)
@@ -524,7 +524,7 @@
 
 /datum/gear/uniform/smockcolor/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/suit/beltcloak
 	display_name = "belted cloak selection (Teshari)"
@@ -548,25 +548,31 @@
 
 /datum/gear/suit/beltcloak_color/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
+
+/datum/gear/suit/dept/beltcloak
+	whitelisted = SPECIES_TESHARI
+	sort_category = "Xenowear"
 
 /datum/gear/suit/dept/beltcloak/wrdn
 	display_name = "warden belted cloak (Teshari)"
 	path = /obj/item/clothing/suit/storage/teshari/beltcloak/jobs/wrdn
 	allowed_roles = list(JOB_HEAD_OF_SECURITY,JOB_WARDEN)
-	sort_category = "Xenowear"
+
+/datum/gear/suit/dept/beltcloak/hos
+	display_name = "Chief of Security belted cloak (Teshari)"
+	path = /obj/item/clothing/suit/storage/teshari/beltcloak/jobs/hos
+	allowed_roles = list(JOB_HEAD_OF_SECURITY)
 
 /datum/gear/suit/dept/beltcloak/jani
 	display_name = "janitor belted cloak (Teshari)"
 	path = /obj/item/clothing/suit/storage/teshari/beltcloak/jobs/jani
 	allowed_roles = list(JOB_JANITOR)
-	sort_category = "Xenowear"
 
 /datum/gear/suit/dept/beltcloak/cmd
 	display_name = "command belted cloak (Teshari)"
 	path = /obj/item/clothing/suit/storage/teshari/beltcloak/jobs/command
 	allowed_roles = list(JOB_SITE_MANAGER,JOB_HEAD_OF_PERSONNEL,JOB_HEAD_OF_SECURITY,JOB_CHIEF_ENGINEER,JOB_CHIEF_MEDICAL_OFFICER,JOB_RESEARCH_DIRECTOR)
-	sort_category = "Xenowear"
 
 /datum/gear/suit/cloak_hood
 	display_name = "hooded cloak selection (Teshari)"
@@ -604,7 +610,7 @@
 
 /datum/gear/uniform/undercoatcolor/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/suit/cloakcolor
 	display_name = "cloak, recolorable (Teshari)"
@@ -614,7 +620,7 @@
 
 /datum/gear/suit/cloakcolor/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/suit/labcoat_tesh
 	display_name = "labcoat, colorable (Teshari)"
@@ -624,7 +630,7 @@
 
 /datum/gear/suit/labcoat_tesh/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/suit/teshcoat
 	display_name = "small black coat, recolorable stripes (Teshari)"
@@ -634,7 +640,7 @@
 
 /datum/gear/suit/teshcoat/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/suit/teshcoatwhite
 	display_name = "smallcoat, recolorable (Teshari)"
@@ -644,7 +650,7 @@
 
 /datum/gear/suit/teshcoatwhite/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/accessory/teshneckscarf
 	display_name = "neckscarf, recolorable (Teshari)"
@@ -654,7 +660,7 @@
 
 /datum/gear/accessory/teshneckscarf/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/shoes/toelessjack
 	display_name = "toe-less jackboots"
@@ -690,7 +696,7 @@
 
 /datum/gear/shoes/teshwrap/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /////
 
@@ -840,7 +846,7 @@
 
 /datum/gear/suit/taur/colorable_skirt/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/suit/zaddat
 	sort_category = "Xenowear"

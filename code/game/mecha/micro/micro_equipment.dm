@@ -3,7 +3,6 @@
 /////////////////////////////
 ////    WEAPONS BELOW    ////
 /////////////////////////////
-/* //CHOMPedit commented micromech stuff, because fuck this trash
 /obj/item/mecha_parts/mecha_equipment/weapon/energy/microlaser
 	w_class = ITEMSIZE_LARGE
 	desc = "A mounted micro laser-carbine for micro mechs." //CHOMPedit
@@ -39,7 +38,7 @@
 	energy_drain = 40
 	equip_cooldown = 10
 	projectile = /obj/item/projectile/beam/stun
-	fire_sound = 'sound/weapons/Taser.ogg'
+	fire_sound = 'sound/weapons/taser.ogg'
 	equip_type = EQUIP_MICRO_WEAPON
 	required_type = list(/obj/mecha/micro/sec)
 
@@ -51,8 +50,8 @@
 	icon_state = "micromech_shotgun"
 	equip_cooldown = 15
 	var/mode = 0 //0 - buckshot, 1 - beanbag, 2 - slug.
-	projectile = /obj/item/projectile/bullet/pellet/shotgun
-	fire_sound = 'sound/weapons/Gunshot_shotgun.ogg'
+	projectile = /obj/item/projectile/scatter/shotgun
+	fire_sound = 'sound/weapons/gunshot_shotgun.ogg'
 	fire_volume = 80
 	projectiles = 6
 	projectiles_per_shot = 1
@@ -68,7 +67,7 @@
 		switch(mode)
 			if(0)
 				occupant_message("Now firing buckshot.")
-				projectile = /obj/item/projectile/bullet/pellet/shotgun
+				projectile = /obj/item/projectile/scatter/shotgun
 			if(1)
 				occupant_message("Now firing beanbags.")
 				projectile = /obj/item/projectile/bullet/shotgun/beanbag
@@ -131,13 +130,13 @@
 				if(W.reinf_material)
 					occupant_message(span_warning("[target] is too durable to drill through."))
 				else
-					log_message("Drilled through [target]")
+					src.mecha_log_message("Drilled through [target]")
 					target.ex_act(2)
-			else if(istype(target, /turf/simulated/mineral))
+			else if(ismineralturf(target))
 				for(var/turf/simulated/mineral/M in range(chassis,1))
 					if(get_dir(chassis,M)&chassis.dir)
 						M.GetDrilled()
-				log_message("Drilled through [target]")
+				src.mecha_log_message("Drilled through [target]")
 				var/obj/item/mecha_parts/mecha_equipment/tool/micro/orescoop/ore_box = (locate(/obj/item/mecha_parts/mecha_equipment/tool/micro/orescoop) in chassis.equipment)
 				if(ore_box)
 					for(var/obj/item/ore/ore in range(chassis,1))
@@ -148,7 +147,7 @@
 							else
 								ore.forceMove(ore_box)
 			else if(target.loc == C)
-				log_message("Drilled through [target]")
+				src.mecha_log_message("Drilled through [target]")
 				target.ex_act(2)
 	return 1
 
@@ -225,4 +224,4 @@
 		O.loc = src.loc
 	to_chat(usr, span_info("You empty the ore box"))
 
-	return */
+	return

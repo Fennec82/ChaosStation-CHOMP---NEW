@@ -1,39 +1,53 @@
 /mob/new_player/Login()
-	update_Login_details()	//handles setting lastKnownIP and computer_id for use by the ban systems as well as checking for multikeying
-	if(GLOB.join_motd)
-		GLOB.join_motd = GLOB.is_valid_url.Replace(GLOB.join_motd, span_linkify("$1"))
-		to_chat(src, examine_block("<div class=\"motd\">[GLOB.join_motd]</div>"))
+	// Happens sometimes
+	if(QDELETED(src))
+		var/mob/new_player/replacement = new /mob/new_player()
+		replacement.key = key
+		return
 
-	if(has_respawned)
-		to_chat(src, CONFIG_GET(string/respawn_message))
-		has_respawned = FALSE
-
+	update_Login_details()    //handles setting lastKnownIP and computer_id for use by the ban systems as well as checking for multikeying
 	if(!mind)
 		mind = new /datum/mind(key)
 		mind.active = 1
 		mind.current = src
 
-	if(client)
-		persistent_ckey = client.ckey
-
 	loc = null
 	sight |= SEE_TURFS
 
-	initialize_lobby_screen()
-
-	player_list |= src
+	GLOB.player_list |= src
+	GLOB.new_player_list += src
 
 	created_for = ckey
+	client.persistent_client.set_mob(src)
 
-	if(!QDELETED(src))
-		addtimer(CALLBACK(src, PROC_REF(do_after_login)), 4 SECONDS, TIMER_DELETE_ME)
+	addtimer(CALLBACK(src, PROC_REF(do_after_login)), 4 SECONDS, TIMER_DELETE_ME)
+	initialize_lobby_screen()
 
 /mob/new_player/proc/do_after_login()
 	PRIVATE_PROC(TRUE)
 	if(client)
+		var/motd = global.config.motd
+		if(motd)
+			to_chat(src, examine_block("<div class=\"motd\">[motd]</div>"))
+
+		if(has_respawned)
+			to_chat(src, CONFIG_GET(string/respawn_message))
+
+		if((read_preference(/datum/preference/text/lastchangelog) != GLOB.changelog_hash)) //bolds the changelog button on the interface so we know there are updates.
+			to_chat(src, span_info("You have unread updates in the changelog."))
+			if(CONFIG_GET(flag/aggressive_changelog))
+				client.changes()
+
+		if(GLOB.custom_event_msg && GLOB.custom_event_msg != "")
+			to_chat(src, "<h1 class='alert'>Custom Event</h1>")
+			to_chat(src, "<h2 class='alert'>A custom event is taking place. OOC Info:</h2>")
+			to_chat(src, span_alert("[GLOB.custom_event_msg]") + "\n")
+
+		has_respawned = FALSE
 		handle_privacy_poll()
 		client.playtitlemusic()
 		version_warnings()
+		add_verb(src, /mob/proc/insidePanel)
 
 /mob/new_player/proc/version_warnings()
 	var/problems // string to store message to present to player as a problem

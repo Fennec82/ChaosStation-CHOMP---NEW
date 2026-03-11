@@ -4,7 +4,7 @@
 	block_tele = TRUE // Anti-cheese.
 
 /turf/simulated/wall/dungeon/Initialize(mapload)
-	. = ..(mapload, "dungeonium")
+	. = ..(mapload, MAT_ALIEN_DUNGEON)
 
 /turf/simulated/wall/dungeon/attackby()
 	return
@@ -38,7 +38,7 @@
 	block_tele = TRUE
 
 /turf/simulated/wall/solidrock/Initialize(mapload)
-	. = ..(mapload, "bedrock")
+	. = ..(mapload,  MAT_ALIEN_BEDROCK)
 
 /turf/simulated/wall/solidrock/Initialize(mapload)
 	. = ..()
@@ -66,7 +66,7 @@
 	return mining_overlay_cache["[cache_id]_[direction]"]
 
 /turf/simulated/wall/solidrock/update_icon(var/update_neighbors)
-	cut_overlays() //ChompEDIT
+	cut_overlays()
 	if(density)
 		var/image/I
 		for(var/i = 1 to 4)

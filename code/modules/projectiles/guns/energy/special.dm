@@ -13,8 +13,8 @@
 	slot_flags = SLOT_BACK
 	projectile_type = /obj/item/projectile/ion
 
-/obj/item/gun/energy/ionrifle/emp_act(severity)
-	..(max(severity, 4)) //so it doesn't EMP itself, I guess
+/obj/item/gun/energy/ionrifle/emp_act(severity, recursive)
+	return
 
 /obj/item/gun/energy/ionrifle/empty
 	cell_type = null
@@ -35,6 +35,7 @@
 /obj/item/gun/energy/decloner
 	name = "biological demolecularisor"
 	desc = "A gun that discharges high amounts of controlled radiation to slowly break a target into component elements."
+	icon = 'icons/obj/gun.dmi' // CHOMPEdit: Gun Sprites
 	icon_state = "decloner"
 	item_state = "decloner"
 	origin_tech = list(TECH_COMBAT = 5, TECH_MATERIAL = 4, TECH_POWER = 3)
@@ -53,7 +54,7 @@
 	cell_type = /obj/item/cell/device/weapon/recharge
 	battery_lock = 1
 
-	var/decl/plantgene/gene = null
+	var/datum/decl/plantgene/gene = null
 	recoil_mode = 0
 	var/obj/item/stock_parts/micro_laser/emitter
 
@@ -173,6 +174,7 @@
 /obj/item/gun/energy/toxgun
 	name = "phoron pistol"
 	desc = "A specialized firearm designed to fire lethal bolts of phoron."
+	icon = 'icons/obj/gun.dmi'
 	icon_state = "toxgun"
 	w_class = ITEMSIZE_NORMAL
 	origin_tech = list(TECH_COMBAT = 5, TECH_PHORON = 4)
@@ -196,7 +198,7 @@
 	charge_meter = 0
 
 /obj/item/gun/energy/staff/special_check(var/mob/user)
-	if((user.mind && !wizards.is_antagonist(user.mind)))
+	if((user.mind && !GLOB.wizards.is_antagonist(user.mind)))
 		to_chat(user, span_warning("You focus your mind on \the [src], but nothing happens!"))
 		return 0
 
@@ -297,7 +299,7 @@
 		user.visible_message(span_cult("[user] aims \the [src] at \the [A]."))
 	if(power_supply && power_supply.charge >= charge_cost) //Do a delay for pointblanking too.
 		power_cycle = TRUE
-		if(do_after(user, 30))
+		if(do_after(user, 3 SECONDS, target = src))
 			if(A.loc == target_turf)
 				..(A, user, def_zone)
 			else
@@ -327,7 +329,7 @@
 
 	if(!power_cycle)
 		power_cycle = TRUE
-		if(do_after(user, 30))
+		if(do_after(user, 3 SECONDS, target = src))
 			if(A.loc == target_turf)
 				..(A, user, adjacent, params)
 			else

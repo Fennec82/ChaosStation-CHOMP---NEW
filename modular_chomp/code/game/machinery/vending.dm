@@ -1,5 +1,6 @@
 /* CONTAINS:
 	Explo equipment vending machines
+	Sec equipment vending machines
 */
 
 /obj/machinery/vending/exploration_armor
@@ -7,7 +8,7 @@
 	desc = "A large vending machine stocked with surplus uniforms, armor and pouches for exploration members."
 	vend_delay = 1
 	icon_state = "sec" // Placeholder
-	req_one_access = list(access_explorer,access_pilot,access_medical_equip)
+	req_one_access = list(ACCESS_EXPLORER,ACCESS_PILOT,ACCESS_MEDICAL_EQUIP)
 	products = list(
 				// Clothing
 					/obj/item/clothing/under/explorer = 10,
@@ -37,19 +38,14 @@
 	desc = "A large vending machine stocked with surplus phase, laser and ballistic weaponry for exploration members."
 	vend_delay = 1
 	icon_state = "sec" // Placeholder
-	req_one_access = list(access_explorer,access_pilot,access_medical_equip)
+	req_one_access = list(ACCESS_EXPLORER,ACCESS_PILOT,ACCESS_MEDICAL_EQUIP)
 	products = list(
 				// Phase
 					/obj/item/gun/energy/locked/phasegun/pistol = 10,
 					/obj/item/gun/energy/locked/phasegun = 10,
 					/obj/item/gun/energy/locked/phasegun/rifle = 5,
-				// Laser
-					/obj/item/gun/energy/laser = 5,
-				// Ballistic
-					/obj/item/gun/projectile/colt = 5,
 				// Ammo
 					/obj/item/cell/device/weapon = 25,
-					/obj/item/ammo_magazine/m45 = 25,
 				// Melee
 					/obj/item/material/knife/tacknife/survival = 10,
 					/obj/item/material/knife/machete = 10,
@@ -66,7 +62,7 @@
 	desc = "A large vending machine stocked with an assortment of miscellaneous equipment handy for explorers."
 	vend_delay = 1
 	icon_state = "sec" // Placeholder
-	req_one_access = list(access_explorer,access_pilot,access_medical_equip)
+	req_one_access = list(ACCESS_EXPLORER,ACCESS_PILOT,ACCESS_MEDICAL_EQUIP)
 	products = list(
 				/obj/item/cataloguer = 10,
 				/obj/item/cell/device = 10,
@@ -84,7 +80,7 @@
 	desc = "A large vending machine stocked with surplus uniforms and equipment for pilots."
 	vend_delay = 1
 	icon_state = "sec" // Placeholder
-	req_access = list(access_pilot)
+	req_access = list(ACCESS_PILOT)
 	products = list(
 				// Clothing
 					/obj/item/clothing/under/rank/pilot1 = 5,
@@ -103,7 +99,7 @@
 	desc = "A large vending machine stocked with surplus uniforms and equipment for field medics."
 	vend_delay = 1
 	icon_state = "sec" // Placeholder
-	req_access = list(access_medical_equip)
+	req_access = list(ACCESS_MEDICAL_EQUIP)
 	products = list(
 				// Clothing
 					/obj/item/clothing/under/explorer = 5,
@@ -125,7 +121,45 @@
 					/obj/item/fulton_core = 1
 				)
 
+/obj/machinery/vending/security_armor
+	name = "Security Plate Carrier Vendor"
+	desc = "A large vending machine stocked with plate carriers and accessories to accompany them."
+	vend_delay = 1
+	icon_state = "sec"
+	req_access = list(ACCESS_SECURITY)
+	products = list(
+				// The vests. Just in black and red, to maintain the security appearance.
+					/obj/item/clothing/suit/armor/pcarrier = 8,
+					/obj/item/clothing/head/helmet = 8,
+				// Accessories
+					/obj/item/clothing/accessory/armor/tag/nt = 8,
+					/obj/item/clothing/accessory/storage/pouches = 8,
+				// Armor fittings
+					/obj/item/clothing/accessory/armor/armguards/security = 8,
+					/obj/item/clothing/accessory/armor/legguards/security = 8,
+					/obj/item/clothing/accessory/armor/armorplate/medium = 8
+				)
 
+/obj/machinery/vending/security_armory_armor
+	name = "Security Armory Plate Carrier Vendor"
+	desc = "A large vending machine stocked with advanced plate carriers and improved accessories to accompany them."
+	vend_delay = 1
+	icon_state = "sec"
+	req_access = list(ACCESS_SECURITY)
+	products = list(
+				// The vests. Now in black, red and white to highlight the 'combat' aspect of the armor
+					/obj/item/clothing/suit/armor/pcarrier = 6,
+					/obj/item/clothing/head/helmet = 6,
+				// Accessories
+					/obj/item/clothing/accessory/armor/tag/ntwhite = 6,
+					/obj/item/clothing/accessory/storage/pouches/large = 6,
+					/obj/item/clothing/accessory/armor/helmcover/ntblack = 6,
+					/obj/item/clothing/accessory/armor/helmcover/nt = 6,
+				// Armor fittings
+					/obj/item/clothing/accessory/armor/armguards/security/white = 6,
+					/obj/item/clothing/accessory/armor/legguards/security/white = 6,
+					/obj/item/clothing/accessory/armor/armorplate/merc = 6
+				)
 
 //Temp Starhunter Fix
 /obj/machinery/vending/starhunter_farmer
@@ -202,5 +236,5 @@
 
 //Some stuff to let sec do things
 /obj/machinery/vending/nifsoft_shop
-	req_log_access = access_security
+	req_log_access = ACCESS_SECURITY
 	has_logs = 1

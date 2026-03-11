@@ -1,7 +1,7 @@
 
 GLOBAL_LIST_EMPTY(chemical_reaction_logs)
 
-/proc/log_chemical_reaction(atom/A, decl/chemical_reaction/R, multiplier)
+/proc/log_chemical_reaction(atom/A, datum/decl/chemical_reaction/R, multiplier)
 	if(!A || !R)
 		return
 
@@ -25,4 +25,6 @@ GLOBAL_LIST_EMPTY(chemical_reaction_logs)
 	for(var/entry in GLOB.chemical_reaction_logs)
 		html += "[entry]<br>"
 
-	usr << browse("<html>[html]</html>", "window=chemlogs")
+	var/datum/browser/popup = new(usr, "chemlogs", "Chemlogs")
+	popup.set_content(html)
+	popup.open()

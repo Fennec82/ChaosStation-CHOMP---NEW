@@ -18,20 +18,20 @@ SUBSYSTEM_DEF(motiontracker)
 	if(_listen_lookup)
 		var/list/track_list = _listen_lookup[COMSIG_MOVABLE_MOTIONTRACKER]
 		if(islist(track_list))
-			count = track_list.len
+			count = length(track_list)
 		else
 			count = 1 // listen_lookup optimizes single entries into just returning the only thing
 	if(hide_all)
 		msg = "HIDE AND SEEK"
 	else
-		msg = "L: [count] | Q: [queued_echo_turfs.len] | A: [all_echos_round]/[all_pings_round]"
+		msg = "L: [count] | Q: [length(queued_echo_turfs)] | A: [all_echos_round]/[all_pings_round]"
 	return ..()
 
 /datum/controller/subsystem/motiontracker/fire(resumed = 0)
 	if(!resumed)
 		src.currentrun = queued_echo_turfs.Copy()
 		expended_echos.Cut()
-	while(currentrun.len)
+	while(length(currentrun))
 		var/key = currentrun[1] // Because using an index into an associative array gets the key at that index... I hate you byond.
 		var/list/data = currentrun[key]
 		var/datum/weakref/AF= data[1]
@@ -43,10 +43,12 @@ SUBSYSTEM_DEF(motiontracker)
 		if(Rt && At && count)
 			while(count-- > 0)
 				// Place at root turf offset from signal responder's turf using px offsets. So it will show up over visblocking.
-				var/image/motion_echo/E = new /image/motion_echo('icons/effects/effects.dmi', Rt, "motion_echo", OBFUSCATION_LAYER, SOUTH)
+				var/image/client_only/motion_echo/E = new /image/client_only/motion_echo('icons/effects/effects.dmi', Rt, "motion_echo", OBFUSCATION_LAYER, SOUTH)
 				E.place_from_root(At)
-				for(var/datum/weakref/C in clients)
-					E.append_client(C)
+				for(var/datum/weakref/CW in clients)
+					var/client/C = CW?.resolve()
+					if(C)
+						E.append_client(C)
 		currentrun.Remove(key)
 		expended_echos[key] = data
 		if(MC_TICK_CHECK)

@@ -2,8 +2,8 @@ import { useBackend } from 'tgui/backend';
 import { Button, NumberInput, Section, Stack } from 'tgui-core/components';
 import type { BooleanLike } from 'tgui-core/react';
 
-import type { localPrefs } from '../types';
-import { VoreUserPreferenceItem } from '../VoreUserPreferenceItem';
+import type { LocalPrefs } from '../types';
+import { VoreUserPreferenceItem } from '../VorePanelElements/VoreUserPreferenceItem';
 
 export const VoreUserPreferencesSpawn = (props: {
   latejoin_vore: BooleanLike;
@@ -12,7 +12,7 @@ export const VoreUserPreferencesSpawn = (props: {
   latejoin_prey: BooleanLike;
   no_spawnprey_warning_time: number;
   no_spawnprey_warning_save: BooleanLike;
-  preferences: localPrefs;
+  preferences: LocalPrefs;
 }) => {
   const { act } = useBackend();
   const {
