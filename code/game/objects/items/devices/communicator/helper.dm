@@ -1,44 +1,12 @@
 /obj/item/communicator/proc/analyze_air()
-	var/list/results = list()
-	var/turf/T = get_turf(src.loc)
-	if(!isnull(T))
-		var/datum/gas_mixture/environment = T.return_air()
-		var/pressure = environment.return_pressure()
-		var/total_moles = environment.total_moles
-		if (total_moles)
-			var/o2_level = environment.gas[GAS_O2]/total_moles
-			var/n2_level = environment.gas[GAS_N2]/total_moles
-			var/co2_level = environment.gas[GAS_CO2]/total_moles
-			var/phoron_level = environment.gas[GAS_PHORON]/total_moles
-			var/unknown_level =  1-(o2_level+n2_level+co2_level+phoron_level)
-
-			// Label is what the entry is describing
-			// Type identifies which unit or other special characters to use
-			// Val is the information reported
-			// Bad_high/_low are the values outside of which the entry reports as dangerous
-			// Poor_high/_low are the values outside of which the entry reports as unideal
-			// Values were extracted from the template itself
-			results = list(
-						list("entry" = "Pressure", "units" = "kPa", "val" = "[round(pressure,0.1)]", "bad_high" = 120, "poor_high" = 110, "poor_low" = 95, "bad_low" = 80),
-						list("entry" = "Temperature", "units" = "\u00B0" + "C", "val" = "[round(environment.temperature-T0C,0.1)]", "bad_high" = 35, "poor_high" = 25, "poor_low" = 15, "bad_low" = 5),
-						list("entry" = "Oxygen", "units" = "kPa", "val" = "[round(o2_level*100,0.1)]", "bad_high" = 140, "poor_high" = 135, "poor_low" = 19, "bad_low" = 17),
-						list("entry" = "Nitrogen", "units" = "kPa", "val" = "[round(n2_level*100,0.1)]", "bad_high" = 105, "poor_high" = 85, "poor_low" = 50, "bad_low" = 40),
-						list("entry" = "Carbon Dioxide", "units" = "kPa", "val" = "[round(co2_level*100,0.1)]", "bad_high" = 10, "poor_high" = 5, "poor_low" = 0, "bad_low" = 0),
-						list("entry" = "Phoron", "units" = "kPa", "val" = "[round(phoron_level*100,0.01)]", "bad_high" = 0.5, "poor_high" = 0, "poor_low" = 0, "bad_low" = 0),
-						list("entry" = "Other", "units" = "kPa", "val" = "[round(unknown_level, 0.01)]", "bad_high" = 1, "poor_high" = 0.5, "poor_low" = 0, "bad_low" = 0)
-						)
-
-	if(isnull(results))
-		results = list(list("entry" = "pressure", "units" = "kPa", "val" = "0", "bad_high" = 120, "poor_high" = 110, "poor_low" = 95, "bad_low" = 80))
-	return results
-
+	return get_gas_mixture_default_scan_data(get_turf(src.loc))
 
 // Proc - compile_news()
 // Parameters - none
 // Description - Returns the list of newsfeeds, compiled for template processing
 /obj/item/communicator/proc/compile_news()
 	var/list/feeds = list()
-	for(var/datum/feed_channel/channel in news_network.network_channels)
+	for(var/datum/feed_channel/channel in GLOB.news_network.network_channels)
 		var/list/messages = list()
 		if(!channel.censored && channel.channel_name != "Vir News Network") //Do not load the 'IC news' channel as it is simply too long.
 			var/index = 0
@@ -74,7 +42,7 @@
 	var/list/news = list()
 
 	// Compile all the newscasts
-	for(var/datum/feed_channel/channel in news_network.network_channels)
+	for(var/datum/feed_channel/channel in GLOB.news_network.network_channels)
 		if(!channel.censored)
 			for(var/datum/feed_message/FM in channel.messages)
 				var/body = replacetext(FM.body, "\n", "<br>")
@@ -333,9 +301,9 @@
 // The contents of the three lists are inherently related, so separating them into different procs would be largely redundant
 /obj/item/commcard/proc/get_GPS_lists()
 	// GPS Access
-	var/intgps[0] // Gps devices within the commcard -- Allow tag edits, turning on/off, etc
-	var/extgps[0] // Gps devices not inside the commcard -- Print locations if a gps is on
-	var/stagps[0] // Gps net status, location, whether it's on, if it's got long range
+	var/list/intgps = list() // Gps devices within the commcard -- Allow tag edits, turning on/off, etc
+	var/list/extgps = list() // Gps devices not inside the commcard -- Print locations if a gps is on
+	var/list/stagps = list() // Gps net status, location, whether it's on, if it's got long range
 	var/obj/item/gps/cumulative = new(src)
 	cumulative.tracking = FALSE
 	cumulative.local_mode = TRUE // Won't detect long-range signals automatically
@@ -365,21 +333,48 @@
 			G.tracking = FALSE // Disable the internal gps units so they don't show up in the report
 			toggled_gps += G
 
-	var/list/remote_gps = cumulative.display_list() // Fetch information for all units except the ones inside of this device
-
 	for(var/obj/item/gps/G in toggled_gps) // Reenable any internal GPS units
 		G.tracking = TRUE
 
 	stagps["enabled"] = cumulative.tracking
 	stagps["long_range_en"] = (cumulative.long_range && !cumulative.local_mode)
 
-	stagps["my_area_name"] = remote_gps["my_area_name"]
-	stagps["curr_x"] = remote_gps["curr_x"]
-	stagps["curr_y"] = remote_gps["curr_y"]
-	stagps["curr_z"] = remote_gps["curr_z"]
-	stagps["curr_z_name"] = remote_gps["curr_z_name"]
+	var/turf/curr = get_turf(cumulative)
+	var/area/my_area = get_area(cumulative)
+	stagps["my_area_name"] = strip_improper(my_area.name)
+	stagps["curr_x"] = curr.x
+	stagps["curr_y"] = curr.y
+	stagps["curr_z"] = curr.z
+	stagps["curr_z_name"] = strip_improper(using_map.get_zlevel_name(curr.z))
 
-	extgps = remote_gps["gps_list"] // Compiled by the GPS
+	var/list/gps_list = list()
+	var/z_level_det = using_map.get_map_levels(curr.z, cumulative.long_range)
+	for(var/obj/item/gps/G in GLOB.GPS_list - cumulative)
+
+		if(!cumulative.can_track(G, z_level_det))
+			continue
+
+		var/list/gps_data = list()
+		gps_data["ref"] = G
+		gps_data["gps_tag"] = G.gps_tag
+
+		var/area/A = get_area(G)
+		gps_data["area_name"] = strip_improper(A.get_name())
+
+		var/turf/T = get_turf(G)
+		gps_data["z_name"] = strip_improper(using_map.get_zlevel_name(T.z))
+		gps_data["direction"] = get_adir(curr, T)
+		gps_data["degrees"] = round(Get_Angle(curr,T))
+		gps_data["distX"] = T.x - curr.x
+		gps_data["distY"] = T.y - curr.y
+		gps_data["distance"] = get_dist(curr, T)
+		gps_data["local"] = (curr.z == T.z)
+		gps_data["x"] = T.x
+		gps_data["y"] = T.y
+
+		UNTYPED_LIST_ADD(gps_list, gps_data)
+
+	extgps = gps_list // Compiled by the GPS
 
 	qdel(cumulative) // Don't want spare GPS units building up in the contents
 

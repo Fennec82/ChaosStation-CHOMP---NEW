@@ -120,7 +120,7 @@
 	icon_state = "plasmacutter"
 	item_state = "plasmacutter"
 	w_class = ITEMSIZE_NORMAL //it is smaller than the pickaxe
-	damtype = "fire"
+	damtype = BURN
 	digspeed = 18 //Can slice though normal walls, all girders, or be used in reinforced wall deconstruction/light thermite on fire
 	origin_tech = list(TECH_MATERIAL = 4, TECH_PHORON = 3, TECH_ENGINEERING = 3)
 	matter = list(MAT_STEEL = 3000, MAT_PLASTEEL = 1500, MAT_DIAMONDS = 500, MAT_PHORON = 500)
@@ -153,7 +153,7 @@
 	var/digspeed = 40
 	var/grave_mode = FALSE
 
-/obj/item/shovel/AltClick(mob/user)
+/obj/item/shovel/click_alt(mob/user)
 	grave_mode = !grave_mode
 	to_chat(user, span_notice("You'll now dig [grave_mode ? "out graves" : "for loot"]."))
 	. = ..()
@@ -210,6 +210,7 @@
 	icon = 'icons/obj/mining.dmi'
 	var/upright = 0
 	var/base_state
+	custom_handling = TRUE
 
 /obj/item/stack/flag/Initialize(mapload)
 	. = ..()
@@ -251,7 +252,10 @@
 	else
 		..()
 
-/obj/item/stack/flag/attack_self(mob/user as mob)
+/obj/item/stack/flag/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 
 	var/obj/item/stack/flag/F = locate() in get_turf(src)
 
@@ -273,7 +277,7 @@
 	newflag.visible_message(span_infoplain(span_bold("[user]") + " plants [newflag] firmly in the ground."))
 	src.use(1)
 
-// Lightpoles for lumber colony
+// Lightpoles for lumber colony //CHOMPEdit Start
 /obj/item/stack/lightpole
 	name = "Trailblazers"
 	desc = "Some colourful trail lights."
@@ -285,6 +289,7 @@
 	var/base_state
 	var/on = 0
 	var/brightness_on = 4 //luminosity when on
+	custom_handling = TRUE
 
 /obj/item/stack/lightpole/Initialize(mapload)
 	. = ..()
@@ -318,7 +323,9 @@
 		..()
 
 /obj/item/stack/lightpole/attack_self(mob/user as mob)
-
+	. = ..(user)
+	if(.)
+		return TRUE
 	var/obj/item/stack/lightpole/F = locate() in get_turf(src)
 
 	var/turf/T = get_turf(src)
@@ -340,3 +347,4 @@
 	newlightpole.icon_state = "[newlightpole.base_state]_on"
 	newlightpole.visible_message("<b>[user]</b> plants [newlightpole] firmly in the ground.")
 	src.use(1)
+//CHOMPEdit End

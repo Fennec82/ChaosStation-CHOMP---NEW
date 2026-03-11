@@ -157,14 +157,15 @@
 		/obj/item/tool/wirecutters/alien = 60,
 		/obj/item/tool/wrench/alien = 60,
 		/obj/item/cell/device/weapon/recharge/alien = 30,
-		/obj/item/perfect_tele/alien = 100
+		/obj/item/perfect_tele/alien = 100,
+		/obj/item/prop/deconstructable/gigacell = 100,
 			)
 
 /mob/living/simple_mob/mechanical/mecha/eclipse/hivebot/boss/do_special_attack(atom/A)
 	. = TRUE // So we don't fire a bolt as well.
 	var/rng_cycle
 	if(attackcycle == 1)
-		specialattackprojectile = /obj/item/projectile/beam/burstlaser
+		specialattackprojectile = /obj/item/projectile/beam/midlaser/shortrange
 		rng_cycle = rand(1,5)
 		say("PROTOCOL: LASER. BLADE.")
 		addtimer(CALLBACK(src, PROC_REF(giant_burst), A, rng_cycle), 2 SECONDS, TIMER_DELETE_ME)

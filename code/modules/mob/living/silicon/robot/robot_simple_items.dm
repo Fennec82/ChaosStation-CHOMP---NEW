@@ -29,7 +29,7 @@
 
 	var/list/integrated_tool_images
 
-/obj/item/robotic_multibelt/CtrlClick(mob/user)
+/obj/item/robotic_multibelt/item_ctrl_click(mob/user)
 	if(selected_item)
 		selected_item.attack_self(user)
 	return
@@ -74,7 +74,9 @@
 	for(var/tool in cyborg_integrated_tools)
 		var/obj/item/real_tool = cyborg_integrated_tools[tool]
 		integrated_tools_by_name[real_tool.name] = real_tool
-		integrated_tool_images[real_tool.name] = image(icon = real_tool.icon, icon_state = real_tool.icon_state)
+		var/image/tool_image = image(icon = real_tool.icon, icon_state = real_tool.icon_state)
+		tool_image.color = real_tool.color
+		integrated_tool_images[real_tool.name] = tool_image
 
 /obj/item/robotic_multibelt/Destroy()
 	selected_item = null
@@ -85,6 +87,9 @@
 
 
 /obj/item/robotic_multibelt/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(!cyborg_integrated_tools || !LAZYLEN(cyborg_integrated_tools))
 		to_chat(user, "Your multibelt is empty!")
 		return
@@ -102,15 +107,15 @@
 		choice = show_radial_menu(user, src, options, radius = 40, require_near = TRUE)
 	if(!choice)
 		return
+	cut_overlays()
 	assume_selected_item(integrated_tools_by_name[choice])
-
-	..()
 
 /obj/item/robotic_multibelt/proc/assume_selected_item(obj/item/chosen_item)
 	if(!chosen_item)
 		return
 	icon = chosen_item.icon
 	icon_state = chosen_item.icon_state
+	color = chosen_item.color
 	selected_item = chosen_item
 
 /obj/item/robotic_multibelt/dropped(mob/user)
@@ -157,8 +162,16 @@
 	icon_state = "indwelder_cyborg"
 	usesound = 'sound/items/Welder2.ogg'
 	toolspeed = 0.5
-	welding = TRUE
+	welding = FALSE
 	no_passive_burn = TRUE
+
+/obj/item/weldingtool/electric/mounted/cyborg/update_icon()
+	. = ..()
+	if(isrobotmultibelt(loc))
+		var/obj/item/robotic_multibelt/our_belt = loc
+		our_belt.cut_overlays()
+		if(welding)
+			our_belt.add_overlay("indwelder_cyborg-on")
 
 /obj/item/tool/wirecutters/cyborg
 	name = "wirecutters"
@@ -184,6 +197,9 @@
 	icon_state = "toolkit_engiborg_multitool"
 	toolspeed = 0.5
 
+/obj/item/multitool/cyborg/update_icon()
+	icon_state = "toolkit_engiborg_multitool"
+
 /obj/item/multitool/ai_detector/cyborg
 	name = "AI detector multitool"
 	toolspeed = 0.5
@@ -203,8 +219,12 @@
 	matter = null
 	uses_charge = 1
 	charge_costs = list(1)
+	custom_handling = TRUE
 
 /obj/item/stack/cable_coil/cyborg/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	set_colour(user)
 
 /obj/item/stack/cable_coil/cyborg/proc/set_colour(mob/user)
@@ -213,6 +233,12 @@
 
 	var/selected_type = tgui_input_list(user, "Pick new colour.", "Cable Colour", GLOB.possible_cable_coil_colours)
 	set_cable_color(selected_type, user)
+	if(isrobotmultibelt(loc))
+		var/obj/item/robotic_multibelt/our_belt = loc
+		var/image/cable_image = our_belt.integrated_tool_images[name]
+		cable_image.color = color
+		if(our_belt.icon == icon)
+			our_belt.color = color
 
 /*
  * Surgical Tools
@@ -481,6 +507,10 @@
 
 	. = ..()
 
+/obj/item/robotic_multibelt/materials/Destroy()
+	QDEL_LIST(cyborg_integrated_tools)
+	. = ..()
+
 ///Allows the material fabricator to pick up materials if they hit an appropriate stack.
 /obj/item/robotic_multibelt/materials/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	if(istype(target, /obj/item/stack)) //We are targeting a stack.
@@ -512,7 +542,7 @@
 	//Has a list of items that it can hold.
 	var/list/can_hold = list(BASIC_GRIPPER)
 
-	var/obj/item/wrapped = null // Item currently being held. //Convert to weak-ref?
+	var/datum/weakref/WR = null //We resolve this to get wrapped. Use get_wrapped_item when possible.
 
 	var/total_pockets = 5 //How many total inventory slots we want to have in the gripper
 
@@ -524,8 +554,18 @@
 
 	var/list/photo_images
 
+	/// If we're currently using the gripper on something.
+	var/gripper_in_use = FALSE
+	/// If we're currently in the radial menu. (Blocks pickup attempts)
+	var/in_radial_menu = FALSE
+
+	var/mob/living/silicon/robot/our_robot
+
 	pickup_sound = 'sound/items/pickup/device.ogg'
 	drop_sound = 'sound/items/drop/device.ogg'
+
+	///Var for attack_self chain
+	var/special_handling = FALSE
 
 /obj/item/storage/internal/gripper
 	max_w_class = ITEMSIZE_HUGE
@@ -540,115 +580,41 @@
 			new_pocket.name = "Pocket [i]"
 			pockets += new_pocket
 	current_pocket = peek(pockets)
+	if(isrobot(loc.loc)) //We're in the module.
+		our_robot = loc.loc
+	else if(isrobot(loc)) //We spawned in the robot's module slots...Weird, but whatever.
+		our_robot = loc
+	else //We were in neither. Let's qdel ourselves.
+		return INITIALIZE_HINT_QDEL
+	RegisterSignal(our_robot, COMSIG_DO_AFTER_BEGAN, PROC_REF(begin_using))
+	RegisterSignal(our_robot, COMSIG_DO_AFTER_ENDED, PROC_REF(end_using))
 
 /obj/item/gripper/Destroy()
 	current_pocket = null
-	qdel_null(wrapped)
-	qdel_null(pockets)
+	QDEL_NULL(WR)
+	QDEL_LIST(pockets)
+	if(our_robot) //In case we returned INITIALIZE_HINT_QDEL earlier in initalize.
+		UnregisterSignal(our_robot, COMSIG_DO_AFTER_BEGAN)
+		UnregisterSignal(our_robot, COMSIG_DO_AFTER_ENDED)
+	our_robot = null
 	. = ..()
 
 
 /obj/item/gripper/examine(mob/user)
 	. = ..()
+	var/obj/item/wrapped = get_wrapped_item()
 	if(wrapped)
 		. += span_notice("\The [src] is holding \the [wrapped].")
 		. += wrapped.examine(user)
 
-/obj/item/gripper/CtrlClick(mob/user)
-	if(wrapped && !is_in_use())
+/obj/item/gripper/item_ctrl_click(mob/user)
+	var/obj/item/wrapped = get_wrapped_item()
+	if(wrapped && !is_in_use(user, FALSE))
 		wrapped.attack_self(user)
-	return
 
-/obj/item/gripper/AltClick(mob/user)
-	if(!is_in_use())
-		drop_item()
-	return
-
-//This is used to check if the gripper is currently being used.
-//If it is, we don't allow any other actions to be performed.
-/obj/item/gripper/proc/is_in_use()
-	if(wrapped && !QDELETED(wrapped))
-		if(istype(wrapped.loc, /obj/item/storage/internal/gripper))
-			return FALSE //We are in a gripper storage or another gripper, so we are not in use.
-		return TRUE
-	else if(QDELETED(wrapped)) //Failsafe.
-		wrapped = null
-		return FALSE //Default to 'we are not in use'
-
-//This is the code that updates our pockets and decides if they should have icons or not.
-//This should be called every time we use the gripper and our wrapped item is used up.
-/obj/item/gripper/proc/generate_icons()
-	if(LAZYLEN(pockets))
-
-		pockets_by_name = list()
-
-		photo_images = list()
-
-		for(var/obj/item/storage/internal/pocket_to_check in pockets)
-			if(!LAZYLEN(pocket_to_check.contents))
-				pockets_by_name[pocket_to_check.name] = pocket_to_check
-				photo_images[pocket_to_check.name] = image(icon = 'icons/effects/effects.dmi', icon_state = "nothing")
-				continue
-			var/obj/item/pocket_content = pocket_to_check.contents[1]
-			pockets_by_name["[pocket_to_check.name]" + "[pocket_content.name]"] = pocket_content
-			var/image/pocket_image = image(icon = pocket_content.icon, icon_state = pocket_content.icon_state)
-			if(pocket_content.color)
-				pocket_image.color = pocket_content.color
-			if(pocket_content.overlays)
-				for(var/overlay in pocket_content.overlays)
-					pocket_image.overlays += overlay
-			photo_images["[pocket_to_check.name]" + "[pocket_content.name]"] = pocket_image
-
-/obj/item/gripper/attack_self(mob/user as mob)
-	if(is_in_use())
-		to_chat(user, span_danger("You are currently using the gripper on something!"))
-		return
-	generate_icons()
-	var/list/options = list()
-
-	for(var/Iname in pockets_by_name)
-		options[Iname] = photo_images[Iname]
-
-	var/list/choice = list()
-	choice = show_radial_menu(user, src, options, radius = 40, require_near = TRUE, autopick_single_option = FALSE)
-	if(choice)
-		current_pocket = pockets_by_name[choice]
-		if(!istype(current_pocket,/obj/item/storage/internal/gripper)) //The pocket we're selecting is NOT a gripper storage
-			if(!istype(current_pocket.loc, /obj/item/storage/internal/gripper)) //We kept the radial menu opened, used the item, then selected it again.
-				current_pocket = pick(pockets) //Just pick a random pocket.
-				wrapped = null
-			else
-				wrapped = current_pocket
-		else
-			wrapped = null
-	else if(wrapped)
-		return wrapped.attack_self(user)
-	return ..()
-
-/obj/item/gripper/attackby(var/obj/item/O, var/mob/user)
-	if(is_in_use())
-		to_chat(user, span_danger("You are currently using the gripper on something!"))
-		return FALSE
-	if(wrapped)
-		wrapped.loc = src.loc //Place it in to the robot.
-		var/resolved = wrapped.attackby(O, user)
-		if(QDELETED(wrapped) || (wrapped.loc != src.loc && !istype(wrapped.loc,/obj/item/storage/internal/gripper)))
-			wrapped = null
-		if(!resolved && wrapped && O)
-			O.afterattack(wrapped,user,1)
-			if(QDELETED(wrapped) || (wrapped.loc != src.loc && !istype(wrapped.loc,/obj/item/storage/internal/gripper)))	 // I don't know of a nicer way to do this.
-				wrapped = null
-		if(wrapped && wrapped != current_pocket)
-			wrapped.loc = current_pocket
-		else if(wrapped)
-			for(var/obj/item/storage/internal/gripper/our_pocket in pockets)
-				if(LAZYLEN(our_pocket.contents))
-					continue
-				current_pocket = our_pocket
-				wrapped.loc = current_pocket
-
-		return resolved
-	return ..()
+/obj/item/gripper/click_alt(mob/user)
+	if(!is_in_use(user, FALSE))
+		drop_item(user)
 
 /obj/item/gripper/verb/drop_gripper_item()
 
@@ -656,193 +622,7 @@
 	set desc = "Release an item from your magnetic gripper."
 	set category = "Abilities.Silicon"
 
-	drop_item()
-
-/obj/item/gripper/proc/drop_item()
-	if(!wrapped)
-		to_chat(src, span_warning("You have nothing to drop!"))
-		return
-	if(is_in_use())
-		to_chat(src, span_danger("You are currently using the gripper on something!"))
-		return
-	if((wrapped == current_pocket && !istype(wrapped.loc, /obj/item/storage/internal/gripper))) //We have wrapped selected as our current_pocket AND wrapped is not in a gripper storage
-		wrapped = null
-		current_pocket = pick(pockets)
-		generate_icons()
-		return
-
-	to_chat(src.loc, span_notice("You drop \the [wrapped]."))
-	wrapped.loc = get_turf(src)
-	wrapped = null
-	generate_icons()
-	//update_icon()
-
-/obj/item/gripper/proc/drop_item_nm()
-	if((wrapped == current_pocket && !istype(wrapped.loc, /obj/item/storage/internal/gripper))) //We have wrapped selected as our current_pocket AND wrapped is not in a gripper storage
-		wrapped = null
-		current_pocket = pick(pockets)
-		return
-
-	wrapped.loc = get_turf(src)
-	wrapped = null
-
-/obj/item/gripper/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
-	if(is_in_use())
-		to_chat(user, span_danger("You are currently using the gripper on something!"))
-		return FALSE
-	if(wrapped) 	//The force of the wrapped obj gets set to zero during the attack() and afterattack().
-		if(QDELETED(wrapped) || (wrapped.loc != src.loc && !istype(wrapped.loc,/obj/item/storage/internal/gripper))) //If our wrapper was deleted OR it's no longer in our internal gripper storage
-			wrapped = null //we become null
-		else
-			wrapped.attack(M,user)
-			M.attackby(wrapped, user)	//attackby reportedly gets procced by being clicked on, at least according to Anewbe.
-			if(QDELETED(wrapped) || (wrapped.loc != src.loc && !istype(wrapped.loc,/obj/item/storage/internal/gripper))) //If our wrapper was deleted OR it's no longer in our internal gripper storage
-				wrapped = null
-			if(wrapped) //In the event nothing happened to wrapped, go back into the gripper.
-				wrapped.loc = current_pocket
-			return 1
-	return 0
-
-/obj/item/gripper/afterattack(var/atom/target, var/mob/living/user, proximity, params)
-	if(!proximity)
-		return // This will prevent them using guns at range but adminbuse can add them directly to modules, so eh.
-	if(is_in_use())
-		to_chat(user, span_danger("You are currently using the gripper on something!"))
-		return
-	var/current_pocket_full = FALSE
-	//There's some weirdness with items being lost inside the arm. Trying to fix all cases. ~Z
-	if(wrapped == current_pocket)
-		current_pocket_full = TRUE
-	if(!wrapped && current_pocket)
-		if(LAZYLEN(current_pocket.contents))
-			wrapped = current_pocket.contents[1]
-			current_pocket_full = TRUE
-
-	if(current_pocket && !LAZYLEN(current_pocket.contents)) //We have a pocket selected and it has no contents! This means we're an item OR we need to null our wrapper!
-		if(istype(current_pocket.loc,/obj/item/storage/internal/gripper) && !LAZYLEN(current_pocket.loc.contents)) //If our pocket is a gripper, AND we have no contents, wrapped = null
-			wrapped = null
-		else if(!istype(current_pocket.loc,/obj/item/storage/internal/gripper)) //If our pocket is an item and we are not in the gripper, wrapped = null
-			wrapped = null
-
-	if(!LAZYLEN(pockets)) //Shouldn't happen, but safety first.
-		to_chat(user, span_danger("Your gripper has nowhere to hold \the [target]."))
-		return
-
-	var/obj/item/storage/internal/gripper/selected_pocket //Find an open pocket to use in case we're trying to pick something up.
-	for(var/obj/item/storage/internal/gripper/available_pocket in pockets)
-		if(LAZYLEN(available_pocket.contents))
-			continue
-		selected_pocket = available_pocket
-		break
-
-	if(wrapped) //Already have an item.
-		//Temporary put wrapped into user so target's attackby() checks pass.
-		var/obj/previous_pocket
-		if(istype(wrapped.loc, /obj/item/storage/internal/gripper))
-			previous_pocket = wrapped.loc
-		wrapped.loc = user
-
-		//Pass the attack on to the target. This might delete/relocate wrapped.
-		var/resolved = target.attackby(wrapped,user)
-		if(!resolved && wrapped && target)
-			wrapped.afterattack(target,user,1)
-
-		if((QDELETED(wrapped))) //We put our wrapped thing INTO something!
-			wrapped = null
-			current_pocket = pick(pockets)
-			return
-		//If we had a previous pocket and the wrapped isn't put into something, put it back in our pocket.
-		else if((previous_pocket && wrapped.loc == user))
-			wrapped.loc = previous_pocket
-		else
-			wrapped = null
-			current_pocket = pick(pockets)
-			return
-	else if(current_pocket_full) //Pocket is full. No grabbing more things.
-		to_chat(user, "Your gripper is currently full! You can't pick anything else up!")
-		return
-
-	else if(istype(target,/obj/item)) //Check that we're not pocketing a mob.
-
-		//...and that the item is not in a container.
-		if(!isturf(target.loc))
-			return
-
-		var/obj/item/I = target
-
-		if(I.anchored)
-			to_chat(user,span_notice("You are unable to lift \the [I] from \the [I.loc]."))
-			return
-
-		//Check if the item is blacklisted.
-		var/grab = 0
-		for(var/typepath in can_hold)
-			if(istype(I,typepath))
-				grab = 1
-				break
-
-		//We can grab the item, finally.
-		if(grab)
-			to_chat(user, "You collect \the [I].")
-			I.loc = selected_pocket
-			wrapped = I
-			return
-		else
-			to_chat(user, span_danger("Your gripper cannot hold \the [target]."))
-
-	else if(istype(target,/obj/machinery/power/apc))
-		var/obj/machinery/power/apc/A = target
-		if(A.opened)
-			if(A.cell && is_type_in_list(A.cell, can_hold))
-
-				wrapped = A.cell
-
-				A.cell.add_fingerprint(user)
-				A.cell.update_icon()
-				A.cell.loc = selected_pocket
-				A.cell = null
-
-				A.charging = 0
-				A.update_icon()
-
-				user.visible_message(span_danger("[user] removes the power cell from [A]!"), "You remove the power cell.")
-
-	else if(istype(target,/mob/living/silicon/robot))
-		var/mob/living/silicon/robot/A = target
-		if(A.opened)
-			if(A.cell && is_type_in_list(A.cell, can_hold))
-
-				wrapped = A.cell
-
-				A.cell.add_fingerprint(user)
-				A.cell.update_icon()
-				A.update_icon()
-				A.cell.loc = current_pocket
-				A.cell = null
-
-				user.visible_message(span_danger("[user] removes the power cell from [A]!"), "You remove the power cell.")
-
-//HELPER PROCS
-/obj/item/gripper/proc/get_current_pocket() //done as a proc so snowflake code can be found later down the line and consolidated.
-	return wrapped
-
-/// Consolidates material stacks by searching our pockets to see if we currently have any stacks. Done in /obj/item/stack/attackby
-/obj/item/gripper/proc/consolidate_stacks(var/obj/item/stack/stack_to_consolidate)
-	if(!stack_to_consolidate || !istype(stack_to_consolidate, /obj/item/stack))
-		return
-	var/stacked = FALSE //So we can break the for loop 2 forloops deep.
-	for(var/obj/item/storage/internal/gripper/pocket in pockets)
-		if(stacked) //We've stacked our item, break!
-			break
-
-		if(LAZYLEN(pocket.contents))
-			for(var/obj/item/stack/stack in pocket.contents)
-				if(istype(stack_to_consolidate, stack))
-					stack_to_consolidate.transfer_to(stack)
-					stacked = TRUE
-					break
-
-
+	drop_item(src.loc)
 
 //Different types of grippers!
 
@@ -907,10 +687,10 @@
 
 	can_hold = list(CIRCUIT_GRIPPER)
 
-/obj/item/gripper/service //Used to handle food, drinks, and seeds.
+/obj/item/gripper/service //Used to handle food, drinks, seeds, and cards.
 	name = "service gripper"
 	icon_state = "gripper-sheet"
-	desc = "A simple grasping tool used to perform tasks in the service sector, such as handling food, drinks, and seeds."
+	desc = "A simple grasping tool used to perform tasks in the service sector, such as handling food, drinks, and seeds. It can also hold cards and fake casino chips for hosting card games."
 
 	can_hold = list(SERVICE_GRIPPER)
 
@@ -964,9 +744,14 @@
 
 	can_hold = list(EXOSUIT_GRIPPER)
 
+	special_handling = TRUE
+
 /obj/item/gripper/no_use //Used when you want to hold and put items in other things, but not able to 'use' the item
 
-/obj/item/gripper/no_use/attack_self(mob/user as mob)
+/obj/item/gripper/no_use/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	return
 
 /obj/item/gripper/no_use/loader //This is used to disallow building with metal.
@@ -993,7 +778,7 @@
 /obj/item/reagent_containers/glass/bucket/cyborg/Initialize(mapload)
 	. = ..()
 	R = loc.loc
-	RegisterSignal(src, COMSIG_OBSERVER_MOVED, PROC_REF(check_loc))
+	RegisterSignal(src, COMSIG_MOVABLE_ATTEMPTED_MOVE, PROC_REF(check_loc))
 
 /obj/item/reagent_containers/glass/bucket/cyborg/proc/check_loc(atom/movable/mover, atom/old_loc, atom/new_loc)
 	if(old_loc == R || old_loc == R.module)
@@ -1008,7 +793,7 @@
 			hud_layerise()
 
 /obj/item/reagent_containers/glass/bucket/cyborg/Destroy()
-	UnregisterSignal(src, COMSIG_OBSERVER_MOVED)
+	UnregisterSignal(src, COMSIG_MOVABLE_ATTEMPTED_MOVE)
 	R = null
 	last_robot_loc = null
 	..()

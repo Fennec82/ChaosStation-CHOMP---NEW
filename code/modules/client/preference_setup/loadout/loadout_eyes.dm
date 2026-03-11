@@ -13,7 +13,7 @@
 
 /datum/gear/eyes/eyepatchwhite/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/eyes/blindfold
 	display_name = "blindfold"
@@ -25,7 +25,7 @@
 
 /datum/gear/eyes/whiteblindfold/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/eyes/thinblindfold
 	display_name = "blindfold, thin white (recolorable)"
@@ -33,7 +33,7 @@
 
 /datum/gear/eyes/thinblindfold/New()
 	..()
-	gear_tweaks += gear_tweak_free_color_choice
+	gear_tweaks += GLOB.gear_tweak_free_color_choice
 
 /datum/gear/eyes/glasses
 	display_name = "Glasses, prescription"
@@ -202,7 +202,7 @@
 
 /datum/gear/eyes/arglasses_visor/New()
 	..()
-	gear_tweaks = list(gear_tweak_free_color_choice)
+	gear_tweaks = list(GLOB.gear_tweak_free_color_choice)
 
 /datum/gear/eyes/arglasses_sec
 	display_name = "AR-Security glasses"
@@ -281,3 +281,33 @@
 /datum/gear/eyes/bigshot
 	display_name = "Big Shot's Glasses"
 	path = /obj/item/clothing/glasses/sunglasses/bigshot
+
+/datum/gear/eyes/ar_mantle
+	display_name = "Augmented Reality Mantle"
+	description = "A full-face, partially-obscuring visor. Covers the face and eyes. Has a simple augmented-reality display on the inside, and can be toggled into a corrective vision mode."
+	path = /obj/item/clothing/glasses/omnihud/mantle
+
+/datum/gear/eyes/ar_mantle_sec
+	display_name = "Augmented Reality Mantle (Sec)"
+	description = "A full-face, partially-obscuring visor. Covers the face and eyes. Has a security-oriented augmented-reality display on the inside, and can be toggled into a corrective vision mode. Flash-resistant."
+	path = /obj/item/clothing/glasses/omnihud/mantle/sec
+	allowed_roles = list(JOB_SECURITY_OFFICER,JOB_HEAD_OF_SECURITY,JOB_WARDEN, JOB_DETECTIVE)
+
+/datum/gear/eyes/ar_mantle_med
+	display_name = "Augmented Reality Mantle (Med)"
+	description = "A full-face, partially-obscuring visor. Covers the face and eyes. Has a medical-oriented augmented-reality display on the inside, and can be toggled into a corrective vision mode."
+	path = /obj/item/clothing/glasses/omnihud/mantle/med
+	allowed_roles = list(JOB_MEDICAL_DOCTOR,JOB_CHIEF_MEDICAL_OFFICER,JOB_CHEMIST,JOB_PARAMEDIC,JOB_GENETICIST, JOB_PSYCHIATRIST)
+
+/datum/gear/eyes/ar_mantle_eng
+	display_name = "Augmented Reality Mantle (Eng)"
+	description = "A full-face, partially-obscuring visor. Covers the face and eyes. Has an engineering-oriented augmented-reality display on the inside, and can be toggled into a corrective vision mode. UV lining blocks flashes and welding glare."
+	path = /obj/item/clothing/glasses/omnihud/mantle/eng
+	allowed_roles = list(JOB_ENGINEER,JOB_CHIEF_ENGINEER,JOB_ATMOSPHERIC_TECHNICIAN)
+
+/datum/gear/eyes/ar_mantle_cmd
+	display_name = "Augmented Reality Mantle (Command)"
+	description = "A full-face, partially-obscuring visor. Covers the face and eyes. Has a command-oriented augmented-reality display on the inside, and can be toggled into a corrective vision mode. Flash-resistant."
+	path = /obj/item/clothing/glasses/omnihud/mantle/cmd
+	cost = 2
+	allowed_roles = list(JOB_SITE_MANAGER,JOB_HEAD_OF_PERSONNEL)

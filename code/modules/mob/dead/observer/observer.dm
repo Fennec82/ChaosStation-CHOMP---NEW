@@ -74,9 +74,9 @@
 				name = M.real_name
 			else
 				if(gender == MALE)
-					name = capitalize(pick(first_names_male)) + " " + capitalize(pick(last_names))
+					name = capitalize(pick(GLOB.first_names_male)) + " " + capitalize(pick(GLOB.last_names))
 				else
-					name = capitalize(pick(first_names_female)) + " " + capitalize(pick(last_names))
+					name = capitalize(pick(GLOB.first_names_female)) + " " + capitalize(pick(GLOB.last_names))
 
 		mind = M.mind	//we don't transfer the mind but we keep a reference to it.
 
@@ -96,13 +96,13 @@
 		to_chat(src, span_danger("Could not locate an observer spawn point. Use the Teleport verb to jump to the station map."))
 
 	if(!name)							//To prevent nameless ghosts
-		name = capitalize(pick(first_names_male)) + " " + capitalize(pick(last_names))
+		name = capitalize(pick(GLOB.first_names_male)) + " " + capitalize(pick(GLOB.last_names))
 	real_name = name
 	animate(src, pixel_y = 2, time = 10, loop = -1)
 	animate(pixel_y = default_pixel_y, time = 10, loop = -1)
 	GLOB.observer_mob_list += src
 	. = ..()
-	visualnet = ghostnet
+	visualnet = GLOB.ghostnet
 
 /mob/observer/dead/proc/checkStatic()
 	return !(check_rights_for(src.client, R_ADMIN|R_FUN|R_EVENT|R_SERVER) || (client && client.buildmode) || isbelly(loc))
@@ -183,6 +183,7 @@ Works together with spawning an observer, noted above.
 //RS Port #658 End
 
 /mob/proc/ghostize(var/can_reenter_corpse = 1, var/aghost = FALSE)
+	reset_perspective(src) // End any remoteview we're in
 	if(key)
 		if(ishuman(src))
 			var/mob/living/carbon/human/H = src
@@ -222,7 +223,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 			if(response == "Admin Ghost")
 				if(!src.client)
 					return
-				src.client.admin_ghost()
+				SSadmin_verbs.dynamic_invoke_verb(client, /datum/admin_verb/admin_ghost)
 		else
 			response = tgui_alert(src, "Are you -sure- you want to ghost?\n(You are alive, or otherwise have the potential to become alive. Don't abuse ghost unless you are inside a cryopod or equivalent! You can't change your mind so choose wisely!)", "Are you sure you want to ghost?", list("Stay in body", "Ghost"))
 		if(response != "Ghost")
@@ -245,8 +246,8 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 /mob/observer/dead/get_status_tab_items()
 	. = ..()
-	if(emergency_shuttle)
-		var/eta_status = emergency_shuttle.get_status_panel_eta()
+	if(GLOB.emergency_shuttle)
+		var/eta_status = GLOB.emergency_shuttle.get_status_panel_eta()
 		if(eta_status)
 			. += ""
 			. += "[eta_status]"
@@ -557,9 +558,9 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	//ChompEDIT START - deal with weird behavior on qdelled ghosts
 	if(client) //qdelling a ghost with a client = make a new ghost i guess
 		ghostize()
-	if(key) //qdelling a ghost with a key = remove the key first to prevent logging into the GC queue
-		key = null
 	//ChompEDIT END
+	if(key)
+		key = null
 	return ..()
 
 /mob/Moved(atom/old_loc, direction, forced = FALSE)
@@ -578,7 +579,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	if(check_rights_for(src.client, R_ADMIN|R_FUN|R_EVENT))
 		return 0
 
-	return (T && T.holy) && (is_manifest || (mind in cult.current_antagonists))
+	return (T && T.holy) && (is_manifest || (mind in GLOB.cult.current_antagonists))
 
 /mob/observer/dead/verb/jumptomob() //Moves the ghost instead of just changing the ghosts's eye -Nodrak
 	set category = "Ghost.Game"
@@ -689,8 +690,8 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return 0 //something is terribly wrong
 
 	var/ghosts_can_write
-	if(ticker.mode.name == "cult")
-		if(cult.current_antagonists.len > CONFIG_GET(number/cult_ghostwriter_req_cultists))
+	if(SSticker.mode.name == "cult")
+		if(GLOB.cult.current_antagonists.len > CONFIG_GET(number/cult_ghostwriter_req_cultists))
 			ghosts_can_write = 1
 
 	if(!ghosts_can_write && !check_rights(R_ADMIN|R_EVENT|R_FUN, 0)) //Let's allow for admins to write in blood for events and the such.
@@ -731,7 +732,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	var/max_length = 50
 
-	var/message = sanitize(tgui_input_text(src, "Write a message. It cannot be longer than [max_length] characters.","Blood writing", "", max_length))
+	var/message = tgui_input_text(src, "Write a message. It cannot be longer than [max_length] characters.","Blood writing", "", max_length)
 
 	if (message)
 
@@ -768,9 +769,8 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		)
 		toggle_ghost_visibility(TRUE)
 	else
-		var/datum/gender/T = GLOB.gender_datums[user.get_visible_gender()]
 		user.visible_message ( \
-			span_warning("\The [user] just tried to smash [T.his] book into that ghost!  It's not very effective."), \
+			span_warning("\The [user] just tried to smash [user.p_their()] book into that ghost!  It's not very effective."), \
 			span_warning("You get the feeling that the ghost can't become any more visible.") \
 		)
 
@@ -905,9 +905,9 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		var/mob/living/M = tgui_input_list(src, "Select who to whisper to:", "Whisper to?", options)
 		if(!M)
 			return 0
-		var/msg = sanitize(tgui_input_text(src, "Message:", "Spectral Whisper"))
+		var/msg = tgui_input_text(src, "Message:", "Spectral Whisper", "", MAX_MESSAGE_LEN)
 		if(msg)
-			log_say("(SPECWHISP to [key_name(M)]): [msg]", src)
+			log_talk("(SPECWHISP to [key_name(M)]): [msg]", LOG_WHISPER)
 			to_chat(M, span_warning(" You hear a strange, unidentifiable voice in your head... [span_purple("[msg]")]"))
 			to_chat(src, span_warning(" You said: '[msg]' to [M]."))
 		else
@@ -941,6 +941,9 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 			ghost_sprite = GLOB.possible_ghost_sprites[choice]
 
+			if(ghost_sprite == "blank")
+				log_and_message_admins("[key_name(src)] has set their ghost sprite to invisible.", src)
+
 			if(!finalized || finalized == "No")
 				icon_state = previous_state
 
@@ -966,24 +969,28 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		to_chat(src,span_warning("You cannot alert pAI cards when you are banned from playing as a pAI."))
 		return
 
-	if(src.client.prefs?.be_special & BE_PAI)
-		var/choice = tgui_alert(src, "Would you like to submit yourself to the recruitment list too?", "Confirmation", list("No", "Yes"))
-		if(!choice)
-			return
-		if(choice == "Yes")
-			paiController.recruitWindow(src)
-		var/count = 0
-		for(var/obj/item/paicard/p in GLOB.all_pai_cards)
-			var/obj/item/paicard/PP = p
-			if(PP.pai == null)
-				count++
-				PP.add_overlay("pai-ghostalert")
-				PP.alertUpdate()
-				spawn(54)
-					PP.cut_overlays()
-		to_chat(src,span_notice("Flashing the displays of [count] unoccupied PAIs."))
-	else
-		to_chat(src,span_warning("You have 'Be pAI' disabled in your character prefs, so we can't help you."))
+	if(!(src.client.prefs?.be_special & BE_PAI))
+		to_chat(src,span_warning("You have 'Be pAI' disabled in your character prefs."))
+		return
+
+	var/choice = tgui_alert(src, "Would you like to submit yourself to the recruitment list too?", "Confirmation", list("No", "Yes"))
+	if(!choice || choice != "Yes")
+		return
+
+	to_chat(src,span_notice("Flashing the displays of [pai_card_ping()] unoccupied PAIs."))
+
+/mob/observer/dead/proc/pai_card_ping()
+	var/count = 0
+	for(var/obj/item/paicard/p in GLOB.all_pai_cards)
+		var/obj/item/paicard/PP = p
+		if(PP.pai)
+			continue
+		count++
+		PP.cut_overlays()
+		PP.add_overlay("pai-ghostalert")
+		PP.alertUpdate()
+		addtimer(CALLBACK(PP, TYPE_PROC_REF(/obj/item/paicard, clear_invite_overlay)), 1 MINUTE, TIMER_DELETE_ME)
+	return count
 
 /mob/observer/dead/speech_bubble_appearance()
 	return "ghost"
@@ -1000,7 +1007,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	if(message)
 		to_chat(src, span_ghostalert(span_huge("[message]")))
 		if(source)
-			throw_alert("\ref[source]_notify_revive", /obj/screen/alert/notify_cloning, new_master = source)
+			throw_alert("\ref[source]_notify_revive", /atom/movable/screen/alert/notify_cloning, new_master = source)
 	to_chat(src, span_ghostalert("<a href='byond://?src=[REF(src)];reenter=1'>(Click to re-enter)</a>"))
 	if(sound)
 		SEND_SOUND(src, sound(sound))

@@ -333,7 +333,7 @@
 //////////////////// Cyborg Modules ////////////////////
 /datum/design_techweb/prosfab/robot_upgrade
 	category = list(
-		RND_CATEGORY_MECHFAB_CYBORG_MODULES
+		RND_CATEGORY_MECHFAB_CYBORG_MODULES + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_UTILITY
 	)
 	build_type = PROSFAB
 	materials = list(MAT_STEEL = 7500)
@@ -360,6 +360,10 @@
 	build_path = /obj/item/borg/upgrade/utility/restart
 
 // Section for basic upgrades for all cyborgs
+/datum/design_techweb/prosfab/robot_upgrade/basic
+	category = list(
+		RND_CATEGORY_MECHFAB_CYBORG_MODULES + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_BASIC
+	)
 
 /datum/design_techweb/prosfab/robot_upgrade/basic/sizeshift
 	name = "Size Alteration Module"
@@ -392,6 +396,10 @@
 	build_path = /obj/item/borg/upgrade/basic/language
 
 // Section for advanced upgrades for all cyborgs
+/datum/design_techweb/prosfab/robot_upgrade/advanced
+	category = list(
+		RND_CATEGORY_MECHFAB_CYBORG_MODULES + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_ADVANCED
+	)
 
 /datum/design_techweb/prosfab/robot_upgrade/advanced/bellysizeupgrade
 	name = "Robohound Capacity Expansion Module"
@@ -424,6 +432,10 @@
 /*
 	Some job related borg upgrade modules, adding useful items for puppers.
 */
+/datum/design_techweb/prosfab/robot_upgrade/restricted
+	category = list(
+		RND_CATEGORY_MECHFAB_CYBORG_MODULES + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_RESTRICTED
+	)
 
 /datum/design_techweb/prosfab/robot_upgrade/restricted/bellycapupgrade
 	name = "Robohound Capability Expansion Module"
@@ -433,6 +445,9 @@
 	build_path = /obj/item/borg/upgrade/restricted/bellycapupgrade
 
 /datum/design_techweb/prosfab/robot_upgrade/restricted/advrped
+	category = list(
+		RND_CATEGORY_MECHFAB_CYBORG_MODULES + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_RESTRICTED + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_SCIENCE
+	)
 	name = "Advanced Rapid Part Exchange Device"
 	desc = "Exactly the same as a standard Advanced RPED, but this one has mounting hardware for a Science Borg."
 	id = "borg_advrped_module"
@@ -441,6 +456,9 @@
 	build_path = /obj/item/borg/upgrade/restricted/advrped
 
 /datum/design_techweb/prosfab/robot_upgrade/restricted/diamonddrill
+	category = list(
+		RND_CATEGORY_MECHFAB_CYBORG_MODULES + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_RESTRICTED + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_MINING
+	)
 	name = "Diamond Drill"
 	desc = "A mining drill with a diamond tip, made for use by Mining Borgs."
 	id = "borg_ddrill_module"
@@ -449,6 +467,9 @@
 	build_path = /obj/item/borg/upgrade/restricted/diamonddrill
 
 /datum/design_techweb/prosfab/robot_upgrade/restricted/pka
+	category = list(
+		RND_CATEGORY_MECHFAB_CYBORG_MODULES + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_RESTRICTED + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_MINING
+	)
 	name = "Proto-Kinetic Accelerator"
 	desc = "A mining weapon designed for clearing rocks and hostile wildlife. This model is equiped with a self upgrade system, allowing it to attach modules hands free."
 	id = "borg_pka_module"
@@ -456,7 +477,42 @@
 	materials = list(MAT_PLASTEEL = 5000, MAT_GLASS = 1000, MAT_URANIUM = 500, MAT_PLATINUM = 350)
 	build_path = /obj/item/borg/upgrade/restricted/pka
 
+/datum/design_techweb/prosfab/robot_upgrade/restricted/adv_scanner
+	category = list(
+		RND_CATEGORY_MECHFAB_CYBORG_MODULES + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_RESTRICTED + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_MINING
+	)
+	name = "Ore Scanning Upgrade"
+	desc = "An upgrade module to improve the potency of the integrated ore scanner."
+	id = "borg_adv_scanner_module"
+	// req_tech = list(TECH_ENGINEERING = 6, TECH_MATERIAL = 5, TECH_POWER = 4)
+	materials = list(MAT_STEEL = 6000, MAT_GLASS = 4000, MAT_GOLD = 2000, MAT_VERDANTIUM = 1500, MAT_DIAMOND = 350)
+	build_path = /obj/item/borg/upgrade/restricted/adv_scanner
+
+/datum/design_techweb/prosfab/robot_upgrade/restricted/adv_snatcher
+	category = list(
+		RND_CATEGORY_MECHFAB_CYBORG_MODULES + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_RESTRICTED + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_MINING
+	)
+	name = "Sheet Snatcher Upgrade"
+	desc = "An upgrade module to expand the robot's sheet storage capacity."
+	id = "borg_adv_snatcher_module"
+	// req_tech = list(TECH_ENGINEERING = 7, TECH_MATERIAL = 8, TECH_POWER = 6)
+	materials = list(MAT_STEEL = 12000, MAT_GLASS = 8000, MAT_PLASTEEL = 2000, MAT_DURASTEEL = 500, MAT_DIAMOND = 700)
+	build_path = /obj/item/borg/upgrade/restricted/adv_snatcher
+
+/datum/design_techweb/prosfab/robot_upgrade/restricted/adv_mailbag
+	category = list(
+		RND_CATEGORY_MECHFAB_CYBORG_MODULES + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_RESTRICTED + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_MINING
+	)
+	name = "Mail Compartment Upgrade"
+	desc = "An upgrade module to expand the robot's postage capacity."
+	id = "borg_adv_mailbag"
+	materials = list(MAT_STEEL = 12000, MAT_GLASS = 8000, MAT_PLASTEEL = 2000, MAT_DURASTEEL = 500, MAT_DIAMOND = 700)
+	build_path = /obj/item/borg/upgrade/restricted/adv_mailbag
+
 /datum/design_techweb/prosfab/robot_upgrade/restricted/tasercooler
+	category = list(
+		RND_CATEGORY_MECHFAB_CYBORG_MODULES + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_RESTRICTED + RND_SUBCATEGORY_MECHFAB_CYBORG_MODULES_SECURITY
+	)
 	name = "Rapid Taser Cooling Module"
 	desc = "Used to cool a mounted taser, increasing the potential current in it and thus its recharge rate."
 	id = "borg_taser_module"

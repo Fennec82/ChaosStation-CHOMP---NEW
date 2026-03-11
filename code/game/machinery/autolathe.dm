@@ -66,8 +66,6 @@
 /obj/machinery/autolathe/tgui_static_data(mob/user)
 	var/list/data = ..()
 
-	data += rmat.mat_container.tgui_static_data(user)
-
 	var/list/categories = list()
 	var/list/recipes = list()
 	for(var/datum/category_group/autolathe/A in autolathe_recipes.categories)
@@ -89,17 +87,24 @@
 	data["recipes"] = recipes
 	data["categories"] = categories
 
+	var/list/material_data = rmat.mat_container?.tgui_static_data(user)
+	if(material_data)
+		data += material_data
+
 	return data
 
 /obj/machinery/autolathe/ui_assets(mob/user)
 	return list(
-		get_asset_datum(/datum/asset/spritesheet/sheetmaterials)
+		get_asset_datum(/datum/asset/spritesheet_batched/sheetmaterials)
 	)
 
 /obj/machinery/autolathe/tgui_data(mob/user, datum/tgui/ui, datum/tgui_state/state)
 	var/list/data = ..()
 	data["busy"] = busy
-	data["materials"] = rmat.mat_container.tgui_data(user, TRUE)
+
+	var/list/material_data = rmat.mat_container?.tgui_data(user, TRUE)
+	if(material_data)
+		data["materials"] = material_data
 	data["mat_efficiency"] = mat_efficiency
 	return data
 
@@ -148,14 +153,12 @@
 	return ..()
 
 /obj/machinery/autolathe/attack_hand(mob/user as mob)
-	user.set_machine(src)
 	interact(user)
 
 /obj/machinery/autolathe/tgui_act(action, list/params, datum/tgui/ui, datum/tgui_state/state)
 	if(..())
 		return TRUE
 
-	ui.user.set_machine(src)
 	add_fingerprint(ui.user)
 
 	if(busy)
@@ -169,20 +172,16 @@
 			if(making.hidden && !hacked)
 				return
 
-			var/datum/component/material_container/materials = rmat.mat_container
-
-			var/list/materials_used = list()
-
 			var/multiplier = (params["multiplier"] || 1)
 
 			if(making.is_stack)
 				var/max_sheets
 				for(var/material in making.resources)
 					var/coeff = (making.no_scale ? 1 : mat_efficiency) //stacks are unaffected by production coefficient
-					var/sheets = round(materials.get_material_amount(material) / round(making.resources[material] * coeff))
+					var/sheets = round(rmat.mat_container.get_material_amount(material) / round(making.resources[material] * coeff))
 					if(isnull(max_sheets) || max_sheets > sheets)
 						max_sheets = sheets
-					if(!isnull(materials.get_material_amount(material)) && materials.get_material_amount(material) < round(making.resources[material] * coeff))
+					if(!isnull(rmat.mat_container.get_material_amount(material)) && rmat.mat_container.get_material_amount(material) < round(making.resources[material] * coeff))
 						max_sheets = 0
 				//Build list of multipliers for sheets.
 				multiplier = tgui_input_number(ui.user, "How many do you want to print? (0-[max_sheets])", null, null, max_sheets, 0)
@@ -192,8 +191,11 @@
 			//Check if we still have the materials.
 			var/coeff = (making.no_scale ? 1 : mat_efficiency) //stacks are unaffected by production coefficient
 
-			if(LAZYLEN(materials_used))
-				if(!materials.has_materials(making.resources))
+			if(!rmat.can_use_resource())
+				return
+
+			if(LAZYLEN(making.resources))
+				if(!rmat.mat_container.has_materials(making.resources, coeff, multiplier))
 					return
 
 				rmat.use_materials(making.resources, coeff, multiplier)

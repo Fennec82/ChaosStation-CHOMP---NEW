@@ -27,13 +27,13 @@
 		body = html2paper_markup(body)
 		//ChompEDIT end
 
-		var/new_title = sanitize(tgui_input_text(src,"Write a good title for the news update.  Note: HTML is NOT supported.","Write News", title), extra = 0)
+		var/new_title = tgui_input_text(src,"Write a good title for the news update.  Note: HTML is NOT supported.","Write News", title, MAX_MESSAGE_LEN)
 		if(!new_title)
 			return
-		var/new_body = sanitize(tgui_input_text(src,"Write the body of the news update here. Note: HTML is NOT supported, however paper markup is supported.  \n\
+		var/new_body = tgui_input_text(src,"Write the body of the news update here. Note: HTML is NOT supported, however paper markup is supported.  \n\
 		Hitting enter will automatically add a line break.  \n\
 		Valid markup includes: \[b\], \[i\], \[u\], \[large\], \[h1\], \[h2\], \[h3\]\ \[*\], \[hr\], \[small\], \[list\], \[table\], \[grid\], \
-		\[row\], \[cell\], \[logo\], \[sglogo\].","Write News", body, multiline = TRUE, prevent_enter = TRUE), extra = 0)
+		\[row\], \[cell\], \[logo\], \[talogo\], \[sglogo\].","Write News", body, MAX_MESSAGE_LEN, TRUE, prevent_enter = TRUE)
 
 		new_body = paper_markup2html(new_body)
 
@@ -88,6 +88,7 @@
 	text = replacetext(text, "\[row\]", "</td><tr>")
 	text = replacetext(text, "\[cell\]", "<td>")
 	text = replacetext(text, "\[logo\]", "<img src=\ref['html/images/ntlogo.png']>") // Not sure if these would get used but why not
+	text = replacetext(text, "\[talogo\]", "<img src=\ref['html/images/talonlogo.png']>")
 	text = replacetext(text, "\[sglogo\]", "<img src=\ref['html/images/sglogo.png']>")
 	return text
 
@@ -125,6 +126,7 @@
 	text = replacetext(text, "</td><tr>", "\[row\]")
 	text = replacetext(text, "<td>", "\[cell\]")
 	text = replacetext(text, "<img src=\ref['html/images/ntlogo.png']>", "\[logo\]") // Not sure if these would get used but why not
+	text = replacetext(text, "<img src=\ref['html/images/talonlogo.png']>", "\[talogo\]")
 	text = replacetext(text, "<img src=\ref['html/images/sglogo.png']>", "\[sglogo\]")
 	return text
 

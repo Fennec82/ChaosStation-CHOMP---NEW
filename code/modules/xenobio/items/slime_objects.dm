@@ -7,7 +7,10 @@
 	description_info = "Use in your hand to attempt to create a Promethean.  It functions similarly to a positronic brain, in that a ghost is needed to become the Promethean."
 	var/searching = 0
 
-/obj/item/slime_cube/attack_self(mob/user as mob)
+/obj/item/slime_cube/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(!searching)
 		to_chat(user, span_warning("You stare at the slimy cube, watching as some activity occurs."))
 		icon_state = "slime cube active"
@@ -57,7 +60,7 @@
 	S.set_species("Promethean")
 	S.shapeshifter_set_colour("#2398FF")
 	visible_message(span_warning("The monkey cube suddenly takes the shape of a humanoid!"))
-	var/newname = sanitize(tgui_input_text(S, "You are a Promethean. Would you like to change your name to something else?", "Name change", null, MAX_NAME_LEN), MAX_NAME_LEN)
+	var/newname = tgui_input_text(S, "You are a Promethean. Would you like to change your name to something else?", "Name change", null, MAX_NAME_LEN)
 	if(newname)
 		S.real_name = newname
 		S.name = S.real_name
@@ -85,6 +88,9 @@
 	qdel(src)
 
 /obj/item/slime_crystal/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	user.visible_message(span_warning("\The [user] teleports themselves with \the [src]!"))
 	safe_blink(user, 14)
 	qdel(src)
@@ -142,7 +148,8 @@
 	light_range = 6
 	on = 1 //Bio-luminesence has one setting, on.
 	power_use = 0
-	light_system = STATIC_LIGHT
+	light_system = STATIC_LIGHT //CHOMPEdit
+	special_handling = TRUE
 
 /obj/item/flashlight/slime/Initialize(mapload)
 	. = ..()
@@ -150,10 +157,6 @@
 
 /obj/item/flashlight/slime/update_brightness()
 	return
-
-/obj/item/flashlight/slime/attack_self(mob/user)
-	return //Bio-luminescence does not toggle.
-
 
 //Radiation Emitter
 

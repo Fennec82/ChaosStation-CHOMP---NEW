@@ -20,7 +20,7 @@
 	response_disarm = "gently pushes aside the"
 	response_harm = "hits the"
 
-	organ_names = /decl/mob_organ_names/smallflying
+	organ_names = /datum/decl/mob_organ_names/smallflying
 
 	harm_intent_damage = 10
 
@@ -39,7 +39,7 @@
 
 	var/scare_chance = 15
 
-	can_be_drop_prey = FALSE //CHOMP Add
+	can_be_drop_prey = FALSE
 
 /mob/living/simple_mob/animal/space/bats/apply_melee_effects(var/atom/A)
 	if(isliving(A))

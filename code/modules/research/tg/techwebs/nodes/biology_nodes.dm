@@ -31,6 +31,7 @@
 		// "biopsy_tool",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS)
+	announce_channels = list(CHANNEL_MEDICAL)
 
 /datum/techweb_node/xenobiology
 	id = TECHWEB_NODE_XENOBIOLOGY
@@ -55,6 +56,7 @@
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)
 	discount_experiments = list(/datum/experiment/scanning/points/slime_scanning = TECHWEB_TIER_3_POINTS)
+	announce_channels = list(CHANNEL_MEDICAL)
 
 /datum/techweb_node/gene_engineering
 	id = TECHWEB_NODE_GENE_ENGINEERING
@@ -112,6 +114,7 @@
 	prereq_ids = list(TECHWEB_NODE_HYDROPONICS)
 	design_ids = list(
 		"flora_gun",
+		"disk_botany",
 		// "gene_shears",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)

@@ -39,7 +39,7 @@
 	character.all_underwear_metadata.Cut()
 
 	for(var/underwear_category_name in pref.all_underwear)
-		var/datum/category_group/underwear/underwear_category = global_underwear.categories_by_name[underwear_category_name]
+		var/datum/category_group/underwear/underwear_category = GLOB.global_underwear.categories_by_name[underwear_category_name]
 		if(underwear_category)
 			var/underwear_item_name = pref.all_underwear[underwear_category_name]
 			character.all_underwear[underwear_category_name] = underwear_category.items_by_name[underwear_item_name]
@@ -65,9 +65,10 @@
 	if(!istype(pref.all_underwear))
 		pref.all_underwear = list()
 
-		for(var/datum/category_group/underwear/WRC in global_underwear.categories)
+		for(var/datum/category_group/underwear/WRC in GLOB.global_underwear.categories)
 			for(var/datum/category_item/underwear/WRI in WRC.items)
-				if(WRI.is_default(pref.identifying_gender ? pref.identifying_gender : MALE))
+				var/id_gender = pref.read_preference(/datum/preference/choiced/gender/identifying)
+				if(WRI.is_default(id_gender ? id_gender : MALE))
 					pref.all_underwear[WRC.name] = WRI.name
 					break
 
@@ -75,7 +76,7 @@
 		pref.all_underwear_metadata = list()
 
 	for(var/underwear_category in pref.all_underwear)
-		var/datum/category_group/underwear/UWC = global_underwear.categories_by_name[underwear_category]
+		var/datum/category_group/underwear/UWC = GLOB.global_underwear.categories_by_name[underwear_category]
 		if(!UWC)
 			pref.all_underwear -= underwear_category
 		else
@@ -95,7 +96,7 @@
 	var/list/data = ..()
 
 	var/list/underwear_data = list()
-	for(var/datum/category_group/underwear/UWC in global_underwear.categories)
+	for(var/datum/category_group/underwear/UWC in GLOB.global_underwear.categories)
 		var/item_name = LAZYACCESS(pref.all_underwear, UWC.name) || "None"
 
 		var/list/tweaks = list()
@@ -183,7 +184,7 @@
 				return TOPIC_REFRESH_UPDATE_PREVIEW
 
 		if("change_underwear")
-			var/datum/category_group/underwear/UWC = LAZYACCESS(global_underwear.categories_by_name, params["underwear"])
+			var/datum/category_group/underwear/UWC = LAZYACCESS(GLOB.global_underwear.categories_by_name, params["underwear"])
 			if(!UWC)
 				return
 			var/datum/category_item/underwear/selected_underwear = tgui_input_list(user, "Choose underwear:", "Character Preference", UWC.items, pref.all_underwear[UWC.name])
@@ -199,7 +200,7 @@
 			if(!gt)
 				return TOPIC_NOACTION
 			var/new_metadata = gt.get_metadata(user, get_metadata(underwear, gt))
-			if(new_metadata)
+			if(!isnull(new_metadata))
 				set_metadata(underwear, gt, new_metadata)
 				return TOPIC_REFRESH_UPDATE_PREVIEW
 
@@ -208,16 +209,23 @@
 			return TOPIC_REFRESH
 
 		if("set_ringtone")
-			var/choice = tgui_input_list(user, "Please select a ringtone. All of these choices come with an associated preset sound. Alternately, select \"Other\" to specify manually.", "Character Preference", GLOB.valid_ringtones + "Other", pref.ringtone)
+			var/choice = tgui_input_list(user, "Please select a ringtone. All of these choices come with an associated preset sound. Alternately, select \"Other\" to specify manually.", "Character Preference", GLOB.device_ringtones + "Other", pref.ringtone)
 			if(!choice)
 				return TOPIC_NOACTION
 			if(choice == "Other")
-				var/raw_choice = sanitize(tgui_input_text(user, "Please enter a custom ringtone. If this doesn't match any of the other listed choices, your PDA will use the default (\"beep\") sound.", "Character Preference", null, 20), 20)
+				var/raw_choice = tgui_input_text(user, "Please enter a custom ringtone. If this doesn't match any of the other listed choices, your PDA will use the default (\"beep\") sound.", "Character Preference", null, 20)
 				if(raw_choice)
 					pref.ringtone = raw_choice
 			else
 				pref.ringtone = choice
 			return TOPIC_REFRESH
+
+		if("test_ringtone")
+			var/S = 'sound/machines/twobeep.ogg'
+			if(pref.ringtone in GLOB.device_ringtones)
+				S = GLOB.device_ringtones[pref.ringtone]
+			SEND_SOUND(user.client, S)
+			return TOPIC_NOACTION
 
 		// if("toggle_shoes")
 		// 	pref.shoe_hater = !pref.shoe_hater

@@ -5,28 +5,6 @@ import type { BooleanLike } from 'tgui-core/react';
  */
 export type MaterialMap = Record<string, number>;
 
-export const MATERIAL_KEYS = {
-  steel: 'sheet-metal_3',
-  glass: 'sheet-glass_3',
-  silver: 'sheet-silver_3',
-  graphite: 'sheet-puck_3',
-  plasteel: 'sheet-plasteel_3',
-  durasteel: 'sheet-durasteel_3',
-  verdantium: 'sheet-wavy_3',
-  morphium: 'sheet-wavy_3',
-  mhydrogen: 'sheet-mythril_3',
-  gold: 'sheet-gold_3',
-  diamond: 'sheet-diamond',
-  supermatter: 'sheet-super_3',
-  osmium: 'sheet-silver_3',
-  phoron: 'sheet-phoron_3',
-  uranium: 'sheet-uranium_3',
-  titanium: 'sheet-titanium_3',
-  lead: 'sheet-adamantine_3',
-  platinum: 'sheet-adamantine_3',
-  plastic: 'sheet-plastic_3',
-};
-
 /**
  * A single, uniquely identifiable material.
  */
@@ -99,12 +77,12 @@ export type FabricatorData = {
   /**
    * The materials available to the fabricator, via ore silo or local storage.
    */
-  materials: Material[];
+  materials?: Material[];
 
   /**
    * Definition of how much units 1 sheet has.
    */
-  SHEET_MATERIAL_AMOUNT: number;
+  SHEET_MATERIAL_AMOUNT?: number;
 
   /**
    * The name of the fabricator, as displayed on the title bar.

@@ -1,3 +1,5 @@
+import { useBackend } from 'tgui/backend';
+import { Window } from 'tgui/layouts';
 import {
   Box,
   Button,
@@ -8,22 +10,31 @@ import {
   Tooltip,
 } from 'tgui-core/components';
 import { classes } from 'tgui-core/react';
-
-import { useBackend } from '../backend';
-import { Window } from '../layouts';
-import { Materials } from './ExosuitFabricator/Material';
+import { MaterialAccessBar } from './common/MaterialAccessBar';
 import { DesignBrowser } from './Fabrication/DesignBrowser';
 import { MaterialCostSequence } from './Fabrication/MaterialCostSequence';
-import type { Design, FabricatorData, MaterialMap } from './Fabrication/Types';
+import type {
+  Design,
+  FabricatorData,
+  Material,
+  MaterialMap,
+} from './Fabrication/Types';
 
 export const Fabricator = (props) => {
   const { act, data } = useBackend<FabricatorData>();
-  const { fabName, onHold, designs, busy, SHEET_MATERIAL_AMOUNT } = data;
+  const {
+    fabName,
+    onHold,
+    designs,
+    busy,
+    SHEET_MATERIAL_AMOUNT = 0,
+    materials = [],
+  } = data;
 
   // Reduce the material count array to a map of actually available materials.
   const availableMaterials: MaterialMap = {};
 
-  for (const material of data.materials) {
+  for (const material of materials) {
     availableMaterials[material.name] = material.amount;
   }
 
@@ -47,7 +58,16 @@ export const Fabricator = (props) => {
           </Stack.Item>
           <Stack.Item>
             <Section>
-              <Materials />
+              <MaterialAccessBar
+                availableMaterials={materials}
+                SHEET_MATERIAL_AMOUNT={SHEET_MATERIAL_AMOUNT}
+                onEjectRequested={(mat: Material, qty: number) =>
+                  act('remove_mat', {
+                    id: mat.name,
+                    amount: qty,
+                  })
+                }
+              />
             </Section>
           </Stack.Item>
         </Stack>

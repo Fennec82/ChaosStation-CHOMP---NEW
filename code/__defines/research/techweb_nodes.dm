@@ -5,6 +5,7 @@
 #define TECHWEB_NODE_ALIENTECH "alientech"
 #define TECHWEB_NODE_ANOMALY_RESEARCH "anomaly_research"
 #define TECHWEB_NODE_ANOMALY_SHELLS "anomaly_shells"
+#define TECHWEB_NODE_TELEKINETIC_RESEARCH "telekinetic_research"
 #define TECHWEB_NODE_APPLIED_BLUESPACE "applied_bluespace"
 #define TECHWEB_NODE_ATMOS "atmos"
 #define TECHWEB_NODE_AUGMENTATION "augmentation"
@@ -41,6 +42,7 @@
 #define TECHWEB_NODE_ELECTRIC_WEAPONS "electric_weapons"
 #define TECHWEB_NODE_ENERGY_MANIPULATION "energy_manipulation"
 #define TECHWEB_NODE_CHEM_REFINERY "chem_refinery"
+#define TECHWEB_NODE_CHEM_ISOLATION "chem_isolation"
 #define TECHWEB_NODE_EXODRONE "exodrone"
 #define TECHWEB_NODE_EXOTIC_AMMO "exotic_ammo"
 #define TECHWEB_NODE_EXP_TOOLS "exp_tools"
@@ -81,10 +83,13 @@
 #define TECHWEB_NODE_MECH_MINING "mech_mining"
 #define TECHWEB_NODE_MEDBAY_EQUIP "medbay_equip"
 #define TECHWEB_NODE_MEDBAY_EQUIP_ADV "medbay_equip_adv"
+#define TECHWEB_NODE_MEDBAY_EQUIP_HIGH_TECH "medbay_equip_high_tech"
 #define TECHWEB_NODE_MEDIGUN "medbay_medigun"
+#define TECHWEB_NODE_MEDIGUN_CONSTANT "medbay_medigun_constant"
 #define TECHWEB_NODE_MINING "mining"
 #define TECHWEB_NODE_MINING_ADV "mining_adv"
 #define TECHWEB_NODE_MOD_ANOMALY "mod_anomaly"
+#define TECHWEB_NODE_MOD_SUPPLY "mod_supply"
 #define TECHWEB_NODE_MOD_ENGI "mod_engi"
 #define TECHWEB_NODE_MOD_ENGI_ADV "mod_engi_adv"
 #define TECHWEB_NODE_MOD_ENTERTAINMENT "mod_entertainment"
@@ -97,6 +102,9 @@
 #define TECHWEB_NODE_MODULAR_COMPUTER "modular_computer"
 #define TECHWEB_NODE_NIF "nif"
 #define TECHWEB_NODE_NIGHT_VISION "night_vision"
+#define TECHWEB_NODE_THERMAL_VISION "thermal_vision"
+#define TECHWEB_NODE_GRAVITON_VISION "graviton_vision"
+#define TECHWEB_NODE_ADVANCED_VISORS "advanced_visors"
 #define TECHWEB_NODE_NSFW "nsfwgun"
 #define TECHWEB_NODE_OFFICE_EQUIP "office_equip"
 #define TECHWEB_NODE_OLDSTATION_SURGERY "oldstation_surgery"
@@ -105,6 +113,8 @@
 #define TECHWEB_NODE_PARTS_HYPER "parts_hyper"
 #define TECHWEB_NODE_PARTS_OMNI "parts_omni"
 #define TECHWEB_NODE_PARTS_UPG "parts_upg"
+#define TECHWEB_NODE_PARTS_EMP_PROOF "parts_empproof"
+#define TECHWEB_NODE_PARTS_RECHARGING "parts_recharging"
 #define TECHWEB_NODE_PASSIVE_IMPLANTS "passive_implants"
 #define TECHWEB_NODE_PLASMA_CONTROL "plasma_control"
 #define TECHWEB_NODE_PLASMA_MINING "plasma_mining"
@@ -133,16 +143,16 @@
 #define TECHWEB_NODE_TELECOMS "telecoms"
 #define TECHWEB_NODE_UNREGULATED_BLUESPACE "unregulated_bluespace"
 #define TECHWEB_NODE_XENOBIOLOGY "xenobiology"
+#define TECHWEB_NODE_TELEPORTER "teleporter"
+#define TECHWEB_NODE_CONFETTI "confetti"
 
 //CHOMPEDIT Start - Chomp Specific techwebs.
 #define TECHWEB_NODE_PHASE_WEAPONS "phase_weapons" //CHOMPEDIT ADD - Adds Phase Weaponry
-#define TECHWEB_NODE_PARTS_EMP_PROOF "parts_empproof" //CHOMPEDIT - Adds EMP-Proof Parts
-#define TECHWEB_NODE_PARTS_RECHARGING "parts_recharging" //CHOMPEDIT - Adds recharging Parts
-#define TECHWEB_NODE_TELEPORTER "teleporter" //CHOMPEDIT - Adds Teleporter
-#define TECHWEB_NODE_CONFETTI "confetti" //CHOMPEDIT Add - Adds Confetti Cannon
 #define TECHWEB_NODE_CRYOGUN "cryogun" //CHOMPEDIT Add - Adds Cryogun
 #define TECHWEB_NODE_CASELESS_RIFLE "caseless_rifle" //CHOMPEDIT Add - Adds Caseless Rifle
 #define TECHWEB_NODE_METAMORPHOSIS_RAY "metamorphosis_ray" //CHOMPEDIT Add - Adds Caseless Rifle
 #define TECHWEB_NODE_MOD_ANOMALY_SUIT "mod_anomaly_suit" //CHOMPEDIT Add - Adds Anomaly RIGs
 #define TECHWEB_NODE_MECH_SHIELDS "mech_shields" //CHOMPEDIT Add - Adds Mech Shields
+#define TECHWEB_NODE_TYRGOODS "tyrian tech" //CHOMPEDIT Add - Adds Craftable Tyr Loot
+#define TECHWEB_NODE_PRECUSORTOOLS "precursor tools" //CHOMPEDIT Add - Adds craftable precursor items
 //CHOMPEDIT End - Chomp Specific techwebs.

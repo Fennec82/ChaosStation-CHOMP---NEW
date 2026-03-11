@@ -9,7 +9,7 @@ var/datum/species/shapeshifter/promethean/prometheans
 	mimic many forms of life. Derived from the Aetolian giant slime (Macrolimus vulgaris) inhabiting the warm, tropical planet \
 	of Aetolus, they are a relatively new lab-created sapient species, and as such many things about them have yet to be comprehensively studied. \
 	What has Science done?"
-	wikilink="https://wiki.vore-station.net/Promethean"
+	wikilink="https://wiki.chompstation13.net/index.php?title=Promethean" //CHOMPEdit
 	catalogue_data = list(/datum/category_item/catalogue/fauna/promethean)
 	show_ssd =         "totally quiescent"
 	death_message =    "rapidly loses cohesion, splattering across the ground..."
@@ -34,6 +34,8 @@ var/datum/species/shapeshifter/promethean/prometheans
 	species_language = LANGUAGE_PROMETHEAN
 	secondary_langs = list(LANGUAGE_PROMETHEAN, LANGUAGE_SOL_COMMON)	// For some reason, having this as their species language does not allow it to be chosen.
 	assisted_langs = list(LANGUAGE_ROOTGLOBAL, LANGUAGE_VOX)	// Prometheans are weird, let's just assume they can use basically any language.
+
+	species_component = list(/datum/component/radiation_effects/promethean)
 
 	blood_name = "gelatinous ooze"
 	blood_reagents = REAGENT_ID_SLIMEJELLY
@@ -128,12 +130,12 @@ var/datum/species/shapeshifter/promethean/prometheans
 	var/heal_rate = 0.5 // Temp. Regen per tick.
 
 	default_emotes = list(
-		/decl/emote/audible/squish,
-		/decl/emote/audible/chirp,
-		/decl/emote/visible/bounce,
-		/decl/emote/visible/jiggle,
-		/decl/emote/visible/lightup,
-		/decl/emote/visible/vibrate
+		/datum/decl/emote/audible/squish,
+		/datum/decl/emote/audible/chirp,
+		/datum/decl/emote/visible/bounce,
+		/datum/decl/emote/visible/jiggle,
+		/datum/decl/emote/visible/lightup,
+		/datum/decl/emote/visible/vibrate
 	)
 
 	footstep = FOOTSTEP_MOB_SLIME

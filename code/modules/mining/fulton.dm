@@ -15,6 +15,9 @@
 	. += "It has [uses_left] use\s remaining."
 
 /obj/item/extraction_pack/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	var/list/possible_beacons = list()
 	for(var/obj/structure/extraction_point/EP as anything in GLOB.total_extraction_beacons)
 		if(EP.beacon_network in beacon_networks)
@@ -56,7 +59,7 @@
 		if(A.anchored)
 			return
 		to_chat(user, span_notice("You start attaching the pack to [A]..."))
-		if(do_after(user,50,target=A))
+		if(do_after(user, 5 SECONDS, target = A))
 			to_chat(user, span_notice("You attach the pack to [A] and activate it."))
 			/* No components, sorry. No convienence for you!
 			if(loc == user && istype(user.back, /obj/item/storage/backpack))
@@ -143,7 +146,14 @@
 	icon_state = "extraction_pointoff"
 
 /obj/item/fulton_core/attack_self(mob/user)
-	if(do_after(user,15,target = user) && !QDELETED(src))
+	. = ..(user)
+	if(.)
+		return TRUE
+	var/turf/T = get_turf(user)
+	if(!T)
+		to_chat(user, span_warning("You must be standing on solid ground to deploy an extraction beacon!"))
+		return
+	if(do_after(user, 1.5 SECONDS, target = user) && !QDELETED(src))
 		new /obj/structure/extraction_point(get_turf(user))
 		qdel(src)
 
@@ -181,9 +191,6 @@
 			if(L.stat != DEAD)
 				return 1
 	return 0
-
-/obj/effect/extraction_holder/singularity_pull()
-	return
 
 /obj/effect/extraction_holder/singularity_pull()
 	return

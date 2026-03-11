@@ -1,4 +1,4 @@
-var/datum/antagonist/ninja/ninjas
+GLOBAL_DATUM(ninjas, /datum/antagonist/ninja)
 
 /datum/antagonist/ninja
 	id = MODE_NINJA
@@ -20,7 +20,7 @@ var/datum/antagonist/ninja/ninjas
 
 /datum/antagonist/ninja/New()
 	..()
-	ninjas = src
+	GLOB.ninjas = src
 
 /datum/antagonist/ninja/attempt_random_spawn()
 	if(CONFIG_GET(flag/ninjas_allowed)) ..()
@@ -84,8 +84,8 @@ var/datum/antagonist/ninja/ninjas
 
 /datum/antagonist/ninja/update_antag_mob(var/datum/mind/player)
 	..()
-	var/ninja_title = pick(ninja_titles)
-	var/ninja_name = pick(ninja_names)
+	var/ninja_title = pick(GLOB.ninja_titles)
+	var/ninja_name = pick(GLOB.ninja_names)
 	var/mob/living/carbon/human/H = player.current
 	if(istype(H))
 		H.real_name = "[ninja_title] [ninja_name]"

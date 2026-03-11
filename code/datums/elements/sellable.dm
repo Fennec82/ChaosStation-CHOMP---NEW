@@ -6,15 +6,15 @@
 	. = ..()
 	if(!isobj(target))
 		return ELEMENT_INCOMPATIBLE
-	RegisterSignal(target, COMSIG_ITEM_SOLD, PROC_REF(sell))
+	RegisterSignal(target, COMSIG_ITEM_EXPORTED, PROC_REF(sell))
 	RegisterSignal(target, COMSIG_ITEM_SCAN_PROFIT, PROC_REF(calculate_sell_value))
-	RegisterSignal(target, COMSIG_PARENT_EXAMINE, PROC_REF(on_examine))
+	RegisterSignal(target, COMSIG_ATOM_EXAMINE, PROC_REF(on_examine))
 	return
 
 /datum/element/sellable/Detach(datum/source)
-	UnregisterSignal(source, COMSIG_ITEM_SOLD)
+	UnregisterSignal(source, COMSIG_ITEM_EXPORTED)
 	UnregisterSignal(source, COMSIG_ITEM_SCAN_PROFIT)
-	UnregisterSignal(source, COMSIG_PARENT_EXAMINE)
+	UnregisterSignal(source, COMSIG_ATOM_EXAMINE)
 	return ..()
 
 // Override this for sub elements that need to do complex calculations when sold
@@ -173,7 +173,6 @@
 				GLOB.refined_chems_sold[R.industrial_use]["units"] += FLOOR(R.volume, 1)
 				GLOB.refined_chems_sold[R.industrial_use]["value"] += reagent_value
 
-//CHOMPEdit Start
 /datum/element/sellable/salvage //For selling /obj/item/salvage
 
 /datum/element/sellable/salvage/calculate_sell_value(obj/source)
@@ -192,4 +191,3 @@
 	if(organ_stuff.health != initial(organ_stuff.health) )
 		return "Error: Product was damaged on arrival."
 	return null
-//CHOMPEdit End

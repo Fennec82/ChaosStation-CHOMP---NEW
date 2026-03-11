@@ -5,23 +5,23 @@
 
 /proc/register_radio(source, old_frequency, new_frequency, radio_filter)
 	if(old_frequency)
-		radio_controller.remove_object(source, old_frequency)
+		SSradio.remove_object(source, old_frequency)
 	if(new_frequency)
-		return radio_controller.add_object(source, new_frequency, radio_filter)
+		return SSradio.add_object(source, new_frequency, radio_filter)
 
 /proc/unregister_radio(source, frequency)
-	if(radio_controller)
-		radio_controller.remove_object(source, frequency)
+	if(SSradio)
+		SSradio.remove_object(source, frequency)
 
 /proc/get_frequency_name(var/display_freq)
 	var/freq_text
 
 	// the name of the channel
-	if(display_freq in ANTAG_FREQS)
+	if(display_freq in GLOB.antag_frequencies)
 		freq_text = "#unkn"
 	else
-		for(var/channel in radiochannels)
-			if(radiochannels[channel] == display_freq)
+		for(var/channel in GLOB.radiochannels)
+			if(GLOB.radiochannels[channel] == display_freq)
 				freq_text = channel
 				break
 
@@ -42,8 +42,8 @@
 	var/list/receiver_reception = list()
 
 /proc/get_message_server()
-	if(message_servers)
-		for (var/obj/machinery/message_server/MS in message_servers)
+	if(GLOB.message_servers)
+		for (var/obj/machinery/message_server/MS in GLOB.message_servers)
 			if(MS.active)
 				return MS
 	return null

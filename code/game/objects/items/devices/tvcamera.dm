@@ -48,6 +48,9 @@
 	. = ..()
 
 /obj/item/tvcamera/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	add_fingerprint(user)
 	user.set_machine(src)
 	show_ui(user)
@@ -69,7 +72,6 @@
 		return 1
 	if(href_list["channel"])
 		var/nc = tgui_input_text(usr, "Channel name", "Select new channel name", channel, MAX_NAME_LEN)
-		nc = sanitize(nc,MAX_NAME_LEN)
 		if(nc)
 			channel = nc
 			camera.c_tag = channel
@@ -127,7 +129,7 @@
 	if(camera.status && !isturf(target))
 		show_tvs(target)
 		user.visible_message(span_infoplain(span_bold("[user]") + " aims [src] at [target]."), span_info("You aim [src] at [target]."))
-		if(user.machine == src)
+		if(user.check_current_machine(src))
 			show_ui(user) // refresh the UI
 
 /obj/item/tvcamera/process()
@@ -158,7 +160,7 @@
 
 /obj/item/tvcamera/proc/update_feed()
 	if(camera.status)
-		SEND_SIGNAL(camera, COMSIG_OBSERVER_MOVED) // Forward the movement signal
+		SEND_SIGNAL(camera, COMSIG_MOVABLE_ATTEMPTED_MOVE) // Forward the movement signal
 
 // CHOMPEdit Start - Bodycam
 // Security Bodycam
@@ -177,6 +179,7 @@
 	var/obj/item/radio/bradio
 	var/datum/weakref/showing
 	var/showing_name
+	special_handling = TRUE
 
 /obj/item/clothing/accessory/bodycam/Initialize(mapload)
 	. = ..()
@@ -212,6 +215,9 @@
 	. = ..()
 
 /obj/item/clothing/accessory/bodycam/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	add_fingerprint(user)
 	//user.set_machine(src)
 	show_bodycam_ui(user)
@@ -311,16 +317,10 @@
 
 /obj/item/clothing/accessory/bodycam/proc/update_feed()
 	if(bcamera.status)
-		SEND_SIGNAL(bcamera, COMSIG_OBSERVER_MOVED) // Forward the movement signal
+		SEND_SIGNAL(bcamera, COMSIG_MOVABLE_ATTEMPTED_MOVE) // Forward the movement signal
 
 /obj/item/clothing/accessory/bodycam/update_icon()
 	..()
-	if(bcamera.status)
-		icon_state = "eshield"
-		item_state = "eshield"
-	else
-		icon_state = "eshield"
-		item_state = "eshield"
 	var/mob/living/carbon/human/H = loc
 	if(istype(H))
 		H.update_inv_r_hand()

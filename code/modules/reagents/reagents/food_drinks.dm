@@ -13,6 +13,8 @@
 	color = "#664330"
 	affects_robots = 1	//VOREStation Edit
 	wiki_flag = WIKI_FOOD
+	coolant_modifier = -1
+	scannable = SCANNABLE_BENEFICIAL
 
 	supply_conversion_value = REFINERYEXPORT_VALUE_UNWANTED
 	industrial_use = REFINERYEXPORT_REASON_FOOD
@@ -48,7 +50,7 @@
 	affect_ingest(M, alien, removed)
 	//VOREStation Edits Start
 	if(M.isSynthetic())
-		M.adjust_nutrition((nutriment_factor * removed) * M.species.synthetic_food_coeff)
+		M.adjust_nutrition((nutriment_factor * removed) * M.species?.synthetic_food_coeff)
 	//VOREStation Edits End
 	..()
 
@@ -163,6 +165,7 @@
 	taste_mult = 0.1
 	nutriment_factor = 27//The caloric ratio of carb/protein/fat is 4:4:9
 	color = "#CCCCCC"
+	coolant_modifier = 1.5
 
 /datum/reagent/nutriment/triglyceride/oil
 	//Having this base class incase we want to add more variants of oil
@@ -278,6 +281,7 @@
 	cup_prefix = "sweetened"
 
 	injectable = 1
+	coolant_modifier = 1.25
 
 /datum/reagent/nutriment/protein // Bad for Skrell!
 	name = REAGENT_PROTEIN
@@ -305,6 +309,13 @@
 	color = "#fdffa8"
 	taste_description = "tofu"
 	allergen_type = ALLERGEN_BEANS //Made from soy beans
+
+/datum/reagent/nutriment/protein/fungi
+	name = REAGENT_FUNGI
+	id = REAGENT_ID_FUNGI
+	taste_description = "some sort of mushroom"
+	color = "#979797"
+	allergen_type = ALLERGEN_FUNGI
 
 /datum/reagent/nutriment/protein/seafood
 	name = REAGENT_SEAFOOD
@@ -511,7 +522,7 @@
 	reagent_state = LIQUID
 	nutriment_factor = 2
 	color = "#792300"
-	allergen_type = ALLERGEN_BEANS //Soy (beans)
+	allergen_type = ALLERGEN_BEANS | ALLERGEN_SALT //Soy (beans)
 	cup_prefix = "umami"
 
 /datum/reagent/nutriment/vinegar
@@ -680,6 +691,7 @@
 	color = "#FFFFFF"
 	overdose = REAGENTS_OVERDOSE
 	ingest_met = REM
+	allergen_type = ALLERGEN_SALT
 	cup_prefix = "salty"
 	supply_conversion_value = REFINERYEXPORT_VALUE_COMMON
 	industrial_use = REFINERYEXPORT_REASON_FOOD
@@ -703,6 +715,19 @@
 	ingest_met = REM
 	color = "#000000"
 	cup_prefix = "peppery"
+	wiki_flag = WIKI_FOOD
+	supply_conversion_value = REFINERYEXPORT_VALUE_COMMON
+	industrial_use = REFINERYEXPORT_REASON_FOOD
+
+/datum/reagent/mustardpods
+	name = REAGENT_MUSTARDPODS
+	id = REAGENT_ID_MUSTARDPODS
+	description = "Densely-packed seed pods from a mustard plant. Good for making mustard. Not much use for anything else."
+	taste_description = "sharp, bitter, dry mustard"
+	reagent_state = SOLID
+	ingest_met = REM
+	color = "#B2A00D"
+	cup_prefix = "mustardy"
 	wiki_flag = WIKI_FOOD
 	supply_conversion_value = REFINERYEXPORT_VALUE_COMMON
 	industrial_use = REFINERYEXPORT_REASON_FOOD
@@ -764,6 +789,7 @@
 	wiki_flag = WIKI_FOOD
 	supply_conversion_value = REFINERYEXPORT_VALUE_COMMON
 	industrial_use = REFINERYEXPORT_REASON_FOOD
+	coolant_modifier = 2.5
 
 /datum/reagent/frostoil/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -804,6 +830,7 @@
 	metabolism = REM * 0.5
 	supply_conversion_value = REFINERYEXPORT_VALUE_PROCESSED
 	industrial_use = REFINERYEXPORT_REASON_MATSCI
+	coolant_modifier = 3
 
 /datum/reagent/capsaicin
 	name = REAGENT_CAPSAICIN
@@ -854,8 +881,10 @@
 /datum/reagent/condensedcapsaicin
 	name = REAGENT_CONDENSEDCAPSAICIN
 	id = REAGENT_ID_CONDENSEDCAPSAICIN
+	scannable = SCANNABLE_ADVANCED
 	description = "A chemical agent used for self-defense and in police work."
 	taste_description = "fire"
+	dermal_absorption = 0
 	taste_mult = 10
 	reagent_state = LIQUID
 	touch_met = 50 // Get rid of it quickly
@@ -1011,9 +1040,11 @@
 	var/adj_temp = 0
 	var/nutriment_factor = 0 //CHOMPStation addition
 	var/water_based = TRUE
+	dermal_absorption = 0
 	wiki_flag = WIKI_DRINK
 	supply_conversion_value = REFINERYEXPORT_VALUE_COMMON
 	industrial_use = REFINERYEXPORT_REASON_FOOD
+	coolant_modifier = 0.8
 
 /datum/reagent/drink/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	var/strength_mod = 1
@@ -2551,7 +2582,7 @@
 /datum/reagent/drink/dry_ramen
 	name = REAGENT_DRYRAMEN
 	id = REAGENT_ID_DRYRAMEN
-	description = "Space age food, since August 25, 1958. Contains dried noodles, vegetables, and chemicals that boil in contact with water."
+	description = "Space age food, since August 25, 1958. Contains dried noodles, vegetables, boil in water before serving."
 	taste_description = "dry cheap noodles"
 	reagent_state = SOLID
 	nutrition = 1
@@ -2998,7 +3029,7 @@
 	color = "#c4c6a5"
 	cup_prefix = "white chocolate"
 
-	allergen_type = ALLERGEN_SUGARS|ALLERGEN_CHOCOLATE
+	allergen_type = ALLERGEN_SUGARS //|ALLERGEN_CHOCOLATE //commenting this out and leaving this comment to inform that WHITE CHOCOLATE IS NOT CHOCOLATE!!!!
 
 /datum/reagent/drink/syrup/strawberry
 	name = REAGENT_SYRUPSTRAWBERRY
@@ -4032,7 +4063,7 @@
 	glass_name = REAGENT_ID_MARGARITA
 	glass_desc = "On the rocks with salt on the rim. Arriba~!"
 
-	allergen_type = ALLERGEN_FRUIT //Made from lime juice(fruit)
+	allergen_type = ALLERGEN_FRUIT | ALLERGEN_SALT //Made from lime juice(fruit)
 
 /datum/reagent/ethanol/mead
 	name = REAGENT_MEAD
@@ -4102,6 +4133,8 @@
 
 	glass_name = "red mead"
 	glass_desc = "A true Viking's beverage, though its color is strange."
+
+	allergen_type = ALLERGEN_SALT
 
 /datum/reagent/ethanol/sbiten
 	name = REAGENT_SBITEN
@@ -4636,6 +4669,7 @@
 
 	glass_name = REAGENT_VOXDELIGHT
 	glass_desc = "Not recommended if you enjoy having organs."
+	coolant_modifier = 1.25
 
 /datum/reagent/ethanol/voxdelight/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
 	..()
@@ -4837,6 +4871,7 @@
 	glass_desc = "Minty, rich, and painfully cold. It's a blizzard in a cup."
 
 	allergen_type = ALLERGEN_COFFEE|ALLERGEN_STIMULANT //Made from iced coffee(coffee)
+	coolant_modifier = 1.15
 
 /datum/reagent/ethanol/mintjulep
 	name = REAGENT_MINTJULEP
@@ -5058,6 +5093,7 @@
 	reagent_state = LIQUID
 	nutriment_factor = 40 //very filling
 	color = "#d169b2"
+	coolant_modifier = 3 // HOOH!
 
 /datum/reagent/nutriment/magicdust/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
 	..()
@@ -5113,3 +5149,14 @@
 
 	supply_conversion_value = REFINERYEXPORT_VALUE_UNWANTED
 	industrial_use = REFINERYEXPORT_REASON_FOOD
+
+
+/datum/reagent/drink/teamush
+	name = REAGENT_TEAMUSH
+	id = REAGENT_ID_TEAMUSH
+	description = "Mashed tea leaves, a bit like grass clippings. You can't make proper tea out of this now."
+	taste_description = "overwhelmingly bitter plant"
+	color = "#7db72d"
+
+	glass_name = "blended plant"
+	glass_desc = "Chunky, mashed up plant of some sort. Looks kinda gross."
