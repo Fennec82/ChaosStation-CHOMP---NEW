@@ -189,16 +189,9 @@
 /obj/machinery/computer/telescience/proc/telefail()
 	COOLDOWN_START(src, teleport_cooldown, (2 SECONDS))
 	switch(rand(99))
-		if(0 to 80)
+		if(0 to 85)
 			sparks()
 			visible_message(span_warning("The telepad weakly fizzles."))
-			return
-		if(81 to 85)
-			sparks()
-			var/anomaly = pick(FLUX_ANOMALY, GRAVITATIONAL_ANOMALY, PYRO_ANOMALY, HALLUCINATION_ANOMALY, BIOSCRAMBLER_ANOMALY, DIMENSIONAL_ANOMALY, WEATHER_ANOMALY)
-			generate_anomaly(get_turf(telepad), anomaly, 1, FALSE)
-			for(var/mob/living/carbon/human/human in viewers(telepad, null))
-				to_chat(human, span_warning("The telepad crackles with energy, as a tear in reality is created!"))
 			return
 		if(86 to 90)
 			// Irradiate everyone in telescience!
@@ -389,7 +382,7 @@
 
 
 // Procedure that calculates the actual trajectory taken!
-/proc/simple_projectile_trajectory(var/src_x, var/src_y, var/rotation, var/distance)
+/proc/simple_projectile_trajectory(src_x, src_y, rotation, distance)
 	var/time = distance / 10 // 100ms per distance seems fine?
 	var/dest_x = src_x + distance*sin(rotation);
 	var/dest_y = src_y + distance*cos(rotation);

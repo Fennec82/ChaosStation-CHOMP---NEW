@@ -24,8 +24,10 @@
 		get_asset_datum(/datum/asset/simple/preferences),
 		get_asset_datum(/datum/asset/spritesheet/preferences),
 		get_asset_datum(/datum/asset/json/preferences),
-		get_asset_datum(/datum/asset/spritesheet_batched/pai_icons),
 	)
+
+	if(GLOB.asset_datums[/datum/asset/spritesheet_batched/pai_icons])
+		assets += get_asset_datum(/datum/asset/spritesheet_batched/pai_icons)
 
 	for (var/datum/preference_middleware/preference_middleware as anything in middleware)
 		assets += preference_middleware.get_ui_assets()
@@ -55,7 +57,7 @@
 	data["character_profiles"] = create_character_profiles()
 
 	// data["character_preview_view"] = character_preview_view.assigned_map
-	// data["overflow_role"] = SSjob.GetJobType(SSjob.overflow_role).title
+	// data["overflow_role"] = SSjob.get_jobType(SSjob.overflow_role).title
 
 	data["window"] = current_window
 

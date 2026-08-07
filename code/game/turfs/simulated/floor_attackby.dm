@@ -1,9 +1,13 @@
-/turf/simulated/floor/attackby(var/obj/item/C, var/mob/user, attack_modifier, click_parameters)
+/turf/simulated/floor/attackby(obj/item/C, mob/user, attack_modifier, click_parameters)
 
 	if(!C || !user)
 		return 0
 
-	if(isliving(user) && istype(C, /obj/item)) //CHOMPEDIT START - Making engraving require disarm intent (and simplifying the proc)
+	// Check parent signals
+	if(..())
+		return
+
+	if(isliving(user) && istype(C, /obj/item))
 		var/mob/living/L = user
 		if(L.a_intent != I_HELP)
 			if(L.a_intent == I_GRAB)

@@ -1,6 +1,5 @@
 ///////////////////////////
 //// Spawning and despawning
-GLOBAL_LIST_EMPTY(latejoin_talon)
 /obj/effect/landmark/talon
 	name = "JoinLateTalon"
 	delete_me = 1
@@ -142,6 +141,8 @@ GLOBAL_LIST_EMPTY(latejoin_talon)
 ///////////////////////////
 //// The Various Machines
 /obj/machinery/telecomms/allinone/talon
+	id = "talon_aio"
+	network = "Talon"
 	freq_listening = list(PUB_FREQ, TALON_FREQ)
 
 /obj/item/paper/secret_vendornote
@@ -282,7 +283,7 @@ personally I recommend using the ship's boat if you need to evacuate, but if you
 
 /mob/living/silicon/robot/drone/talon
 	foreign_droid = TRUE
-	idcard_type = /obj/item/card/id/synthetic/talon
+	module_type = /obj/item/robot_module/drone/talon
 
 /obj/item/card/id/synthetic/talon
 	name = "\improper Talon synthetic ID"
@@ -523,7 +524,7 @@ personally I recommend using the ship's boat if you need to evacuate, but if you
 		/obj/item/gps/mining/talonminer,
 		/obj/item/clothing/gloves/black,
 		/obj/item/analyzer,
-		/obj/item/storage/bag/ore,
+		/obj/item/ore_bag,
 		/obj/item/flashlight/lantern,
 		/obj/item/shovel,
 		/obj/item/pickaxe,
