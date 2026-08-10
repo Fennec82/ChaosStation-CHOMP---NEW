@@ -88,6 +88,7 @@
 /datum/surgery_step/repairflesh/repair_burns
 	surgery_name = "Repair Burns"
 	allowed_tools = list(
+	/obj/item/surgical/FixOVein = 100,
 	/obj/item/stack/medical/advanced/ointment = 100,
 	/obj/item/stack/medical/ointment = 100,
 	/obj/item/tape_roll = 30,
@@ -160,6 +161,7 @@
 /datum/surgery_step/repairflesh/repair_brute
 	surgery_name = "Repair Brute"
 	allowed_tools = list(
+	/obj/item/surgical/hemostat = 100,
 	/obj/item/stack/medical/advanced/bruise_pack = 100,
 	/obj/item/stack/medical/bruise_pack = 100,
 	/obj/item/tape_roll = 40,
